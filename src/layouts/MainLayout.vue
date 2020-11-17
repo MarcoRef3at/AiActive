@@ -54,13 +54,13 @@ const linksData = [
   {
     title: 'Dashboard',
     caption: 'Printing',
-    icon: 'print',
+    icon: 'dashboard',
     link: '/'
   },
   {
     title: 'Reporting',
     caption: 'Printing',
-    icon: 'print',
+    icon: 'report',
     link: '/Report'
   },
  
