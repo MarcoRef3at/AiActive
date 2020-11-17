@@ -54,7 +54,7 @@ const linksData = [
   {
     title: 'Dashboard',
     caption: 'Printing',
-    icon: 'dashboard',
+    icon: 'leaderboard',
     link: '/'
   },
   {
