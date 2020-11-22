@@ -12,6 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "apexcharts": "^3.22.2",
     "core-js": "^3.6.5",
+    "firebase": "^8.1.1",
     "quasar": "^1.0.0",
     "quasar-components-chart": "^0.1.7",
     "vue-apexcharts": "^1.6.0"
