@@ -74,13 +74,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions('auth',['registerUser']),
+    ...mapActions('auth',['registerUser','loginUser']),
     submitForm() {
       this.$refs.email.validate();
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
         if (this.tab == "login") {
-          console.log("Login user");
+           this.loginUser(this.formData)
         } else {
           this.registerUser(this.formData)
         }
