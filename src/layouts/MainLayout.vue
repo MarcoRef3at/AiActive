@@ -16,7 +16,22 @@
         </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
-        <q-btn to="/auth" flat icon-right="account_circle" label="Login" class="absolute-right"/>
+        <q-btn
+          v-if="!LoggedIn"
+          to="/auth"
+          flat
+          icon-right="account_circle"
+          label="Login"
+          class="absolute-right"
+        />
+        <q-btn
+          v-else
+          @click="logoutUser"
+          flat
+          icon-right="logout"
+          label="Logout"
+          class="absolute-right"
+        />
       </q-toolbar>
     </q-header>
 
@@ -27,10 +42,7 @@
       content-class="bg-grey-1"
     >
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
+        <q-item-label header class="text-grey-8">
           Menu
         </q-item-label>
         <EssentialLink
@@ -38,7 +50,6 @@
           :key="link.title"
           v-bind="link"
         />
-        
       </q-list>
     </q-drawer>
 
@@ -49,32 +60,37 @@
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
-
+import EssentialLink from "components/EssentialLink.vue";
+import { mapState, mapActions } from "vuex";
 const linksData = [
   {
-    title: 'Dashboard',
-    caption: 'Printing',
-    icon: 'leaderboard',
-    link: '/'
+    title: "Dashboard",
+    caption: "Printing",
+    icon: "leaderboard",
+    link: "/"
   },
   {
-    title: 'Reporting',
-    caption: 'Printing',
-    icon: 'report',
-    link: '/Report'
-  },
- 
+    title: "Reporting",
+    caption: "Printing",
+    icon: "report",
+    link: "/Report"
+  }
 ];
 
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   components: { EssentialLink },
-  data () {
+  data() {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData
-    }
+    };
+  },
+  methods: {
+    ...mapActions("auth", ["logoutUser"])
+  },
+  computed: {
+    ...mapState("auth", ["LoggedIn"])
   }
-}
+};
 </script>

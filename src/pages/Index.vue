@@ -7,9 +7,9 @@
       <div class="col-md-6 col-sm-12 col-xs-12">
         <apex-donut></apex-donut>
       </div>
-      <div class="col-md-6 col-sm-12 col-xs-12">
+      <!-- <div class="col-md-6 col-sm-12 col-xs-12">
         <apex-line></apex-line>
-      </div>
+      </div> -->
       <div class="col-md-6 col-sm-12 col-xs-12">
         <apex-multiple-radial-bars></apex-multiple-radial-bars>
       </div>
@@ -52,14 +52,14 @@ import VueApexCharts from 'vue-apexcharts'
 import ApexColumn from 'components/Charts/ApexColumn'
 import ApexArea from 'components/Charts/ApexArea'
 import ApexDonut from 'components/Charts/ApexDonut'
-import ApexLine from 'components/Charts/ApexLine'
+// import ApexLine from 'components/Charts/ApexLine'
 import ApexHeatmap from 'components/Charts/ApexHeatmap'
 import ApexMultipleRadialBars from 'components/Charts/ApexMultipleRadialBars'
 import ApexRadialBar from 'components/Charts/ApexRadialBar'
 import ApexBubble from 'components/Charts/ApexBubble'
 import ApexRadar from 'components/Charts/ApexRadar'
 import ApexCandleStick from 'components/Charts/ApexCandleStick'
-import ApexLineSmall from 'components/Charts/ApexLineSmall'
+// import ApexLineSmall from 'components/Charts/ApexLineSmall'
 import ApexPolarMap from 'components/Charts/ApexPolarMap'
 import ApexLineColumn from 'components/Charts/ApexLineColumn'
 import ApexTreemap from 'components/Charts/ApexTreemap'
@@ -70,13 +70,13 @@ components: {
   ApexColumn,
     ApexArea,
     ApexDonut,
-    ApexLine,
+    // ApexLine,
     ApexMultipleRadialBars,
     ApexHeatmap,
     ApexRadialBar,
     ApexBubble,
     ApexRadar,
-    ApexLineSmall,
+    // ApexLineSmall,
     ApexPolarMap,
     ApexCandleStick,
     ApexLineColumn,

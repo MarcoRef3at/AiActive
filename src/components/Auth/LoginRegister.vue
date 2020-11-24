@@ -64,13 +64,8 @@ export default {
         email: "",
         password: ""
       },
-      text: "",
       isPwd: true,
-      search: "",
-      tel: "",
-      url: "",
-      time: "",
-      date: ""
+
     };
   },
   methods: {
