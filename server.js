@@ -12,7 +12,7 @@ connectDB();
 
 //Route files
 const bootcamps = require('./routes/bootcamps');
-
+const auth = require('./routes/auth')
 const app = express();
 
 //Body parser
@@ -24,6 +24,7 @@ if (process.env.Node_ENV === 'development') {
 
 //Mount Routers
 app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/auth', auth);
 
 //Error Handler (must be after Mount Routers)
 app.use(errorHandler);
