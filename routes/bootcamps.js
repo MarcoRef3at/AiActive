@@ -8,14 +8,17 @@ const {
   updateBootcamp,
 } = require('../controllers/bootcamps');
 
-const { protect } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
-router.route('/').get(getBootcamps).post(protect,creatBootcamp);
+router
+  .route('/')
+  .get(getBootcamps)
+  .post(protect, authorize('publisher', 'admin'), creatBootcamp);
 router
   .route('/:id')
   .get(getBootcamp)
-  .put(protect,updateBootcamp)
-  .delete(protect,deleteBootcamp);
+  .put(protect, authorize('publisher', 'admin'), updateBootcamp)
+  .delete(protect, authorize('publisher', 'admin'), deleteBootcamp);
 
 // router.get('/:id', (req, res) => {
 //   res.status(200).json({
