@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const asyncHandler = require('../middleware/async');
 const Errorresponse = require('../utils/errorResponse');
-
 // @desc        Register user
 // @route       POST /api/v1/auth/register
 // @access      Public
@@ -64,3 +63,15 @@ const sendTokenResponse = (user, statusCode, res) => {
     .cookie('token', token, options)
     .json({ success: true, token });
 };
+
+// @desc        Get Current logged in user
+// @route       POST /api/v1/auth/me
+// @access      Private
+exports.getMe = asyncHandler(async (req,res,next)=>{
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    data : user
+  });
+})
