@@ -1,17 +1,17 @@
 import { LocalStorage, Loading, QSpinnerPie } from "quasar";
 import { firebaseAuth } from "boot/firebase";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
+import FeatureDataService from "../services/FeatureDataService";
+
 function loading() {
-  Loading.show(
-      {
-        spinner: QSpinnerPie,
-        spinnerColor: 'blue',
-        spinnerSize: 140,
-        backgroundColor: 'gery',
-        message: 'Some important process is in progress. Hang on...',
-        messageColor: 'black'
-      }
-  );
+  Loading.show({
+    spinner: QSpinnerPie,
+    spinnerColor: "blue",
+    spinnerSize: 140,
+    backgroundColor: "gery",
+    message: "Some important process is in progress. Hang on...",
+    messageColor: "black"
+  });
 }
 const state = {
   LoggedIn: false
@@ -24,27 +24,50 @@ const mutations = {
 const actions = {
   registerUser({}, payload) {
     loading();
-    firebaseAuth
-      .createUserWithEmailAndPassword(payload.email, payload.password)
+    // console.log(payload.name);
+    FeatureDataService.register(payload)
       .then(response => {
-        // console.log("response: ", response);
+        console.log(response);
       })
       .catch(error => {
-        showErrorMessage(error.message);
+        console.log(error);
+        showErrorMessage(error);
       });
   },
   loginUser({}, payload) {
     loading();
-
-    firebaseAuth
-      .signInWithEmailAndPassword(payload.email, payload.password)
+    FeatureDataService.login(payload)
       .then(response => {
-        // console.log("response: ", response);
+        console.log(response);
       })
       .catch(error => {
-        showErrorMessage(error.message);
+        console.log(error);
+        showErrorMessage(error);
       });
   },
+  // registerUser({}, payload) {
+  //   loading();
+  //   firebaseAuth
+  //     .createUserWithEmailAndPassword(payload.email, payload.password)
+  //     .then(response => {
+  //       // console.log("response: ", response);
+  //     })
+  //     .catch(error => {
+  //       showErrorMessage(error.message);
+  //     });
+  // },
+  // loginUser({}, payload) {
+  //   loading();
+
+  //   firebaseAuth
+  //     .signInWithEmailAndPassword(payload.email, payload.password)
+  //     .then(response => {
+  //       // console.log("response: ", response);
+  //     })
+  //     .catch(error => {
+  //       showErrorMessage(error.message);
+  //     });
+  // },
   logoutUser() {
     loading();
     firebaseAuth.signOut();

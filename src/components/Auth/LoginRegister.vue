@@ -13,6 +13,20 @@
         color="teal"
         class="col"
         outlined
+        v-model="formData.name"
+        label="Name"
+        stack-label
+        lazy-rules
+        ref="name"
+      />
+    </div>
+
+    
+    <div class="row q-mb-md">
+      <q-input
+        color="teal"
+        class="col"
+        outlined
         v-model="formData.email"
         label="Email"
         stack-label
@@ -49,6 +63,26 @@
       </q-input>
     </div>
     <div class="row q-mb-md">
+        <q-select 
+        filled
+        v-model="formData.role"
+        :options="roleOptions"
+        stack-label
+        label="Account Role"
+        :display-value="`${formData.role ? formData.role : 'user'}`"
+      >
+        <template v-slot:append>
+          <q-icon
+            v-if="formData.role !== null"
+            class="cursor-pointer"
+            name="clear"
+            @click.stop="formData.role = null"
+          />
+        </template>
+      </q-select>
+</div>
+    <div class="row q-mb-md">
+      
       <q-space />
       <q-btn type="submit" :label="tab" color="primary" />
     </div>
@@ -61,9 +95,14 @@ export default {
   data() {
     return {
       formData: {
+        name:"",
         email: "",
-        password: ""
+        password: "",
+        role:"user"
       },
+      roleOptions: [
+        'admin','publisher'
+      ],
       isPwd: true,
 
     };
@@ -75,6 +114,7 @@ export default {
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
         if (this.tab == "login") {
+          ////////////////////////Password is not encrypted in console////////////////////////
            this.loginUser(this.formData)
         } else {
           this.registerUser(this.formData)
