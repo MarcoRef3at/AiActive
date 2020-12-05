@@ -5,6 +5,8 @@ const colors = require('colors');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
+var cors = require('cors');
+
 //load env vars (must be before db connection)
 dotenv.config({ path: './config/config.env' });
 
@@ -15,6 +17,9 @@ connectDB();
 const bootcamps = require('./routes/bootcamps');
 const auth = require('./routes/auth');
 const app = express();
+
+//Preflight request (Post and get instead of OPTIONS)
+app.use(cors());
 
 //Body parser
 app.use(express.json());
