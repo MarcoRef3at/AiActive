@@ -31,7 +31,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
-        showErrorMessage(error);
+        showErrorMessage(error.response.data.error);
       });
   },
   loginUser({}, payload) {
@@ -40,9 +40,9 @@ const actions = {
       .then(response => {
         console.log(response);
       })
+
       .catch(error => {
-        console.log(error);
-        showErrorMessage(error);
+        showErrorMessage(error.response.data.error);
       });
   },
   // registerUser({}, payload) {
