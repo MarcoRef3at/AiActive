@@ -45,6 +45,18 @@ const actions = {
         console.log(response);
         this.state.token = response.data.token;
         console.log(this.state.token)
+        Loading.hide();
+      })
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+      });
+  },
+  getAllBoot({}) {
+    loading();
+    FeatureDataService.getAllBoot()
+      .then(response => {
+        console.log(response);
+        Loading.hide();
       })
       .catch(error => {
         showErrorMessage(error.response.data.error);
@@ -93,7 +105,7 @@ const actions = {
   //   });
   // }
   handleAuthStateChange({ commit }) {
-    if (this.state.token != null) {
+    if (this.state.token = null) {
       Loading.hide();
       commit("setLoggedIn", true);
       LocalStorage.set("loggedIn", true);
