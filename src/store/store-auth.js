@@ -14,11 +14,15 @@ function loading() {
   });
 }
 const state = {
-  LoggedIn: false
+  LoggedIn: false,
+  token: null
 };
 const mutations = {
   setLoggedIn(state, value) {
     state.LoggedIn = value;
+  },
+  setToken(state, value) {
+    state.token = value;
   }
 };
 const actions = {
@@ -39,8 +43,9 @@ const actions = {
     FeatureDataService.login(payload)
       .then(response => {
         console.log(response);
+        this.state.token = response.data.token;
+        console.log(this.state.token)
       })
-
       .catch(error => {
         showErrorMessage(error.response.data.error);
       });
@@ -72,20 +77,33 @@ const actions = {
     loading();
     firebaseAuth.signOut();
   },
-  handleAuthStateChange({ commit }) {
-    firebaseAuth.onAuthStateChanged(user => {
-      Loading.hide();
-      if (user) {
-        commit("setLoggedIn", true);
-        LocalStorage.set("loggedIn", true);
-        this.$router.push("/");
-      } else {
-        commit("setLoggedIn", false);
-        LocalStorage.set("loggedIn", false);
+  // handleAuthStateChange({ commit }) {
+  //   firebaseAuth.onAuthStateChanged(user => {
+  //     Loading.hide();
+  //     if (user) {
+  //       commit("setLoggedIn", true);
+  //       LocalStorage.set("loggedIn", true);
+  //       this.$router.push("/");
+  //     } else {
+  //       commit("setLoggedIn", false);
+  //       LocalStorage.set("loggedIn", false);
 
-        this.$router.replace("/auth");
-      }
-    });
+  //       this.$router.replace("/auth");
+  //     }
+  //   });
+  // }
+  handleAuthStateChange({ commit }) {
+    if (this.state.token != null) {
+      Loading.hide();
+      commit("setLoggedIn", true);
+      LocalStorage.set("loggedIn", true);
+      this.$router.push("/");
+    } else {
+      commit("setLoggedIn", false);
+      LocalStorage.set("loggedIn", false);
+
+      this.$router.replace("/auth");
+    }
   }
 };
 const getters = {};
