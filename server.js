@@ -5,7 +5,17 @@ const colors = require('colors');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
+// var cors = require('cors');
 var cors = require('cors');
+const whitelist = ['http://192.168.1.99:8080'];
+const corsOptions = {
+  credentials: true, // This is important.
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin)) return callback(null, true);
+
+    callback(new Error('Not allowed by CORS'));
+  },
+};
 
 //load env vars (must be before db connection)
 dotenv.config({ path: './config/config.env' });
@@ -19,8 +29,8 @@ const auth = require('./routes/auth');
 const app = express();
 
 //Preflight request (Post and get instead of OPTIONS)
-app.use(cors());
-
+// app.use(cors());
+app.use(cors(corsOptions));
 //Body parser
 app.use(express.json());
 

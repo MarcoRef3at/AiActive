@@ -53,7 +53,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 1000 * 60 * 60 * 24
     ),
-    httpOnly: true,
+    // httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') {
     options.secure = true;
@@ -67,11 +67,11 @@ const sendTokenResponse = (user, statusCode, res) => {
 // @desc        Get Current logged in user
 // @route       POST /api/v1/auth/me
 // @access      Private
-exports.getMe = asyncHandler(async (req,res,next)=>{
+exports.getMe = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   res.status(200).json({
     success: true,
-    data : user
+    data: user,
   });
-})
+});
