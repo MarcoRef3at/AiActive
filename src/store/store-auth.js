@@ -8,7 +8,7 @@ import Vue from "vue";
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 Vue.$cookies.config('7d')
-var cookies = $cookies.get()  // return value
+var cookies = $cookies.get('token')  // return value
 
 function loading() {
   Loading.show({
