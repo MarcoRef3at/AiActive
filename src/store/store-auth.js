@@ -52,8 +52,24 @@ const actions = {
         // console.log(response);
         console.log('cookies=',cookies);
         this.state.token = response.data.token;
+<<<<<<< HEAD
         Loading.hide();
         // console.log(this.state.token)
+=======
+        console.log(this.state.token)
+        Loading.hide();
+      })
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+      });
+  },
+  getAllBoot({}) {
+    loading();
+    FeatureDataService.getAllBoot()
+      .then(response => {
+        console.log(response);
+        Loading.hide();
+>>>>>>> 62ae9b8cae705e5421ddb68564488dced1623ff3
       })
       .catch(error => {
         showErrorMessage(error.response.data.error);
@@ -102,7 +118,7 @@ const actions = {
   //   });
   // }
   handleAuthStateChange({ commit }) {
-    if (this.state.token != null) {
+    if (this.state.token = null) {
       Loading.hide();
       commit("setLoggedIn", true);
       LocalStorage.set("loggedIn", true);

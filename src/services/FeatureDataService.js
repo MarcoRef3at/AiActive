@@ -18,6 +18,9 @@ class FeatureDataService {
   login(data) {
     return http.post("/auth/login", data);
   }
+  getAllBoot() {
+    return http.get("/bootcamps");
+  }
 
   update(id, data) {
     return http.put(`/bootcamps/${id}`, data);
