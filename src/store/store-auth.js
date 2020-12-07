@@ -3,6 +3,13 @@ import { firebaseAuth } from "boot/firebase";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import FeatureDataService from "../services/FeatureDataService";
 
+import Vue from "vue";
+
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+Vue.$cookies.config('7d')
+var cookies = $cookies.get()  // return value
+
 function loading() {
   Loading.show({
     spinner: QSpinnerPie,
@@ -42,9 +49,11 @@ const actions = {
     loading();
     FeatureDataService.login(payload)
       .then(response => {
-        console.log(response);
+        // console.log(response);
+        console.log('cookies=',cookies);
         this.state.token = response.data.token;
-        console.log(this.state.token)
+        Loading.hide();
+        // console.log(this.state.token)
       })
       .catch(error => {
         showErrorMessage(error.response.data.error);
