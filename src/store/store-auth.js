@@ -4,12 +4,11 @@ import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import FeatureDataService from "../services/FeatureDataService";
 
 import Vue from "vue";
-
-import VueCookies from 'vue-cookies'
-Vue.use(VueCookies)
-Vue.$cookies.config('7d')
-var cookies = $cookies.get('token')  // return value
-
+import VueCookies from "vue-cookies";
+Vue.use(VueCookies);
+Vue.$cookies.config("7d");
+var cookies = $cookies.get("token"); // return value
+$cookies.set("token", cookies);
 function loading() {
   Loading.show({
     spinner: QSpinnerPie,
@@ -20,18 +19,22 @@ function loading() {
     messageColor: "black"
   });
 }
+
 const state = {
   LoggedIn: false,
-  token: null
+  token: ""
 };
+
 const mutations = {
   setLoggedIn(state, value) {
     state.LoggedIn = value;
   },
+
   setToken(state, value) {
     state.token = value;
   }
 };
+
 const actions = {
   registerUser({}, payload) {
     loading();
@@ -39,21 +42,39 @@ const actions = {
     FeatureDataService.register(payload)
       .then(response => {
         console.log(response);
+        console.log("cookies=", cookies);
       })
       .catch(error => {
         console.log(error);
         showErrorMessage(error.response.data.error);
       });
   },
-  loginUser({}, payload) {
+
+  loginUser({ commit }, payload) {
     loading();
     FeatureDataService.login(payload)
       .then(response => {
         // console.log(response);
-        console.log('cookies=',cookies);
-        this.state.token = response.data.token;
+        console.log("cookies=", cookies);
+        commit("setToken", cookies);
+        // this.state.token = response.data.token;
+        $cookies.set("token", cookies);
         Loading.hide();
         // console.log(this.state.token)
+      })
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+      });
+  },
+
+  me() {
+    const payload = {
+      token: state.token
+    };
+
+    FeatureDataService.me(payload)
+      .then(response => {
+        console.log("response", response);
       })
       .catch(error => {
         showErrorMessage(error.response.data.error);
