@@ -7,13 +7,15 @@ const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 // var cors = require('cors');
 var cors = require('cors');
-const whitelist = ['http://192.168.1.99:8080'];
+const whitelist = ['http://localhost:8080'];
 const corsOptions = {
   credentials: true, // This is important.
   origin: (origin, callback) => {
-    if (whitelist.includes(origin)) return callback(null, true);
+    // console.log('origin', origin);
+    // if (whitelist.includes(origin)) 
+    return callback(null, true);
 
-    callback(new Error('Not allowed by CORS'));
+    // callback(new Error('Not allowed by CORS'));
   },
 };
 

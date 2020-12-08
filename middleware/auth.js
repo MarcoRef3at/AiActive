@@ -21,9 +21,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
+    console.log('decoded', decoded);
     req.user = await User.findById(decoded.id);
-    console.log(req.user)
+    console.log('req.user', req.user);
     next();
   } catch (err) {
     return next(new ErrorResponse('Not authorized to access this route', 401));
@@ -31,11 +31,16 @@ exports.protect = asyncHandler(async (req, res, next) => {
 });
 
 //Grant Access to specific roles
-exports.authorize=(...roles) =>{
-    return (req,res,next)=>{
-        if(!roles.includes(req.user.role)){
-            return next(new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`,403));
-        }
-        next();
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ErrorResponse(
+          `User role ${req.user.role} is not authorized to access this route`,
+          403
+        )
+      );
     }
-}
+    next();
+  };
+};
