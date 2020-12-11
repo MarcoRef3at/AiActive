@@ -10,6 +10,7 @@
     </div>
     <div class="row q-mb-md">
       <q-input
+        v-if="tab == 'register'"
         color="teal"
         class="col"
         outlined
@@ -63,6 +64,7 @@
     </div>
     <div class="row q-mb-md">
       <q-select
+        v-if="tab == 'register'"
         filled
         v-model="formData.role"
         :options="roleOptions"
@@ -83,7 +85,6 @@
     <div class="row q-mb-md">
       <q-space />
       <q-btn type="submit" :label="tab" color="primary" />
-      <q-btn @click="isLogged" label="me" color="primary" />
     </div>
   </form>
 </template>

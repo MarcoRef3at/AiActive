@@ -10,9 +10,9 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-
         <q-toolbar-title>
           Quasar App
+          <q-btn @click="isLogged" label="Token Decoder" color="secondary" />
         </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
@@ -86,9 +86,14 @@ export default {
       essentialLinks: linksData
     };
   },
+
   methods: {
-    ...mapActions("auth", ["logoutUser"])
+    ...mapActions("auth", ["logoutUser", "isLoggedIn"]),
+    isLogged() {
+      this.isLoggedIn();
+    }
   },
+  
   computed: {
     ...mapState("auth", ["LoggedIn"])
   }
