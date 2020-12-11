@@ -83,7 +83,7 @@
     <div class="row q-mb-md">
       <q-space />
       <q-btn type="submit" :label="tab" color="primary" />
-      <q-btn @click="test" label="me" color="primary" />
+      <q-btn @click="isLogged" label="me" color="primary" />
     </div>
   </form>
 </template>
@@ -104,7 +104,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("auth", ["registerUser", "loginUser", "me"]),
+    ...mapActions("auth", ["registerUser", "loginUser", "isLoggedIn"]),
     submitForm() {
       this.$refs.email.validate();
       this.$refs.password.validate();
@@ -117,8 +117,8 @@ export default {
         }
       }
     },
-    test() {
-      this.me();
+    isLogged() {
+      this.isLoggedIn();
     },
     isValidEmailAddress(email) {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

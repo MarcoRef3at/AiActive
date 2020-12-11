@@ -1,9 +1,15 @@
 // import config from "@/../config/config.env";
-import Axios from "axios";
+import axios from "axios";
+const Axios = axios.create({
+  baseURL: "http://localhost:5000/api/v1",
+  headers: { "Content-type": "application/json" },
+  withCredentials: true
+});
+
 import { LocalStorage, Loading, QSpinnerPie } from "quasar";
-import { firebaseAuth } from "boot/firebase";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 
+import { firebaseAuth } from "boot/firebase";
 import FeatureDataService from "../services/FeatureDataService";
 
 //Cookies Import
@@ -11,8 +17,8 @@ import Vue from "vue";
 import VueCookies from "vue-cookies";
 Vue.use(VueCookies);
 Vue.$cookies.config("7d");
-var cookies = $cookies.get("token"); // return value
-$cookies.set("token", cookies);
+var cookies = ""; // return value
+// $cookies.set("token", cookies);
 
 //loading spin GUI
 function loading() {
@@ -67,37 +73,23 @@ const actions = {
       });
   },
 
-  loginUser0000({ commit }, payload) {
-    loading();
-    FeatureDataService.login(payload)
-      .then(response => {
-        console.log("cookies=", cookies);
-        commit("setToken", cookies);
-        $cookies.set("token", cookies);
-        Loading.hide();
-      })
-      .catch(error => {
-        showErrorMessage(error.response.data.error);
-      });
-  },
-  loginUser({ commit }, payload) {
-    loading();
+  loginUser({ commit, dispatch }, payload) {
+    Loading.show();
+
     setTimeout(() => {
       return new Promise((resolve, reject) => {
-        // let host = config.API_URL + "/auth/login";
-        let host = "http://localhost:5000/api/v1" + "/auth/login";
+        let host = "/auth/login";
 
         Axios.post(host, {
           email: payload.email,
           password: payload.password
         })
+
           .then(response => {
-            // let userAuthData = response.data;
-            // dispatch('handleAuthStateChange', userAuthData)
-            commit("setToken", cookies);
-            $cookies.set("token", cookies);
-            console.log(response);
+            let userAuthData = { auth: true, data: response.data };
+            dispatch("handleAuthStateChange", userAuthData);
           })
+
           .catch(error => {
             if (error.message == "Network Error") {
               showErrorMessage("Server Offline");
@@ -115,20 +107,6 @@ const actions = {
       });
     }, 500);
   },
-
-  me() {
-    const payload = {
-      token: state.token
-    };
-
-    FeatureDataService.me(payload)
-      .then(response => {
-        console.log("response", response);
-      })
-      .catch(error => {
-        showErrorMessage(error.response.data.error);
-      });
-  },
   // registerUser({}, payload) {
   //   loading();
   //   firebaseAuth
@@ -140,19 +118,22 @@ const actions = {
   //       showErrorMessage(error.message);
   //     });
   // },
-  // loginUser({}, payload) {
-  //   loading();
 
-  //   firebaseAuth
-  //     .signInWithEmailAndPassword(payload.email, payload.password)
-  //     .then(response => {
-  //       // console.log("response: ", response);
-  //     })
-  //     .catch(error => {
-  //       showErrorMessage(error.message);
-  //     });
-  // },
+  isLoggedIn() {
+    let host = "/auth/me";
+    Axios.get(host, {
+      headers: { Authorization: `Bearer ${state.token}` }
+    })
+
+      .then(response => {
+        showErrorMessage("LoggedIn");
+      })
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+      });
+  },
   logoutUser({ dispatch }) {
+    loading();
     console.log("logoutUser");
     let userAuthData = { auth: false };
     dispatch("handleAuthStateChange", userAuthData);
@@ -174,9 +155,14 @@ const actions = {
   // }
   handleAuthStateChange({ commit }, userAuthData) {
     Loading.hide();
+    console.log("userAuthdata", userAuthData.auth);
     if (userAuthData.auth) {
       commit("setLoggedIn", true);
-      commit("setUserData", userAuthData.user);
+      commit("setUserData", userAuthData.data);
+      cookies = $cookies.get("token");
+      $cookies.set("token", cookies);
+      console.log("cookies=", cookies);
+      commit("setToken", cookies);
 
       LocalStorage.set("loggedIn", true);
       LocalStorage.set("loggedInUser", userAuthData.user);
@@ -186,7 +172,11 @@ const actions = {
     } else {
       commit("setLoggedIn", false);
       commit("setUserData", false);
-
+      cookies = null
+      $cookies.remove("token");
+      console.log("cookies=", cookies);
+      commit("setToken", cookies);
+      
       LocalStorage.remove("loggedIn");
       LocalStorage.remove("loggedInUser");
       LocalStorage.remove("loggedInUserToken");
