@@ -21,6 +21,14 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'publisher'],
     default: 'user',
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   password: {
     type: String,
     required: [true, 'Please add a Password'],
@@ -43,9 +51,18 @@ UserSchema.pre('save', async function (next) {
 
 //Sign JWT and return **TOKEN**
 UserSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign(
+    {
+      id: this._id,
+      userName: this.name,
+      isAdmin: this.isAdmin,
+      isActive: this.isActive,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    }
+  );
 };
 
 //Match user entered password to hashed password in database

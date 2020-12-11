@@ -4,8 +4,8 @@ const errorHandler = (err, req, res, next) => {
   error.message = err.message;
 
   //log to console for dev
-  console.log("err.errors",err.errors);
-  console.log("err.message",err.message);
+  console.log('err.errors', err.errors);
+  console.log('err.message', err.message);
 
   //Mongoose bad ObjectID
   if (err.name === 'CastError') {
@@ -17,14 +17,14 @@ const errorHandler = (err, req, res, next) => {
     const message = 'Duplicate field value entered';
     error = new Errorresponse(message, 400);
   }
-//Mongoose validation errors
-if(err.name === 'ValidationError'){
-    const message = Object.values(err.errors).map(val => val.message);
+  //Mongoose validation errors
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map((val) => val.message);
     error = new Errorresponse(message, 400);
-}
+  }
   res.status(error.statusCode || 500).json({
     success: false,
-    error: error.message || 'Server Error',
+    message: error.message || 'Server Error',
   });
 };
 

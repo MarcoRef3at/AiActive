@@ -5,13 +5,15 @@ const Errorresponse = require('../utils/errorResponse');
 // @route       POST /api/v1/auth/register
 // @access      Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, isAdmin,isActive } = req.body;
   //create user
   const user = await User.create({
     name,
     email,
     password,
     role,
+    isAdmin,
+    isActive
   });
 
   //Create Token
@@ -61,7 +63,15 @@ const sendTokenResponse = (user, statusCode, res) => {
   res
     .status(statusCode)
     .cookie('token', token, options)
-    .json({ success: true, token });
+    .json({
+      userName: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      isActive: user.isActive,
+      role: user.role,
+      success: true,
+      token,
+    });
 };
 
 // @desc        Get Current logged in user
