@@ -29,7 +29,7 @@ function loading() {
 }
 
 const state = {
-  LoggedIn: false,
+  LoggedIn: $cookies.isKey("token"),
   token: null,
   userData: {
     userName: "",
@@ -125,7 +125,7 @@ const actions = {
               showErrorMessage(error.response.data.message);
               return;
             } else {
-              showErrorMessage(error.response.data.error);
+              showErrorMessage(error.response.data.message);
             }
           });
       });
@@ -157,7 +157,7 @@ const actions = {
         showErrorMessage(parseJwt(state.token));
       })
       .catch(error => {
-        showErrorMessage(error.response.data.error);
+        showErrorMessage(error.response.data.message);
       });
   },
 

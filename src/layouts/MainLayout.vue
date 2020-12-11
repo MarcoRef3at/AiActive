@@ -17,7 +17,7 @@
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn
-          v-if="!LoggedIn"
+          v-if="!LoggedIn && $route.path != '/auth'"
           to="/auth"
           flat
           icon-right="account_circle"
@@ -25,7 +25,7 @@
           class="absolute-right"
         />
         <q-btn
-          v-else
+          v-else-if="$route.path != '/auth'"
           @click="logoutUser"
           flat
           icon-right="logout"
@@ -93,7 +93,7 @@ export default {
       this.isLoggedIn();
     }
   },
-  
+
   computed: {
     ...mapState("auth", ["LoggedIn"])
   }
