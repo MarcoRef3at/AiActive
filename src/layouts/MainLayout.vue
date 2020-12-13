@@ -17,7 +17,7 @@
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn
-          v-if="!LoggedIn && $route.path != '/auth'"
+          v-if="!loggedIn && $route.path != '/auth'"
           to="/auth"
           flat
           icon-right="account_circle"
@@ -74,6 +74,12 @@ const linksData = [
     caption: "Printing",
     icon: "report",
     link: "/Report"
+  },
+  {
+    title: "Toll Camera",
+    caption: "Printing",
+    icon: "camera",
+    link: "/TollCamera"
   }
 ];
 
@@ -95,7 +101,7 @@ export default {
   },
 
   computed: {
-    ...mapState("auth", ["LoggedIn"])
+    ...mapState("auth", ["loggedIn"])
   }
 };
 </script>

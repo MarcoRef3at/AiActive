@@ -29,7 +29,7 @@ function loading() {
 }
 
 const state = {
-  LoggedIn: $cookies.isKey("token"),
+  loggedIn: $cookies.isKey("token"),
   token: null,
   userData: {
     userName: "",
@@ -41,7 +41,7 @@ const state = {
 
 const mutations = {
   setLoggedIn(state, value) {
-    state.LoggedIn = value;
+    state.loggedIn = value;
   },
   setUserData(state, userData) {
     Object.assign(state.userData, userData);
