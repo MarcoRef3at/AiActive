@@ -1,35 +1,12 @@
 // import config from "@/../config/config.env";
-import axios from "axios";
-const Axios = axios.create({
-  baseURL: "http://localhost:5000/api/v1",
-  headers: { "Content-type": "application/json" },
-  withCredentials: true
-});
-
 import { LocalStorage, Loading, QSpinnerPie } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
-
-//Cookies Import
-import Vue from "vue";
-import VueCookies from "vue-cookies";
-Vue.use(VueCookies);
-Vue.$cookies.config("7d");
-var cookies = ""; // return value
-
-//loading spin GUI
-function loading() {
-  Loading.show({
-    spinner: QSpinnerPie,
-    spinnerColor: "blue",
-    spinnerSize: 140,
-    backgroundColor: "gery",
-    message: "Some important process is in progress. Hang on...",
-    messageColor: "black"
-  });
-}
+import { Axios } from "boot/axios";
+import { Cookies } from "quasar";
+var cookies;
 
 const state = {
-  loggedIn: $cookies.isKey("token"),
+  loggedIn: Cookies.has("token"),
   token: null,
   userData: {
     userName: "",
@@ -42,16 +19,25 @@ const state = {
 const mutations = {
   setLoggedIn(state, value) {
     state.loggedIn = value;
+    //value is boolean, if true set cookies, if false remove cookies
+    if (value) {
+      cookies = Cookies.get("token");
+      Cookies.set("token", cookies);
+    } else {
+      cookies = null;
+      Cookies.remove("token");
+    }
+    state.token = cookies;
+    console.log("cookies=", cookies);
   },
+
   setUserData(state, userData) {
     Object.assign(state.userData, userData);
-    if (!userData)
+    if (!userData) {
       // clear userData
       Object.keys(state.userData).forEach(k => (state.userData[k] = ""));
-    state.token = null;
-  },
-  setToken(state, value) {
-    state.token = value;
+      state.token = null;
+    }
   }
 };
 
@@ -99,43 +85,39 @@ const actions = {
     Loading.show();
 
     setTimeout(() => {
-      return new Promise((resolve, reject) => {
-        let host = "/auth/login";
+      let host = "/auth/login";
 
-        Axios.post(host, {
+      Axios.post(
+        host,
+        {
           email: payload.email,
           password: payload.password
+        },
+        { withCredentials: true }
+      )
+
+        .then(response => {
+          let userAuthData = { auth: true, data: response.data };
+          dispatch("handleAuthStateChange", userAuthData);
         })
 
-          .then(response => {
-            let userAuthData = { auth: true, data: response.data };
-            dispatch("handleAuthStateChange", userAuthData);
-          })
-
-          .catch(error => {
-            if (error.message == "Network Error") {
-              showErrorMessage("Server Offline");
-              return;
-            }
-
-            if (error.response.status === 401) {
-              showErrorMessage(error.response.data.message);
-              return;
-            } else if (error.response.status === 404) {
-              showErrorMessage(error.response.data.message);
-              return;
-            } else {
-              showErrorMessage(error.response.data.message);
-            }
-          });
-      });
+        .catch(error => {
+          if (error.message == "Network Error") {
+            showErrorMessage("Server Offline");
+            return;
+          } else {
+            showErrorMessage(error.response.data.message);
+          }
+        });
     }, 500);
   },
 
   isLoggedIn() {
     let host = "/auth/me";
     Axios.get(host, {
-      headers: { Authorization: `Bearer ${state.token}` }
+      headers: {
+        Authorization: `Bearer ${state.token}`
+      }
     })
       .then(response => {
         console.log(response);
@@ -154,7 +136,7 @@ const actions = {
           return JSON.parse(jsonPayload);
         }
         console.log(parseJwt(state.token));
-        showErrorMessage(parseJwt(state.token));
+        showErrorMessage("Token Decoded in Console");
       })
       .catch(error => {
         showErrorMessage(error.response.data.message);
@@ -162,42 +144,23 @@ const actions = {
   },
 
   logoutUser({ dispatch }) {
-    loading();
+    Loading.show();
     console.log("logoutUser");
     let userAuthData = { auth: false };
     dispatch("handleAuthStateChange", userAuthData);
   },
 
-  handleAuthStateChange({ commit }, userAuthData) {
+  handleAuthStateChange({ commit, dispatch }, userAuthData) {
     Loading.hide();
     //*********************check error***************************************
-    if (userAuthData.auth) {
+    console.log("userAuthData.auth", userAuthData.auth);
+    if (userAuthData.auth == true) {
       commit("setLoggedIn", true);
       commit("setUserData", userAuthData.data);
-      cookies = $cookies.get("token");
-      $cookies.set("token", cookies);
-      console.log("cookies=", cookies);
-      commit("setToken", cookies);
-
-      LocalStorage.set("loggedIn", true);
-      LocalStorage.set("loggedInUser", userAuthData.user);
-      LocalStorage.set("loggedInUserToken", userAuthData.token);
-
       this.$router.push("/");
     } else {
       commit("setLoggedIn", false);
       commit("setUserData", false);
-      cookies = null;
-      $cookies.remove("token");
-      console.log("cookies=", cookies);
-      commit("setToken", cookies);
-
-      LocalStorage.remove("loggedIn");
-      LocalStorage.remove("loggedInUser");
-      LocalStorage.remove("loggedInUserToken");
-
-      // LocalStorage.set('loggedIn', false)
-      // LocalStorage.set('loggedInUser', {})
       this.$router.replace("/auth");
     }
   },
