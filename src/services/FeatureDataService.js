@@ -18,6 +18,21 @@ class FeatureDataService {
   login(data) {
     return http.post("/auth/login", data);
   }
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+  me(data) {
+    console.log("sending token", data);
+
+    return http.get("/auth/me", {
+      headers: { Authorization: `Bearer ${data.token}` }
+    });
+=======
+  getAllBoot() {
+    return http.get("/bootcamps");
+>>>>>>> origin/master
+  }
+>>>>>>> Stashed changes
 
   update(id, data) {
     return http.put(`/bootcamps/${id}`, data);
