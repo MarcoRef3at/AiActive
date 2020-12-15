@@ -18,12 +18,17 @@ class FeatureDataService {
   login(data) {
     return http.post("/auth/login", data);
   }
+<<<<<<< HEAD
   me(data) {
     console.log("sending token", data);
 
     return http.get("/auth/me", {
       headers: { Authorization: `Bearer ${data.token}` }
     });
+=======
+  getAllBoot() {
+    return http.get("/bootcamps");
+>>>>>>> origin/master
   }
 
   update(id, data) {
