@@ -18,7 +18,6 @@ class FeatureDataService {
   login(data) {
     return http.post("/auth/login", data);
   }
-<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< HEAD
@@ -34,11 +33,6 @@ class FeatureDataService {
 >>>>>>> origin/master
   }
 >>>>>>> Stashed changes
-=======
-  getAllBoot() {
-    return http.get("/bootcamps");
-  }
->>>>>>> f7a478a53a13d3cf8a1c263d2a6c36d1b396709b
 
   update(id, data) {
     return http.put(`/bootcamps/${id}`, data);
