@@ -8,38 +8,56 @@
       <q-item>
         <q-item-section avatar>
           <q-avatar size="100px">
-            <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+            <img :src="image2" />
           </q-avatar>
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>Toll Camera</q-item-label>
+          <q-item-label>{{ Plates.no }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-img
-        src="https://cdn.quasar.dev/img/parallax2.jpg"
-        spinner-color="red"
-      />
+
+      <q-img :src="image1" spinner-color="red" />
     </q-card>
 
     <q-dialog v-model="card" class="q-pa-md items-start q-gutter-md ">
       <q-card class="ExpandableCard">
         <div class="row">
-          <q-img class="col" src="https://cdn.quasar.dev/img/avatar2.jpg" />
-          <q-img class="col" src="https://cdn.quasar.dev/img/parallax2.jpg" />
+          <q-img class="col" :src="image2" transition="slide-right">
+            <div class="absolute-bottom-left text-subtitle2">
+              {{ Plates.time }}
+            </div>
+            <div class="absolute-bottom-right text-subtitle2">
+              {{ Plates.date }}
+            </div>
+          </q-img>
+
+          <q-img class="col" :src="image1" transition="slide-left">
+            <div class="absolute-bottom-left text-subtitle2">
+              <div>Confidence</div>
+              <div>{{ Plates.confidence }}</div>
+            </div>
+            <div class="absolute-bottom-right text-subtitle2">
+              <div>Brand: {{ Plates.brand }}</div>
+              <div>Model: {{ Plates.model }}</div>
+              <div>Colour: {{ Plates.color }}</div>
+            </div>
+            <div class="absolute-top text-subtitle2">
+              <div class="absolute-center text-subtitle1">
+                {{ Plates.no }}
+              </div>
+            </div>
+          </q-img>
         </div>
 
-        <q-card-section>
-          <div class="row no-wrap items-center">
-            <div class="col text-h6 ellipsis">
-              Plate No. Date Time confidence color brand model
-            </div>
-          </div>
-        </q-card-section>
-        <q-separator />
-
-        <q-card-actions align="right">
-          <q-btn v-close-popup flat color="primary" label="Confirm" />
+        <q-card-actions align="center">
+          <q-btn
+            class="full-width"
+            v-close-popup
+            flat
+            color="primary"
+            label="Confirm"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -50,40 +68,30 @@
 export default {
   data() {
     return {
-      carousel: false,
-      card: false,
-      sliders: false,
+      Plates: {
+        no: "ط ر ت 123",
+        brand: "Hyundai",
+        model: "Accent",
+        color: "black",
+        confidence: "90%",
+        time: "10:50",
+        date: "20/10/2020"
+      },
 
-      slide: 1,
-      lorem:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus, ratione eum minus fuga, quasi dicta facilis corporis magnam, suscipit at quo nostrum!",
-
-      stars: 3,
-
-      slideVol: 39,
-      slideAlarm: 56,
-      slideVibration: 63,
-      tab: "login"
+      image1: "https://cdn.quasar.dev/img/parallax2.jpg",
+      image2: "https://cdn.quasar.dev/img/avatar2.jpg",
+      card: false
     };
-  },
-  components: {
-    "login-register": require("components/Auth/LoginRegister.vue").default
   }
 };
 </script>
 
 <style>
-.auth-tabs {
-  max-width: 500px;
-  margin: 0 auto;
-}
 .my-card {
   width: 100%;
   max-width: 250px;
 }
 .ExpandableCard {
-  width: 200%;
-  max-width: 1000px;
-  height: 100%;
+  width: 100%;
 }
 </style>
