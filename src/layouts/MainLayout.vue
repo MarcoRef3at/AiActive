@@ -10,14 +10,14 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-
         <q-toolbar-title>
           Quasar App
+          <q-btn @click="isLogged" label="Token Decoder" color="secondary" />
         </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn
-          v-if="!LoggedIn"
+          v-if="!loggedIn && $route.path != '/auth'"
           to="/auth"
           flat
           icon-right="account_circle"
@@ -25,7 +25,7 @@
           class="absolute-right"
         />
         <q-btn
-          v-else
+          v-else-if="$route.path != '/auth'"
           @click="logoutUser"
           flat
           icon-right="logout"
@@ -74,6 +74,12 @@ const linksData = [
     caption: "Printing",
     icon: "report",
     link: "/Report"
+  },
+  {
+    title: "Toll Camera",
+    caption: "Printing",
+    icon: "camera",
+    link: "/TollCamera"
   }
 ];
 
@@ -86,11 +92,16 @@ export default {
       essentialLinks: linksData
     };
   },
+
   methods: {
-    ...mapActions("auth", ["logoutUser"])
+    ...mapActions("auth", ["logoutUser", "isLoggedIn"]),
+    isLogged() {
+      this.isLoggedIn();
+    }
   },
+
   computed: {
-    ...mapState("auth", ["LoggedIn"])
+    ...mapState("auth", ["loggedIn"])
   }
 };
 </script>

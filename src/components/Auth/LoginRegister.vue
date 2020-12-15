@@ -5,11 +5,12 @@
         <template v-slot:avatar>
           <q-icon name="account_circle" color="primary" />
         </template>
-        {{tab | titleCase }} to access your AIACTIVE platform!
+        {{ tab | titleCase }} to access your AIACTIVE platform!
       </q-banner>
     </div>
     <div class="row q-mb-md">
       <q-input
+        v-if="tab == 'register'"
         color="teal"
         class="col"
         outlined
@@ -21,7 +22,6 @@
       />
     </div>
 
-    
     <div class="row q-mb-md">
       <q-input
         color="teal"
@@ -63,7 +63,8 @@
       </q-input>
     </div>
     <div class="row q-mb-md">
-        <q-select 
+      <q-select
+        v-if="tab == 'register'"
         filled
         v-model="formData.role"
         :options="roleOptions"
@@ -80,55 +81,54 @@
           />
         </template>
       </q-select>
-</div>
+    </div>
     <div class="row q-mb-md">
-      
       <q-space />
       <q-btn type="submit" :label="tab" color="primary" />
     </div>
   </form>
 </template>
 <script>
-import {mapActions} from 'vuex'
+import { mapActions } from "vuex";
 export default {
   props: ["tab"],
   data() {
     return {
       formData: {
-        name:"",
+        name: "",
         email: "",
         password: "",
-        role:"user"
+        role: "user"
       },
-      roleOptions: [
-        'admin','publisher'
-      ],
-      isPwd: true,
-
+      roleOptions: ["admin", "publisher"],
+      isPwd: true
     };
   },
   methods: {
-    ...mapActions('auth',['registerUser','loginUser']),
+    ...mapActions("auth", ["registerUser", "loginUser", "isLoggedIn"]),
     submitForm() {
       this.$refs.email.validate();
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
         if (this.tab == "login") {
           ////////////////////////Password is not encrypted in console////////////////////////
-           this.loginUser(this.formData)
+          this.loginUser(this.formData);
         } else {
-          this.registerUser(this.formData)
+          this.registerUser(this.formData);
         }
       }
+    },
+    isLogged() {
+      this.isLoggedIn();
     },
     isValidEmailAddress(email) {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     }
   },
-  filters:{
-    titleCase(value){
-      return value.charAt(0).toUpperCase() + value.slice(1)
+  filters: {
+    titleCase(value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
     }
   }
 };

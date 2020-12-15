@@ -1,118 +1,148 @@
+// import config from "@/../config/config.env";
 import { LocalStorage, Loading, QSpinnerPie } from "quasar";
-import { firebaseAuth } from "boot/firebase";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
-import FeatureDataService from "../services/FeatureDataService";
+import { tokenDecoder } from "src/functions/fn_TokenDecoder";
+import { Axios } from "boot/axios";
+import { Cookies } from "quasar";
 
-import Vue from "vue";
-
-import VueCookies from 'vue-cookies'
-Vue.use(VueCookies)
-Vue.$cookies.config('7d')
-var cookies = $cookies.get('token')  // return value
-
-function loading() {
-  Loading.show({
-    spinner: QSpinnerPie,
-    spinnerColor: "blue",
-    spinnerSize: 140,
-    backgroundColor: "gery",
-    message: "Some important process is in progress. Hang on...",
-    messageColor: "black"
-  });
-}
 const state = {
-  LoggedIn: false,
-  token: null
+  loggedIn: Cookies.has("token"),
+  token: Cookies.get("token"),
+  userData: {}
 };
+
 const mutations = {
   setLoggedIn(state, value) {
-    state.LoggedIn = value;
+    state.loggedIn = value;
+    var cookies = Cookies.get("token");
+    //value is boolean, if true set cookies, if false remove cookies
+    if (value) {
+      state.token = cookies;
+      Cookies.set("token", cookies);
+    } else {
+      Cookies.remove("token");
+    }
   },
-  setToken(state, value) {
-    state.token = value;
+
+  setUserData(state, userData) {
+    Object.assign(state.userData, userData);
+    if (!userData) {
+      // clear userData
+      Object.keys(state.userData).forEach(k => (state.userData[k] = ""));
+      state.token = null;
+    }
   }
 };
+
 const actions = {
-  registerUser({}, payload) {
-    loading();
-    // console.log(payload.name);
-    FeatureDataService.register(payload)
-      .then(response => {
-        console.log(response);
+  registerUser({ dispatch }, payload) {
+    Loading.show();
+
+    setTimeout(() => {
+      let host = "/auth/register";
+
+      Axios.post(
+        host,
+        {
+          name: payload.name,
+          email: payload.email,
+          password: payload.password,
+          isAdmin: payload.isAdmin
+        },
+        { withCredentials: true }
+      )
+
+        .then(response => {
+          let userAuthData = { auth: true, data: response.data };
+          dispatch("handleAuthStateChange", userAuthData);
+        })
+
+        .catch(error => {
+          if (error.message == "Network Error") {
+            showErrorMessage("Server Offline");
+            return;
+          } else {
+            showErrorMessage(error.response.data.message);
+          }
+        });
+    }, 500);
+  },
+
+  loginUser({ dispatch }, payload) {
+    Loading.show();
+
+    setTimeout(() => {
+      let host = "/auth/login";
+
+      Axios.post(
+        host,
+        {
+          email: payload.email,
+          password: payload.password
+        },
+        { withCredentials: true }
+      )
+
+        .then(response => {
+          let userAuthData = { auth: true, data: response.data };
+          dispatch("handleAuthStateChange", userAuthData);
+        })
+
+        .catch(error => {
+          if (error.message == "Network Error") {
+            showErrorMessage("Server Offline");
+            return;
+          } else {
+            showErrorMessage(error.response.data.message);
+          }
+        });
+    }, 500);
+  },
+
+  isLoggedIn() {
+    let host = "/auth/me";
+    const token = Cookies.get("token");
+    Axios.get(host, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(() => {
+        const decoded = tokenDecoder(token);
+        console.log(decoded);
+        showErrorMessage(decoded.id);
       })
+
       .catch(error => {
-        console.log(error);
-        showErrorMessage(error.response.data.error);
+        showErrorMessage(error.response.data.message);
       });
   },
-  loginUser({}, payload) {
-    loading();
-    FeatureDataService.login(payload)
-      .then(response => {
-        // console.log(response);
-        console.log('cookies=',cookies);
-        this.state.token = response.data.token;
-        Loading.hide();
-        // console.log(this.state.token)
-      })
-      .catch(error => {
-        showErrorMessage(error.response.data.error);
-      });
-  },
-  // registerUser({}, payload) {
-  //   loading();
-  //   firebaseAuth
-  //     .createUserWithEmailAndPassword(payload.email, payload.password)
-  //     .then(response => {
-  //       // console.log("response: ", response);
-  //     })
-  //     .catch(error => {
-  //       showErrorMessage(error.message);
-  //     });
-  // },
-  // loginUser({}, payload) {
-  //   loading();
 
-  //   firebaseAuth
-  //     .signInWithEmailAndPassword(payload.email, payload.password)
-  //     .then(response => {
-  //       // console.log("response: ", response);
-  //     })
-  //     .catch(error => {
-  //       showErrorMessage(error.message);
-  //     });
-  // },
-  logoutUser() {
-    loading();
-    firebaseAuth.signOut();
+  logoutUser({ dispatch }) {
+    Loading.show();
+    console.log("logoutUser");
+    let userAuthData = { auth: false };
+    dispatch("handleAuthStateChange", userAuthData);
   },
-  // handleAuthStateChange({ commit }) {
-  //   firebaseAuth.onAuthStateChanged(user => {
-  //     Loading.hide();
-  //     if (user) {
-  //       commit("setLoggedIn", true);
-  //       LocalStorage.set("loggedIn", true);
-  //       this.$router.push("/");
-  //     } else {
-  //       commit("setLoggedIn", false);
-  //       LocalStorage.set("loggedIn", false);
 
-  //       this.$router.replace("/auth");
-  //     }
-  //   });
-  // }
-  handleAuthStateChange({ commit }) {
-    if (this.state.token != null) {
-      Loading.hide();
+  handleAuthStateChange({ commit }, userAuthData) {
+    Loading.hide();
+    if (userAuthData.auth == true) {
       commit("setLoggedIn", true);
-      LocalStorage.set("loggedIn", true);
+      commit("setUserData", userAuthData.data);
       this.$router.push("/");
     } else {
       commit("setLoggedIn", false);
-      LocalStorage.set("loggedIn", false);
-
+      commit("setUserData", false);
       this.$router.replace("/auth");
     }
+  },
+  handleBootUserAuth({ commit }) {
+    let loggedIn = LocalStorage.getItem("loggedIn");
+    let loggedInUser = LocalStorage.getItem("loggedInUser");
+    if (!loggedIn) return;
+    commit("setLoggedIn", loggedIn);
+    commit("setUserData", loggedInUser);
   }
 };
 const getters = {};

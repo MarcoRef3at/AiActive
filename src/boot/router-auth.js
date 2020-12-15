@@ -1,7 +1,8 @@
-import { LocalStorage } from "quasar";
+import { Cookies } from "quasar";
+
 export default ({ router }) => {
   router.beforeEach((to, from, next) => {
-    let loggedIn = LocalStorage.getItem("loggedIn");
+    let loggedIn = Cookies.has("token");
     if (!loggedIn && to.path !== "/auth") {
       next("/auth");
     } else {

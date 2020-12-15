@@ -1,7 +1,7 @@
 const routes = [
   {
-    path: '/',
-    redirect: '/dashboard',
+    path: "/",
+    redirect: "/dashboard"
   },
   {
     path: "/dashboard",
@@ -16,7 +16,14 @@ const routes = [
   {
     path: "/Report",
     component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/PageReportingModule.vue") }]
+    children: [
+      { path: "", component: () => import("pages/PageReportingModule.vue") }
+    ]
+  },
+  {
+    path: "/TollCamera",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{ path: "", component: () => import("pages/TollCamera.vue") }]
   },
 
   // Always leave this as last one,
