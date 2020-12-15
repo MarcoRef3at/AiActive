@@ -26,7 +26,7 @@
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
- <q-btn label="Test" color="primary" @click="submitBoot"/>
+
     <!-- <q-card class="auth-tabs">
       <q-tabs
         v-model="tab"
@@ -57,8 +57,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
 export default {
   data() {
     return {
@@ -67,14 +65,7 @@ export default {
   },
   components: {
     "login-register": require("components/Auth/LoginRegister.vue").default
-  },
-   methods: {
-    ...mapActions('auth',['getAllBoot']),
-    submitBoot(){
-           this.getAllBoot()
-
-    }
-   }
+  }
 };
 </script>
 
