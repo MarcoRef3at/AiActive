@@ -1,91 +1,135 @@
 <template>
-  <q-page padding>
-    <q-card
-      v-ripple
-      class="my-card cursor-pointer q-hoverable my-card"
-      @click="card = true"
-    >
-      <q-item>
-        <q-item-section avatar>
-          <q-avatar size="100px">
-            <img :src="image2" />
-          </q-avatar>
-        </q-item-section>
+  <div class="q-pa-md">
+    <q-table title="Toll Camera" :data="data" :columns="columns" row-key="name">
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
 
-        <q-item-section>
-          <q-item-label>{{ Plates.no }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-img :src="image1" spinner-color="red" />
-    </q-card>
-
-    <q-dialog v-model="card" class="q-pa-md items-start q-gutter-md ">
-      <q-card class="ExpandableCard">
-        <div class="row">
-          <q-img class="col" :src="image2" transition="slide-right">
-            <div class="absolute-bottom-left text-subtitle2">
-              {{ Plates.time }}
-            </div>
-            <div class="absolute-bottom-right text-subtitle2">
-              {{ Plates.date }}
-            </div>
-          </q-img>
-
-          <q-img class="col" :src="image1" transition="slide-left">
-            <div class="absolute-bottom-left text-subtitle2">
-              <div>Confidence</div>
-              <div>{{ Plates.confidence }}</div>
-            </div>
-            <div class="absolute-bottom-right text-subtitle2">
-              <div>Brand: {{ Plates.brand }}</div>
-              <div>Model: {{ Plates.model }}</div>
-              <div>Colour: {{ Plates.color }}</div>
-            </div>
-            <div class="absolute-top text-subtitle2">
-              <div class="absolute-center text-subtitle1">
-                {{ Plates.no }}
-              </div>
-            </div>
-          </q-img>
-        </div>
-
-        <q-card-actions align="center">
-          <q-btn
-            class="full-width"
-            v-close-popup
-            flat
-            color="primary"
-            label="Confirm"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  </q-page>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <span v-if="col.name != 'Image' && col.name != 'Plate_Image'">
+              {{ col.value }}</span
+            >
+            <q-avatar v-if="col.name == 'Image'" size="100px" class="shadow-10">
+              <img :src="props.row.image" />
+            </q-avatar>
+            <q-avatar
+              v-if="col.name == 'Plate_Image'"
+              size="100px"
+              class="shadow-10"
+            >
+              <img :src="props.row.plate_image" />
+            </q-avatar>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      Plates: {
-        no: "ط ر ت 123",
-        brand: "Hyundai",
-        model: "Accent",
-        color: "black",
-        confidence: "90%",
-        time: "10:50",
-        date: "20/10/2020"
-      },
-
-      image1: "https://cdn.quasar.dev/img/parallax2.jpg",
-      image2: "https://cdn.quasar.dev/img/avatar2.jpg",
-      card: false
+      columns: [
+        {
+          name: "Plate No.",
+          required: true,
+          label: "Plate No.",
+          field: row => row.name,
+          align: "left",
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "Date",
+          label: "Date",
+          field: row => row.date,
+          align: "center",
+          sortable: true
+        },
+        {
+          name: "Time",
+          label: "Time",
+          field: row => row.time,
+          align: "center",
+          sortable: true
+        },
+        {
+          name: "Brand",
+          label: "Brand",
+          field: row => row.brand,
+          align: "center",
+          sortable: true
+        },
+        {
+          name: "Model",
+          label: "Model",
+          field: row => row.model,
+          align: "center",
+          sortable: true
+        },
+        {
+          name: "Color",
+          label: "Color",
+          field: row => row.color,
+          align: "center",
+          sortable: true
+        },
+        {
+          name: "Plate_Image",
+          label: "Plate Image",
+          field: "plate_image",
+          style: "width: 5px"
+        },
+        {
+          name: "Image",
+          label: "Image",
+          field: "image",
+          style: "width: 5px"
+        }
+      ],
+      data: [
+        {
+          name: "ط ر ا 1 2 3",
+          date: 237,
+          time: 9.0,
+          brand: 37,
+          model: 4.3,
+          color: 129,
+          plate_image: "https://cdn.quasar.dev/img/parallax2.jpg",
+          image: "https://cdn.quasar.dev/img/avatar2.jpg"
+        },
+        {
+          name: "ك ي ف 5 8 9",
+          date: 262,
+          time: 16.0,
+          brand: 23,
+          model: 6.0,
+          color: 337,
+          plate_image: "https://cdn.quasar.dev/img/parallax2.jpg",
+          image: "https://cdn.quasar.dev/img/avatar2.jpg"
+        },
+        {
+          name: "ا خ ة 9 6 3",
+          date: 305,
+          time: 3.7,
+          brand: 67,
+          model: 4.3,
+          color: 413,
+          plate_image: "https://cdn.quasar.dev/img/parallax2.jpg",
+          image: "https://cdn.quasar.dev/img/avatar2.jpg"
+        }
+      ]
     };
   }
 };
 </script>
-
 <style>
 .my-card {
   width: 100%;
