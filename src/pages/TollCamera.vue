@@ -48,10 +48,10 @@
       <q-card class="ExpandableCard">
         <div class="row">
           <q-img
-            class="col"
+            class="col image-holder"
             :src="activeCarousel.image"
             transition="slide-right"
-            style="height: 400px; max-width: 500px"
+            style="width: 1280px; max-height: 720px"
           >
             <div class="absolute-top text-h6 text-weight-bold  ">
               <div class="absolute-left q-mx-md ">
@@ -64,10 +64,10 @@
           </q-img>
 
           <q-img
-            class="col"
+            class="col image-holder"
             :src="activeCarousel.plate_image"
             transition="slide-left"
-            style="height: 400px; max-width: 500px"
+            style="width: 1280px; max-height: 720px"
           >
             <div class="absolute-bottom text-subtitle2">
               <div>Brand: {{ activeCarousel.brand }}</div>
@@ -189,6 +189,6 @@ export default {
 </script>
 <style>
 .ExpandableCard {
-  width: 100%;
+  width: 3000vw;
 }
 </style>
