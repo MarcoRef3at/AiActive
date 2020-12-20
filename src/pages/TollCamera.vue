@@ -20,7 +20,12 @@
           class="cursor-pointer"
           @click="setCarousel(props.row)"
         >
-          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            style="font-size: medium"
+          >
             <span v-if="col.name != 'Image' && col.name != 'Plate_Image'">
               {{ col.value }}</span
             >
@@ -103,9 +108,10 @@ export default {
           required: true,
           label: "Plate No.",
           field: row => row.name,
-          align: "left",
+          align: "center",
           format: val => `${val}`,
-          sortable: true
+          sortable: true,
+          style: "background-color:#ddd ; font-weight: bold;"
         },
         {
           name: "Plate_Image",
