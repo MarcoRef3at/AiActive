@@ -2,7 +2,7 @@ const state = {
   lprData: [
     {
       id: 1,
-      name: "ط ر ا 1 2 3",
+      name: "طرا١٢٣",
       date: "3/10/2020",
       time: "10:00",
       brand: "Hyundai",
@@ -13,7 +13,7 @@ const state = {
     },
     {
       id: 2,
-      name: "ط ر ا 1 2 3",
+      name: "طرا١٢٣",
       date: "5/8/2020",
       time: "10:00",
       brand: "Astra",
@@ -24,7 +24,7 @@ const state = {
     },
     {
       id: 3,
-      name: "ط ر ا 1 2 3",
+      name: "طرا١٢٣",
       date: "1/9/2020",
       time: "10:00",
       brand: "Suzuki",
@@ -36,7 +36,7 @@ const state = {
     },
     {
       id: 4,
-      name: "ط ر ا 1 2 3",
+      name: "طرا١٢٣",
       date: "1/6/2020",
       time: "03:15",
       brand: "Mitsubishi",
@@ -48,7 +48,7 @@ const state = {
     },
     {
       id: 5,
-      name: "ط ر ا 1 2 3",
+      name: "طرا١٢٣",
       date: "11/2/2018",
       time: "11:00",
       brand: "Toyota",
@@ -59,7 +59,7 @@ const state = {
     },
     {
       id: 6,
-      name: "ك ي ف 5 8 9",
+      name: "طرا١٢٣",
       date: "20/10/2020",
       time: "10:20",
       brand: "Mercedes",
@@ -70,7 +70,7 @@ const state = {
     },
     {
       id: 7,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -81,7 +81,7 @@ const state = {
     },
     {
       id: 8,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -92,7 +92,7 @@ const state = {
     },
     {
       id: 9,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -103,7 +103,7 @@ const state = {
     },
     {
       id: 10,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -114,7 +114,7 @@ const state = {
     },
     {
       id: 11,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -125,7 +125,7 @@ const state = {
     },
     {
       id: 12,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",
@@ -136,7 +136,7 @@ const state = {
     },
     {
       id: 13,
-      name: "ا خ ة 9 6 3",
+      name: "طرا١٢٣",
       date: "10/5/2019",
       time: "18:30",
       brand: "BMW",

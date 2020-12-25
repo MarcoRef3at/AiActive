@@ -109,7 +109,7 @@ export default {
           label: "Plate No.",
           field: row => row.name,
           align: "center",
-          format: val => `${val}`,
+          format: val => `${val.match(/.([٠-٩])+|([أ-ى-آ])/g).join(" ")}`,
           sortable: true,
           style: "background-color:#ddd ; font-weight: bold;"
         },
