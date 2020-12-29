@@ -80,6 +80,12 @@ const linksData = [
     caption: "Printing",
     icon: "camera",
     link: "/TollCamera"
+  },
+  {
+    title: "Test",
+    caption: "Test",
+    icon: "camera",
+    link: "/Test"
   }
 ];
 

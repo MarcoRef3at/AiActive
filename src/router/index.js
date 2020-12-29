@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import routes from "./routes";
-import "./ml";
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
