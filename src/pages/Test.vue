@@ -1,14 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-pa-md">
-      <q-select
-        label="Select Language"
-        v-model="lang"
-        map-options
-        :options="langs"
-        class="row"
-      />
-      <div class="row q-pt-md">Phrase for Success: {{ $t("success") }}</div>
+      <q-btn :label="$t('success')"></q-btn>
       <div class="row q-pt-md">Phrase for Failure: {{ $t("failed") }}</div>
       <div class="row q-pt-md">Current Language: {{ $i18n.locale }}</div>
       <div class="row q-pt-md">Currency: {{ $n(100, "currency") }}</div>
@@ -38,17 +31,6 @@ export default {
   name: "PageIndex",
   data() {
     return {
-      langs: [
-        {
-          label: "German",
-          value: "de"
-        },
-        {
-          label: "US English",
-          value: "en-us"
-        }
-      ],
-      lang: this.$i18n.locale,
       pagination: {
         rowsPerPage: 0,
         page: 1
@@ -81,15 +63,6 @@ export default {
         }
       ]
     };
-  },
-  watch: {
-    lang(lang) {
-      this.$i18n.locale = lang.value;
-      // set quasar's language too!!
-      import(`quasar/lang/${lang.value}`).then(language => {
-        this.$q.lang.set(language.default);
-      });
-    }
   }
 };
 </script>

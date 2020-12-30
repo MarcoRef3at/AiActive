@@ -1,10 +1,10 @@
 import enUS from "./en-us";
-import deDE from "./de";
+import arAR from "./ar";
 import numberFormats from "./number-formats";
 
 const messages = {
   "en-us": enUS,
-  de: deDE
+  ar: arAR
 };
 
 export { messages, numberFormats };

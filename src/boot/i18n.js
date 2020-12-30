@@ -6,8 +6,8 @@ export default async ({ app, Vue }) => {
   console.log(messages, numberFormats);
   // Set i18n instance on app
   app.i18n = new VueI18n({
-    locale: "en-us",
-    fallbackLocale: "en-us",
+    locale: "ar",
+    fallbackLocale: "ar",
     messages,
     numberFormats
   });

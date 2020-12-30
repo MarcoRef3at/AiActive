@@ -12,9 +12,19 @@
         />
         <q-toolbar-title>
           Quasar App
-          <q-btn @click="isLogged" label="Token Decoder" color="secondary" />
-        </q-toolbar-title>
 
+          <q-btn @click="isLogged" label="Token Decoder" color="secondary" />
+          <q-select
+            label="Select Language"
+            v-model="lang"
+            map-options
+            :options="langOptions"
+            bg-color="secondary"
+            filled
+            class="absolute-center"
+            style="max-width: 150px"
+          />
+        </q-toolbar-title>
         <!-- <div>Quasar v{{ $q.version }}</div> -->
         <q-btn
           v-if="!loggedIn && $route.path != '/auth'"
@@ -24,6 +34,7 @@
           label="Login"
           class="absolute-right"
         />
+
         <q-btn
           v-else-if="$route.path != '/auth'"
           @click="logoutUser"
@@ -62,6 +73,10 @@
 <script>
 import EssentialLink from "components/EssentialLink.vue";
 import { mapState, mapActions } from "vuex";
+import languages from "quasar/lang/index.json";
+const appLanguages = languages.filter(lang =>
+  ["ar", "en-us"].includes(lang.isoName)
+);
 const linksData = [
   {
     title: "Dashboard",
@@ -94,6 +109,7 @@ export default {
   components: { EssentialLink },
   data() {
     return {
+      lang: this.$i18n.locale,
       leftDrawerOpen: false,
       essentialLinks: linksData
     };
@@ -108,6 +124,21 @@ export default {
 
   computed: {
     ...mapState("auth", ["loggedIn"])
+  },
+  watch: {
+    lang(lang) {
+      this.$i18n.locale = lang.value;
+      // set quasar's language too!!
+      import(`quasar/lang/${lang.value}`).then(language => {
+        this.$q.lang.set(language.default);
+      });
+    }
+  },
+  created() {
+    this.langOptions = appLanguages.map(lang => ({
+      label: lang.nativeName,
+      value: lang.isoName
+    }));
   }
 };
 </script>
