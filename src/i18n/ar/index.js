@@ -3,5 +3,6 @@ export default {
   success: "Aktion erfolgreich",
   essentialLinks: "Essenzielle Links",
   name: "Vorname",
-  surname: "Nachname"
+  surname: "Nachname",
+  Dashboard: "لوحة المعلومات"
 };

@@ -3,5 +3,6 @@ export default {
   success: "Action successful",
   essentialLinks: "Essential Links",
   name: "Name",
-  surname: "Surname"
+  surname: "Surname",
+  Dashboard: "Dashboard"
 };
