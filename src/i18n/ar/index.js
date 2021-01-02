@@ -12,8 +12,8 @@ export default {
   Settings: "إعدادات",
   Logout: "تسجيل خروج",
   Login: "تسجيل دخول",
-  Online: "متصل",
-  Offline: "غير متصل",
+  online: "متصل",
+  offline: "غير متصل",
   //FreeFlow
   AutoUpdate: "تحديث تلقائى",
   SearchPlate: "بحث بالوحة",
