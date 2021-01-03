@@ -1,8 +1,8 @@
 export default {
-  de: {
+  ar: {
     currency: {
       style: "currency",
-      currency: "EUR"
+      currency: "LE"
     }
   },
   "en-us": {
