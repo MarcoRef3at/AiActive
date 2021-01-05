@@ -93,6 +93,7 @@ const actions = {
             showErrorMessage("Server Offline");
             return;
           } else {
+            console.log("error.response.data.error:", error);
             showErrorMessage(error.response.data.error);
           }
         });
@@ -129,8 +130,7 @@ const actions = {
     Loading.hide();
     if (userAuthData.auth == true) {
       commit("setLoggedIn", true);
-      console.log("DecodedToken:", tokenDecoder(userAuthData.data.token));
-      commit("setUserData", userAuthData.data);
+      commit("setUserData", tokenDecoder(userAuthData.data.token));
       this.$router.push("/");
     } else {
       commit("setLoggedIn", false);
