@@ -1,5 +1,5 @@
 // import config from "@/../config/config.env";
-import { LocalStorage, Loading, QSpinnerPie } from "quasar";
+import { LocalStorage, Loading } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { Axios } from "boot/axios";
@@ -8,7 +8,7 @@ import { Cookies } from "quasar";
 const state = {
   loggedIn: Cookies.has("token"),
   token: Cookies.get("token"),
-  userData: {} //userdata is in the token and needs to be decoded
+  userData: {}
 };
 
 const mutations = {
@@ -62,7 +62,7 @@ const actions = {
             showErrorMessage("Server Offline");
             return;
           } else {
-            showErrorMessage(error.response.data.error);
+            showErrorMessage(error.response.data.message);
           }
         });
     }, 500);
@@ -94,7 +94,7 @@ const actions = {
             return;
           } else {
             console.log("error.response.data.error:", error);
-            showErrorMessage(error.response.data.error);
+            showErrorMessage(error.response.data.message);
           }
         });
     }, 500);
