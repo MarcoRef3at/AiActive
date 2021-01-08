@@ -1,7 +1,7 @@
 import Vue from "vue";
 import axios from "axios";
 const Axios = axios.create({
-  baseURL: "http://localhost:5000/api/v1",
+  baseURL: "http://196.219.234.3:9300/api/v1",
   headers: { "Content-type": "application/json" },
   withCredentials: true
 });
