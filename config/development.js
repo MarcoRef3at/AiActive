@@ -1,5 +1,3 @@
 export default {
-  API_URL: "http://196.219.234.3:9300/api/v1",
-  TOKEN:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDYsIm5hbWUiOiJNYXJjbyIsImVtYWlsIjoibWFyY29AYWlzYWN0aXZlLmNvbSIsInJvbGUiOiJhZG1pbiIsInN0YXR1cyI6dHJ1ZSwiaWF0IjoxNjEwMjEyMTk5LCJleHAiOjE2MTI4MDQxOTl9.9KjE1rW_nwO9YJXSNP4KjJouWPLGwrhDbhsNJCuUoxk"
+  API_URL: "http://196.219.234.3:9300/api/v1"
 };

@@ -67,7 +67,7 @@ const actions = {
             showErrorMessage("Server Offline");
             return;
           } else {
-            showErrorMessage(error.response.data.message);
+            showErrorMessage(error.response.data.error);
           }
         });
     }, 500);
