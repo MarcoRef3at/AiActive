@@ -98,24 +98,26 @@ export default {
         name: "",
         email: "",
         password: "",
-        role: "user"
+        role: "user",
+        status: this.tab
       },
       roleOptions: ["admin", "publisher"],
       isPwd: true
     };
   },
   methods: {
-    ...mapActions("auth", ["registerUser", "loginUser", "isLoggedIn"]),
+    ...mapActions("auth", [
+      "registerUser",
+      "loginUser",
+      "login_register",
+      "isLoggedIn"
+    ]),
     submitForm() {
       this.$refs.email.validate();
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
-        if (this.tab == "login") {
-          ////////////////////////Password is not encrypted in console////////////////////////
-          this.loginUser(this.formData);
-        } else {
-          this.registerUser(this.formData);
-        }
+        ////////////////////////Password is not encrypted in console////////////////////////
+        this.login_register(this.formData);
       }
     },
     isLogged() {

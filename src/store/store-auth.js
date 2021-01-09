@@ -14,8 +14,8 @@ const state = {
 
 const mutations = {
   setLoggedIn(state, value) {
-    state.loggedIn = value.success;
-    var cookiesToken = value.token;
+    state.loggedIn = value.success; //Boolean true or false
+    var cookiesToken = value.token; //Token from body
 
     //value is boolean, if true set cookies, if false remove cookies
     if (value) {
@@ -39,24 +39,25 @@ const mutations = {
 };
 
 const actions = {
-  registerUser({ dispatch }, payload) {
+  login_register({ dispatch }, payload) {
     Loading.show();
 
     setTimeout(() => {
-      let host = "/auth/register";
+      let host = `/auth/${payload.status}`;
 
       Axios.post(
         host,
         {
-          name: payload.name,
           email: payload.email,
           password: payload.password,
+          name: payload.name,
           role: payload.isAdmin
         },
         { withCredentials: true }
       )
 
         .then(response => {
+          //Set UserData and LoggedIn then Route to homepage
           let userAuthData = { auth: true, data: response.data };
           dispatch("handleAuthStateChange", userAuthData);
         })
@@ -66,38 +67,6 @@ const actions = {
             showErrorMessage("Server Offline");
             return;
           } else {
-            showErrorMessage(error.response.data.message);
-          }
-        });
-    }, 500);
-  },
-
-  loginUser({ dispatch }, payload) {
-    Loading.show();
-
-    setTimeout(() => {
-      let host = "/auth/login";
-
-      Axios.post(
-        host,
-        {
-          email: payload.email,
-          password: payload.password
-        },
-        { withCredentials: true }
-      )
-
-        .then(response => {
-          let userAuthData = { auth: true, data: response.data };
-          dispatch("handleAuthStateChange", userAuthData);
-        })
-
-        .catch(error => {
-          if (error.message == "Network Error") {
-            showErrorMessage("Server Offline");
-            return;
-          } else {
-            console.log("error.response.data.error:", error);
             showErrorMessage(error.response.data.message);
           }
         });
@@ -124,7 +93,7 @@ const actions = {
         dispatch("handleAuthStateChange", userAuthData);
       });
   },
-  ////////////////////////////////////////
+  ////////////////////Check Logic////////////////////
   logoutUser({ dispatch }) {
     Loading.show();
     console.log("logoutUser");
@@ -133,7 +102,7 @@ const actions = {
 
     Axios.get(host, {
       headers: {
-        Authorization: `Bearer ${token}`
+        // Authorization: `Bearer ${token}`
       }
     })
       .then(() => {
