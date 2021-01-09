@@ -1,34 +1,38 @@
-// import config from "@/../config/config.env";
-import { LocalStorage, Loading } from "quasar";
+import { Loading } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
 
 const state = {
-  loggedIn: Cookies.has("token"),
-  token: Cookies.get("token"),
+  loggedIn: false,
+
+  token: "",
+
   userData: {}
 };
 
 const mutations = {
   setLoggedIn(state, value) {
-    state.loggedIn = value;
-    var cookies = Cookies.get("token");
+    state.loggedIn = value.success;
+    var cookiesToken = value.token;
+
     //value is boolean, if true set cookies, if false remove cookies
     if (value) {
-      state.token = cookies;
-      Cookies.set("token", cookies);
+      state.token = cookiesToken;
+      Cookies.set("token", cookiesToken);
     } else {
       Cookies.remove("token");
     }
   },
 
   setUserData(state, userData) {
-    Object.assign(state.userData, userData);
+    //Set UserData
+    state.userData = userData;
+
+    // Clear Token and UserData
     if (!userData) {
-      // clear userData
-      Object.keys(state.userData).forEach(k => (state.userData[k] = ""));
+      state.userData = "";
       state.token = null;
     }
   }
@@ -100,36 +104,53 @@ const actions = {
     }, 500);
   },
 
-  isLoggedIn() {
+  isLoggedIn({ dispatch }) {
     let host = "/auth/me";
     const token = Cookies.get("token");
+
+    Axios.post(host, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(() => {
+        let userAuthData = { auth: true, data: response.data };
+        dispatch("handleAuthStateChange", userAuthData);
+      })
+
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+        let userAuthData = { auth: false };
+        dispatch("handleAuthStateChange", userAuthData);
+      });
+  },
+  ////////////////////////////////////////
+  logoutUser({ dispatch }) {
+    Loading.show();
+    console.log("logoutUser");
+    let host = "/auth/logout";
+    const token = Cookies.get("token");
+
     Axios.get(host, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then(() => {
-        const decoded = tokenDecoder(token);
-        console.log(decoded);
-        showErrorMessage(decoded.id);
+        let userAuthData = { auth: false };
+        dispatch("handleAuthStateChange", userAuthData);
       })
 
       .catch(error => {
-        showErrorMessage(error.response.data.error);
+        showErrorMessage("Failed To Logout from the server");
+        console.log("error:", error);
       });
-  },
-
-  logoutUser({ dispatch }) {
-    Loading.show();
-    console.log("logoutUser");
-    let userAuthData = { auth: false };
-    dispatch("handleAuthStateChange", userAuthData);
   },
 
   handleAuthStateChange({ commit }, userAuthData) {
     Loading.hide();
     if (userAuthData.auth == true) {
-      commit("setLoggedIn", true);
+      commit("setLoggedIn", userAuthData.data);
       commit("setUserData", tokenDecoder(userAuthData.data.token));
       this.$router.push("/");
     } else {
@@ -138,20 +159,18 @@ const actions = {
       this.$router.replace("/auth");
     }
   },
-  handleBootUserAuth({ commit }) {
-    let loggedIn = LocalStorage.getItem("loggedIn");
-    let loggedInUser = LocalStorage.getItem("loggedInUser");
-    if (!loggedIn) return;
-    commit("setLoggedIn", loggedIn);
-    commit("setUserData", loggedInUser);
+
+  handleBootUserAuth({ dispatch }) {
+    //If There's a token in cookies Check it with the server
+    if (Cookies.has("token")) {
+      dispatch("isLoggedIn");
+    }
   }
 };
-const getters = {};
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions,
-  getters
+  actions
 };

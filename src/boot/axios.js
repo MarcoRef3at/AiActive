@@ -1,7 +1,10 @@
 import Vue from "vue";
 import axios from "axios";
+import config from "@/../../config/config";
+
+// Creat Axios Instance
 const Axios = axios.create({
-  baseURL: "http://196.219.234.3:9300/api/v1",
+  baseURL: config.API_URL,
   headers: { "Content-type": "application/json" },
   withCredentials: true
 });
