@@ -58,6 +58,7 @@ const actions = {
 
         .then(response => {
           //Set UserData and LoggedIn then Route to homepage
+          console.log("response:", response);
           let userAuthData = { auth: true, data: response.data };
           dispatch("handleAuthStateChange", userAuthData);
         })
@@ -82,13 +83,18 @@ const actions = {
         Authorization: `Bearer ${token}`
       }
     })
-      .then(() => {
+      .then(response => {
+        console.log("response:", response);
+        //In /auth/me response comes with no token so we add it from cookies
         let userAuthData = { auth: true, data: response.data };
+        userAuthData.data.token = Cookies.get("token");
+        console.log("userAuthData:", userAuthData);
         dispatch("handleAuthStateChange", userAuthData);
       })
 
       .catch(error => {
-        showErrorMessage(error.response.data.error);
+        console.log("error:", error);
+        // showErrorMessage(error.response.data.message);
         let userAuthData = { auth: false };
         dispatch("handleAuthStateChange", userAuthData);
       });
@@ -96,19 +102,21 @@ const actions = {
   ////////////////////Check Logic////////////////////
   logoutUser({ dispatch }) {
     Loading.show();
-    console.log("logoutUser");
+
+    //Client-Side Logout
+    let userAuthData = { auth: false };
+    dispatch("handleAuthStateChange", userAuthData);
+
     let host = "/auth/logout";
     const token = Cookies.get("token");
 
+    //Server-Side Logout
     Axios.get(host, {
       headers: {
         // Authorization: `Bearer ${token}`
       }
     })
-      .then(() => {
-        let userAuthData = { auth: false };
-        dispatch("handleAuthStateChange", userAuthData);
-      })
+      .then(() => {})
 
       .catch(error => {
         showErrorMessage("Failed To Logout from the server");
@@ -121,7 +129,9 @@ const actions = {
     if (userAuthData.auth == true) {
       commit("setLoggedIn", userAuthData.data);
       commit("setUserData", tokenDecoder(userAuthData.data.token));
-      this.$router.push("/");
+      if (this.$router.history.current.fullPath != "/") {
+        this.$router.push("/");
+      }
     } else {
       commit("setLoggedIn", false);
       commit("setUserData", false);
