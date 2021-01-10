@@ -52,7 +52,7 @@
         outlined
         v-model="formData.password"
         label="Password"
-        :type="isPwd ? 'password' : 'text'"
+        :type="isPasswordVisible ? 'password' : 'text'"
         stack-label
         :rules="[
           val => val.length >= 6 || 'Please enter at least 6 characters'
@@ -63,35 +63,12 @@
         <!-- //Show Password Button -->
         <template v-slot:append>
           <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
+            :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
-            @click="isPwd = !isPwd"
+            @click="isPasswordVisible = !isPasswordVisible"
           />
         </template>
       </q-input>
-    </div>
-
-    <!-- //Role (if Register Tab) -->
-    <div class="row q-mb-md">
-      <q-select
-        class="mwidth"
-        v-if="login_register_status == 'register'"
-        filled
-        v-model="formData.role"
-        :options="roleOptions"
-        stack-label
-        label="Account Role"
-        :display-value="`${formData.role ? formData.role : 'user'}`"
-      >
-        <template v-slot:append>
-          <q-icon
-            v-if="formData.role !== null"
-            class="cursor-pointer"
-            name="clear"
-            @click.stop="formData.role = null"
-          />
-        </template>
-      </q-select>
     </div>
 
     <!-- //Submit Button (Login or Register) -->
@@ -117,8 +94,7 @@ export default {
         role: "user",
         status: this.login_register_status
       },
-      roleOptions: ["admin", "publisher"],
-      isPwd: true
+      isPasswordVisible: true
     };
   },
   methods: {
@@ -146,8 +122,3 @@ export default {
   }
 };
 </script>
-<style>
-.mwidth {
-  min-width: 180px;
-}
-</style>

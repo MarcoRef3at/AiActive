@@ -6,7 +6,7 @@ import { Cookies } from "quasar";
 
 const token = Cookies.get("token");
 const headers = {
-  Authorization: `Bearer ${token}`,
+  Authorization: `Bearer ${token}`
 };
 
 const state = {
@@ -14,7 +14,7 @@ const state = {
 
   token: "",
 
-  userData: {},
+  userData: {}
 };
 
 const mutations = {
@@ -45,7 +45,7 @@ const mutations = {
       state.userData = "";
       state.token = null;
     }
-  },
+  }
 };
 
 const actions = {
@@ -61,16 +61,16 @@ const actions = {
         email: payload.email,
         password: payload.password,
         name: payload.name,
-        role: payload.isAdmin,
+        role: payload.isAdmin
       })
 
-        .then((response) => {
+        .then(response => {
           //Set UserData and LoggedIn then Route to homepage
           let userAuthData = { auth: true, data: response.data };
           dispatch("handleAuthStateChange", userAuthData);
         })
 
-        .catch((error) => {
+        .catch(error => {
           if (error.message == "Network Error") {
             showErrorMessage("Server Offline");
             return;
@@ -86,14 +86,14 @@ const actions = {
 
     Axios.post(host, {}, { headers: headers })
 
-      .then((response) => {
+      .then(response => {
         let payload = { auth: true, data: response.data };
         //In /auth/me response comes with no token so we add it from cookies
         payload.data.token = Cookies.get("token");
         dispatch("handleAuthStateChange", payload);
       })
 
-      .catch((error) => {
+      .catch(error => {
         showErrorMessage(error.response.data.error);
         //Client-Side Logout
         let payload = { auth: false };
@@ -109,10 +109,9 @@ const actions = {
     dispatch("handleAuthStateChange", userAuthData);
 
     let host = "/auth/logout";
-    const token = Cookies.get("token");
 
     //Server-Side Logout
-    Axios.get(host, {}, { headers: headers }).catch((error) => {
+    Axios.get(host, {}, { headers: headers }).catch(error => {
       showErrorMessage("Failed To Logout from the server");
       console.log("error:", error);
     });
@@ -120,8 +119,8 @@ const actions = {
 
   handleAuthStateChange({ commit }, payload) {
     Loading.hide();
-
-    if (payload.auth == true) {
+    ///////Change .success to be enabled or disabled
+    if (payload.auth == true && payload.data.success == true) {
       commit("setLoggedIn", payload.data);
       commit("setUserData", tokenDecoder(payload.data.token));
 
@@ -131,7 +130,9 @@ const actions = {
     } else {
       commit("setLoggedIn", false);
       commit("setUserData", false);
-      this.$router.replace("/auth");
+      if (this.$router.history.current.fullPath != "/auth") {
+        this.$router.replace("/auth");
+      }
     }
   },
 
@@ -140,12 +141,12 @@ const actions = {
     if (Cookies.has("token")) {
       dispatch("isLoggedIn");
     }
-  },
+  }
 };
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions,
+  actions
 };
