@@ -1,9 +1,15 @@
+//change values to be payload
+//axios interceptors
+//tab name in loginregister.vue
 import { Loading } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
-
+const token = Cookies.get("token");
+const headers = {
+  Authorization: `Bearer ${token}`
+};
 const state = {
   loggedIn: false,
 
@@ -45,16 +51,12 @@ const actions = {
     setTimeout(() => {
       let host = `/auth/${payload.status}`;
 
-      Axios.post(
-        host,
-        {
-          email: payload.email,
-          password: payload.password,
-          name: payload.name,
-          role: payload.isAdmin
-        },
-        { withCredentials: true }
-      )
+      Axios.post(host, {
+        email: payload.email,
+        password: payload.password,
+        name: payload.name,
+        role: payload.isAdmin
+      })
 
         .then(response => {
           //Set UserData and LoggedIn then Route to homepage
@@ -77,12 +79,17 @@ const actions = {
   isLoggedIn({ dispatch }) {
     let host = "/auth/me";
     const token = Cookies.get("token");
+    // const headers = {
+    //   Authorization: `Bearer ${token}`
+    // };
 
-    Axios.post(host, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    Axios.post(
+      host,
+      {},
+      {
+        headers: headers
       }
-    })
+    )
       .then(response => {
         console.log("response:", response);
         //In /auth/me response comes with no token so we add it from cookies
@@ -94,7 +101,7 @@ const actions = {
 
       .catch(error => {
         console.log("error:", error);
-        // showErrorMessage(error.response.data.message);
+        showErrorMessage(error.response.data.error);
         let userAuthData = { auth: false };
         dispatch("handleAuthStateChange", userAuthData);
       });
@@ -111,11 +118,13 @@ const actions = {
     const token = Cookies.get("token");
 
     //Server-Side Logout
-    Axios.get(host, {
-      headers: {
-        // Authorization: `Bearer ${token}`
+    Axios.get(
+      host,
+      {},
+      {
+        headers: headers
       }
-    })
+    )
       .then(() => {})
 
       .catch(error => {
