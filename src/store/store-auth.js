@@ -1,71 +1,76 @@
-//change values to be payload
-//axios interceptors
-//tab name in loginregister.vue
 import { Loading } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
+
 const token = Cookies.get("token");
 const headers = {
-  Authorization: `Bearer ${token}`
+  Authorization: `Bearer ${token}`,
 };
+
 const state = {
   loggedIn: false,
 
   token: "",
 
-  userData: {}
+  userData: {},
 };
 
 const mutations = {
-  setLoggedIn(state, value) {
-    state.loggedIn = value.success; //Boolean true or false
-    var cookiesToken = value.token; //Token from body
+  setLoggedIn(state, payload) {
+    state.loggedIn = payload.success; //Boolean true or false
+    var cookiesToken = payload.token; //Token from body
 
-    //value is boolean, if true set cookies, if false remove cookies
-    if (value) {
+    //payload is either data or false
+    //if not false set cookies
+    if (payload != false) {
       state.token = cookiesToken;
       Cookies.set("token", cookiesToken);
-    } else {
+    }
+    // if false remove cookies
+    else {
       Cookies.remove("token");
     }
   },
 
-  setUserData(state, userData) {
+  //payload is either data OR false
+  //if not false set userData
+  setUserData(state, payload) {
     //Set UserData
-    state.userData = userData;
+    state.userData = payload;
 
     // Clear Token and UserData
-    if (!userData) {
+    if (!payload) {
       state.userData = "";
       state.token = null;
     }
-  }
+  },
 };
 
 const actions = {
+  //Login or Register Action
   login_register({ dispatch }, payload) {
     Loading.show();
 
     setTimeout(() => {
+      //payload.status = login or register
       let host = `/auth/${payload.status}`;
 
       Axios.post(host, {
         email: payload.email,
         password: payload.password,
         name: payload.name,
-        role: payload.isAdmin
+        role: payload.isAdmin,
       })
 
-        .then(response => {
+        .then((response) => {
           //Set UserData and LoggedIn then Route to homepage
-          console.log("response:", response);
           let userAuthData = { auth: true, data: response.data };
           dispatch("handleAuthStateChange", userAuthData);
         })
 
-        .catch(error => {
+        .catch((error) => {
           if (error.message == "Network Error") {
             showErrorMessage("Server Offline");
             return;
@@ -78,35 +83,24 @@ const actions = {
 
   isLoggedIn({ dispatch }) {
     let host = "/auth/me";
-    const token = Cookies.get("token");
-    // const headers = {
-    //   Authorization: `Bearer ${token}`
-    // };
 
-    Axios.post(
-      host,
-      {},
-      {
-        headers: headers
-      }
-    )
-      .then(response => {
-        console.log("response:", response);
+    Axios.post(host, {}, { headers: headers })
+
+      .then((response) => {
+        let payload = { auth: true, data: response.data };
         //In /auth/me response comes with no token so we add it from cookies
-        let userAuthData = { auth: true, data: response.data };
-        userAuthData.data.token = Cookies.get("token");
-        console.log("userAuthData:", userAuthData);
-        dispatch("handleAuthStateChange", userAuthData);
+        payload.data.token = Cookies.get("token");
+        dispatch("handleAuthStateChange", payload);
       })
 
-      .catch(error => {
-        console.log("error:", error);
+      .catch((error) => {
         showErrorMessage(error.response.data.error);
-        let userAuthData = { auth: false };
-        dispatch("handleAuthStateChange", userAuthData);
+        //Client-Side Logout
+        let payload = { auth: false };
+        dispatch("handleAuthStateChange", payload);
       });
   },
-  ////////////////////Check Logic////////////////////
+
   logoutUser({ dispatch }) {
     Loading.show();
 
@@ -118,26 +112,19 @@ const actions = {
     const token = Cookies.get("token");
 
     //Server-Side Logout
-    Axios.get(
-      host,
-      {},
-      {
-        headers: headers
-      }
-    )
-      .then(() => {})
-
-      .catch(error => {
-        showErrorMessage("Failed To Logout from the server");
-        console.log("error:", error);
-      });
+    Axios.get(host, {}, { headers: headers }).catch((error) => {
+      showErrorMessage("Failed To Logout from the server");
+      console.log("error:", error);
+    });
   },
 
-  handleAuthStateChange({ commit }, userAuthData) {
+  handleAuthStateChange({ commit }, payload) {
     Loading.hide();
-    if (userAuthData.auth == true) {
-      commit("setLoggedIn", userAuthData.data);
-      commit("setUserData", tokenDecoder(userAuthData.data.token));
+
+    if (payload.auth == true) {
+      commit("setLoggedIn", payload.data);
+      commit("setUserData", tokenDecoder(payload.data.token));
+
       if (this.$router.history.current.fullPath != "/") {
         this.$router.push("/");
       }
@@ -149,16 +136,16 @@ const actions = {
   },
 
   handleBootUserAuth({ dispatch }) {
-    //If There's a token in cookies Check it with the server
+    //If There's a token in cookies validate it from the server
     if (Cookies.has("token")) {
       dispatch("isLoggedIn");
     }
-  }
+  },
 };
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 };

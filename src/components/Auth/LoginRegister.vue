@@ -5,12 +5,16 @@
         <template v-slot:avatar>
           <q-icon name="account_circle" color="primary" />
         </template>
-        {{ tab | titleCase }} to access your AIACTIVE platform!
+
+        {{ login_register_status | titleCase }} to access your AIACTIVE
+        platform!
       </q-banner>
     </div>
+
     <div class="row q-mb-md">
+      <!-- //Name (if Register Tab) -->
       <q-input
-        v-if="tab == 'register'"
+        v-if="login_register_status == 'register'"
         color="teal"
         class="col"
         outlined
@@ -22,6 +26,7 @@
       />
     </div>
 
+    <!-- //Email -->
     <div class="row q-mb-md">
       <q-input
         color="teal"
@@ -38,6 +43,8 @@
         ref="email"
       />
     </div>
+
+    <!-- //Password -->
     <div class="row q-mb-md">
       <q-input
         color="teal"
@@ -53,6 +60,7 @@
         lazy-rules
         ref="password"
       >
+        <!-- //Show Password Button -->
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -62,9 +70,12 @@
         </template>
       </q-input>
     </div>
+
+    <!-- //Role (if Register Tab) -->
     <div class="row q-mb-md">
       <q-select
-        v-if="tab == 'register'"
+        class="mwidth"
+        v-if="login_register_status == 'register'"
         filled
         v-model="formData.role"
         :options="roleOptions"
@@ -82,16 +93,21 @@
         </template>
       </q-select>
     </div>
+
+    <!-- //Submit Button (Login or Register) -->
     <div class="row q-mb-md">
       <q-space />
-      <q-btn type="submit" :label="tab" color="primary" />
+      <q-btn type="submit" :label="login_register_status" color="primary" />
     </div>
   </form>
 </template>
+
 <script>
 import { mapActions } from "vuex";
+
 export default {
-  props: ["tab"],
+  props: ["login_register_status"],
+
   data() {
     return {
       formData: {
@@ -99,19 +115,15 @@ export default {
         email: "",
         password: "",
         role: "user",
-        status: this.tab
+        status: this.login_register_status
       },
       roleOptions: ["admin", "publisher"],
       isPwd: true
     };
   },
   methods: {
-    ...mapActions("auth", [
-      "registerUser",
-      "loginUser",
-      "login_register",
-      "isLoggedIn"
-    ]),
+    ...mapActions("auth", ["login_register", "isLoggedIn"]),
+
     submitForm() {
       this.$refs.email.validate();
       this.$refs.password.validate();
@@ -120,14 +132,13 @@ export default {
         this.login_register(this.formData);
       }
     },
-    isLogged() {
-      this.isLoggedIn();
-    },
+
     isValidEmailAddress(email) {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     }
   },
+
   filters: {
     titleCase(value) {
       return value.charAt(0).toUpperCase() + value.slice(1);
@@ -135,3 +146,8 @@ export default {
   }
 };
 </script>
+<style>
+.mwidth {
+  min-width: 180px;
+}
+</style>

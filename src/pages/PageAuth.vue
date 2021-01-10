@@ -18,11 +18,11 @@
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="login">
-          <login-register :tab="tab" />
+          <login-register :login_register_status="tab" />
         </q-tab-panel>
 
         <q-tab-panel name="register">
-          <login-register :tab="tab" />
+          <login-register :login_register_status="tab" />
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
