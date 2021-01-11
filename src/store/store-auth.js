@@ -66,8 +66,7 @@ const actions = {
 
         .then(response => {
           //Set UserData and LoggedIn then Route to homepage
-          let userAuthData = { auth: true, data: response.data };
-          dispatch("handleAuthStateChange", userAuthData);
+          dispatch("handleAuthStateChange", response.data);
         })
 
         .catch(error => {
@@ -87,17 +86,16 @@ const actions = {
     Axios.post(host, {}, { headers: headers })
 
       .then(response => {
-        let payload = { auth: true, data: response.data };
         //In /auth/me response comes with no token so we add it from cookies
-        payload.data.token = Cookies.get("token");
-        dispatch("handleAuthStateChange", payload);
+        response.data.token = Cookies.get("token");
+        dispatch("handleAuthStateChange", response.data);
       })
 
       .catch(error => {
         showErrorMessage(error.response.data.error);
+
         //Client-Side Logout
-        let payload = { auth: false };
-        dispatch("handleAuthStateChange", payload);
+        dispatch("handleAuthStateChange", { success: false });
       });
   },
 
@@ -105,8 +103,7 @@ const actions = {
     Loading.show();
 
     //Client-Side Logout
-    let userAuthData = { auth: false };
-    dispatch("handleAuthStateChange", userAuthData);
+    dispatch("handleAuthStateChange", { success: false });
 
     let host = "/auth/logout";
 
@@ -120,16 +117,13 @@ const actions = {
   handleAuthStateChange({ commit }, payload) {
     Loading.hide();
 
-    // LOGIN If Auth is True & User Status is not Disabled
-    if (payload.auth) {
-      let decodedToken = tokenDecoder(payload.data.token);
-      if (decodedToken.status) {
-        commit("setLoggedIn", payload.data);
-        commit("setUserData", decodedToken);
+    // LOGIN If success is True & User Status is not Disabled
+    if (payload.success && tokenDecoder(payload.token)) {
+      commit("setLoggedIn", payload);
+      commit("setUserData", tokenDecoder(payload.token));
 
-        if (this.$router.history.current.fullPath != "/") {
-          this.$router.push("/");
-        }
+      if (this.$router.history.current.fullPath != "/") {
+        this.$router.push("/");
       }
     } else {
       commit("setLoggedIn", false);
