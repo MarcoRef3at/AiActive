@@ -1,13 +1,29 @@
 import { Cookies } from "quasar";
+import { tokenDecoder } from "src/functions/fn_TokenDecoder";
+import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 
 export default ({ router }) => {
   router.beforeEach((to, from, next) => {
     let loggedIn = Cookies.has("token");
-    if (!loggedIn && to.path !== "/auth") {
+
+    if (loggedIn) {
+      let token = Cookies.get("token");
+      let decodedToken = tokenDecoder(token);
+      to.matched[1].meta.userStatus = decodedToken.status;
+    }
+
+    let isEnabled = to.matched[1].meta.userStatus;
+
+    if (!isEnabled) {
+      showErrorMessage("User is Disabled");
+    }
+
+    if ((!loggedIn || !isEnabled) && to.path !== "/auth") {
       next("/auth");
     } else {
       next();
     }
+
     if (loggedIn && to.path == "/auth") {
       next("/");
     }
