@@ -119,13 +119,17 @@ const actions = {
 
   handleAuthStateChange({ commit }, payload) {
     Loading.hide();
-    ///////Change .success to be enabled or disabled
-    if (payload.auth == true && payload.data.success == true) {
-      commit("setLoggedIn", payload.data);
-      commit("setUserData", tokenDecoder(payload.data.token));
 
-      if (this.$router.history.current.fullPath != "/") {
-        this.$router.push("/");
+    // LOGIN If Auth is True & User Status is not Disabled
+    if (payload.auth) {
+      let decodedToken = tokenDecoder(payload.data.token);
+      if (decodedToken.status) {
+        commit("setLoggedIn", payload.data);
+        commit("setUserData", decodedToken);
+
+        if (this.$router.history.current.fullPath != "/") {
+          this.$router.push("/");
+        }
       }
     } else {
       commit("setLoggedIn", false);
