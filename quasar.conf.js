@@ -62,20 +62,9 @@ module.exports = function(/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
-      // https: false,
-      // port: 8080,
-      // open: true, // opens browser window automatically
-      proxy: {
-        // proxy all requests starting with /api to jsonplaceholder
-        "http://localhost:8080": {
-          target: "http://196.219.234.3:9300",
-          secure: false,
-          changeOrigin: true,
-          pathRewrite: {
-            "^/api/v1": ""
-          }
-        }
-      }
+      https: false,
+      port: 8080,
+      open: true // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework

@@ -21,7 +21,7 @@ const mutations = {
   setLoggedIn(state, payload) {
     state.loggedIn = payload.success; //Boolean true or false
     var cookiesToken = payload.token; //Token from body
-
+    // var cookiesToken = Cookies.get("token"); //Token from cookies
     //payload is either data or false
     //if not false set cookies
     if (payload != false) {
