@@ -1,6 +1,6 @@
 import { Cookies } from "quasar";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
-import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
+import { showNotif } from "../functions/fn_ShowNotification";
 
 export default ({ router }) => {
   router.beforeEach((to, from, next) => {
@@ -15,7 +15,7 @@ export default ({ router }) => {
     let isEnabled = to.matched[1].meta.userStatus;
 
     if (!isEnabled) {
-      showErrorMessage("User is Disabled");
+      showNotif("User is Disabled");
     }
 
     if ((!loggedIn || !isEnabled) && to.path !== "/auth") {
