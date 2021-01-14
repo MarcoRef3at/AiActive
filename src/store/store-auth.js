@@ -3,6 +3,7 @@ import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
+import config from "app/config/config";
 
 const token = Cookies.get("token");
 const headers = {
@@ -20,13 +21,19 @@ const state = {
 const mutations = {
   setLoggedIn(state, payload) {
     state.loggedIn = payload.success; //Boolean true or false
-    var cookiesToken = payload.token; //Token from body
-    // var cookiesToken = Cookies.get("token"); //Token from cookies
+    var cookiesToken;
+    if (process.env.NODE_ENV == "development") {
+      cookiesToken = payload.token; //Token from body
+    } else {
+      cookiesToken = Cookies.get("token"); //Token from cookies
+    }
     //payload is either data or false
     //if not false set cookies
     if (payload != false) {
       state.token = cookiesToken;
-      Cookies.set("token", cookiesToken);
+      //if development-mode set cookies from body
+      if (process.env.NODE_ENV == "development")
+        Cookies.set("token", cookiesToken);
     }
     // if false remove cookies
     else {
