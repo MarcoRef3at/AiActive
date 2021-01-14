@@ -1,0 +1,13 @@
+<template>
+  <q-page class="flex flex-center">
+    <Users />
+  </q-page>
+</template>
+
+<script>
+import Users from "src/components/Settings/Users.vue";
+export default {
+  components: { Users },
+  name: "SettingsPage"
+};
+</script>

@@ -11,6 +11,17 @@ const routes = [
     ]
   },
   {
+    path: "/settings",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/Settings.vue"),
+        meta: { userStatus: false }
+      }
+    ]
+  },
+  {
     path: "/auth",
     component: () => import("layouts/MainLayout.vue"),
     children: [{ path: "", component: () => import("pages/PageAuth.vue") }]
