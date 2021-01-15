@@ -40,7 +40,6 @@ const actions = {
 
     setTimeout(() => {
       const host = config.API_URL + `/users/${payload.id}`;
-      delete payload.id;
       console.log("payload:", payload);
       Axios.put(host, payload, {
         headers: headers
@@ -53,6 +52,7 @@ const actions = {
           showErrorMessage(error.response.data.error);
         });
     }, 500);
+
     Loading.hide();
   }
 };

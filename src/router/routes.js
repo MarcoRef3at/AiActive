@@ -6,7 +6,11 @@ const routes = [
       {
         path: "",
         component: () => import("pages/Index.vue"),
-        meta: { userStatus: false }
+        meta: {
+          userStatus: true,
+          requiresAuth: true,
+          permissions: ["user"]
+        }
       }
     ]
   },
@@ -17,14 +21,26 @@ const routes = [
       {
         path: "",
         component: () => import("pages/Settings.vue"),
-        meta: { userStatus: false }
+        meta: {
+          userStatus: true,
+          requiresAuth: true,
+          permissions: ["admin"]
+        }
       }
     ]
   },
   {
     path: "/auth",
     component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/PageAuth.vue") }]
+    children: [
+      {
+        path: "",
+        component: () => import("pages/PageAuth.vue"),
+        meta: {
+          requiresAuth: false
+        }
+      }
+    ]
   },
 
   // Always leave this as last one,
