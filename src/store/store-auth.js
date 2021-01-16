@@ -148,10 +148,15 @@ const actions = {
     }
   }
 };
+const getters = {
+  isLoggedIn: state => state.loggedIn,
+  token: state => state.token
+};
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getters
 };
