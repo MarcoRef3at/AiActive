@@ -1,14 +1,13 @@
 import { Cookies } from "quasar";
-import { tokenDecoder } from "src/functions/fn_TokenDecoder";
 import { showNotif } from "../functions/fn_ShowNotification";
-
+import JWT from "jwt-client";
 export default ({ router }) => {
   router.beforeEach((to, from, next) => {
     let loggedIn = Cookies.has("token");
 
     if (loggedIn) {
       let token = Cookies.get("token");
-      let decodedToken = tokenDecoder(token);
+      let decodedToken = JWT.read(token).claim;
       to.matched[1].meta.userStatus = decodedToken.status;
     }
 

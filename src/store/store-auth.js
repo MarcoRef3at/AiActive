@@ -1,6 +1,6 @@
 import { Loading } from "quasar";
 import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
-import { tokenDecoder } from "src/functions/fn_TokenDecoder";
+import JWT from "jwt-client";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
 import config from "app/config/config";
@@ -125,9 +125,9 @@ const actions = {
     Loading.hide();
 
     // LOGIN If success is True & User Status is not Disabled
-    if (payload.success && tokenDecoder(payload.token)) {
+    if (payload.success && JWT.read(payload.token).claim) {
       commit("setLoggedIn", payload);
-      commit("setUserData", tokenDecoder(payload.token));
+      commit("setUserData", JWT.read(payload.token).claim);
 
       if (this.$router.history.current.fullPath != "/") {
         this.$router.push("/");
