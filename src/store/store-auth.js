@@ -129,6 +129,10 @@ const actions = {
       commit("setLoggedIn", payload);
       commit("setUserData", JWT.read(payload.token).claim);
 
+      /*--------------------------------------------------
+      todo: leave routings to the router-auth
+            to remember the desiered path before login and redirects to it
+            */
       if (this.$router.history.current.fullPath != "/") {
         this.$router.push("/");
       }
