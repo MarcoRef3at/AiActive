@@ -1,10 +1,11 @@
 import { Notify } from "quasar";
 
-export function showNotif(Notification) {
+export function showNotif(Notification, Caption) {
   Notify.create({
-    message: Notification,
+    message: Notification.charAt(0).toUpperCase() + Notification.slice(1),
+    caption: Caption,
     color: "negative",
     multiLine: true,
-    position: "center"
+    position: "top"
   });
 }

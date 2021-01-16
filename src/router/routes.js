@@ -16,7 +16,7 @@ const routes = [
     ]
   },
   {
-    path: "/settings",
+    path: "/settings/",
     name: "settings",
     component: () => import("layouts/MainLayout.vue"),
     children: [
@@ -38,7 +38,10 @@ const routes = [
     children: [
       {
         path: "",
-        component: () => import("pages/PageAuth.vue")
+        component: () => import("pages/PageAuth.vue"),
+        meta: {
+          permissions: []
+        }
       }
     ]
   },
