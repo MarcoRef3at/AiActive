@@ -19,8 +19,7 @@ export default async ({ router, store }) => {
 
       //if trying to access home page without login
       //redirect to auth page
-      if (!isLoggedIn && record.name === "home") {
-        ////// // console.log("!isLoggedIn && record.name === home");
+      if (!isLoggedIn && record.meta.title === "home") {
         next({
           path: "/auth",
           replace: true

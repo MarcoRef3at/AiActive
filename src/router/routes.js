@@ -1,7 +1,6 @@
 const routes = [
   {
     path: "/",
-    // name: "home",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -18,7 +17,6 @@ const routes = [
   },
   {
     path: "/lpr/",
-    // name: "lpr",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -35,7 +33,6 @@ const routes = [
   },
   {
     path: "/users/",
-    // name: "users",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -52,7 +49,6 @@ const routes = [
   },
   {
     path: "/settings/",
-    // name: "settings",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -69,7 +65,6 @@ const routes = [
   },
   {
     path: "/auth",
-    // name: " auth",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
