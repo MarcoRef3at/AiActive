@@ -4,6 +4,7 @@ import JWT from "jwt-client";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
 import config from "app/config/config";
+import router from "../boot/router-auth";
 
 const token = Cookies.get("token");
 const headers = {
@@ -133,8 +134,11 @@ const actions = {
       todo: leave routings to the router-auth
             to remember the desiered path before login and redirects to it
             */
+      //
       if (this.$router.history.current.fullPath != "/") {
-        this.$router.push("/");
+        this.$router.replace("/");
+        // console.log("this.$router:", this.$router);
+        // this.$router.go(-1);
       }
     } else {
       commit("setLoggedIn", false);
@@ -146,6 +150,7 @@ const actions = {
   },
 
   handleBootUserAuth({ dispatch }) {
+    // todo : check senario again
     //If There's a token in cookies validate it from the server
     if (Cookies.has("token")) {
       dispatch("isLoggedIn");

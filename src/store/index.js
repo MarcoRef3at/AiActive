@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import auth from "./store-auth";
 import users from "./store-users";
 Vue.use(Vuex);
-let store = null;
+// let store = null;
 export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
@@ -15,8 +15,8 @@ export default function(/* { ssrContext } */) {
     strict: process.env.DEBUGGING
   });
   // add this so that we export store
-  store = Store;
+  // store = Store;
   return Store;
 }
 // add this line to access store wherever you need
-export { store };
+// export { store };

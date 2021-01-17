@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+        <!-- Menu Button -->
         <q-btn
           v-if="loggedIn && $route.path != '/auth'"
           flat
@@ -16,6 +17,7 @@
           Quasar App
         </q-toolbar-title>
 
+        <!-- Login  Button -->
         <q-btn
           v-if="!loggedIn && $route.path != '/auth'"
           to="/auth"
@@ -25,6 +27,7 @@
           class="absolute-right"
         />
 
+        <!-- logout  Button -->
         <q-btn
           v-else-if="$route.path != '/auth'"
           @click="logoutUser"
@@ -75,6 +78,16 @@ const linksData = [
     title: "Settings",
     icon: "settings",
     link: "/Settings"
+  },
+  {
+    title: "users",
+    icon: "users",
+    link: "/users"
+  },
+  {
+    title: "lpr",
+    icon: "lpr",
+    link: "/lpr"
   }
 ];
 

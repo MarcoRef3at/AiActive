@@ -1,31 +1,12 @@
-//Router Auth
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { store } from "../store";
 import JWT from "jwt-client";
 import { Cookies } from "quasar";
-import routes from "../router/routes";
 import { showNotif } from "../functions/fn_ShowNotification";
 
 Vue.use(VueRouter);
 
-export default ({ router }) => {
-  const Router = new VueRouter({
-    /*
-     * NOTE! Change Vue Router mode from quasar.conf.js -> build -> vueRouterMode
-     *
-     * If you decide to go with "history" mode, please also set "build.publicPath"
-     * to something other than an empty string.
-     * Example: '/' instead of ''
-     */
-
-    // Leave as is and change from quasar.conf.js instead!
-    mode: process.env.VUE_ROUTER_MODE,
-    base: process.env.VUE_ROUTER_BASE,
-    scrollBehavior: () => ({ y: 0 }),
-    routes
-  });
-
+export default async ({ router, store }) => {
   router.beforeEach((to, from, next) => {
     let allowedToEnter = true;
 
@@ -33,7 +14,7 @@ export default ({ router }) => {
     to.matched.some(record => {
       //Get LoggedIn value from the store & cookies
       let hasCookies = Cookies.has("token");
-      let isLoggedIn = store.getters["auth/isLoggedIn"] && hasCookies;
+      let isLoggedIn = store.getters["auth/isLoggedIn"];
       //////// console.log("isLoggedIn:", isLoggedIn);
 
       //if trying to access home page without login
@@ -44,7 +25,6 @@ export default ({ router }) => {
           path: "/auth",
           replace: true
         });
-        return;
       }
       if ("meta" in record) {
         // ------------------------------------------------------------
@@ -64,6 +44,7 @@ export default ({ router }) => {
                 query: { redirect: to.fullPath }
               });
               // console.log("to.fullPath:", to.fullPath);
+              return;
             }
           }
         }
@@ -74,7 +55,9 @@ export default ({ router }) => {
           let permissions = record.meta.permissions;
           // console.log("permissions:", permissions);
           // get currently logged in user permissions
-          let token = store.getters["auth/token"];
+          // let token = store.getters["auth/token"];
+          const token = Cookies.get("token");
+          console.log("token:", token);
           // decipher the token
           let session = JWT.read(token);
           // console.log("session.claim.role:", session.claim.role);
@@ -127,5 +110,12 @@ export default ({ router }) => {
       }
     });
     /////////// console.log("store.getters:", store.getters["auth/isLoggedIn"]);
+  });
+
+  //Change Tab Title to be with page name
+  router.afterEach((to, from) => {
+    Vue.nextTick(() => {
+      document.title = "Aiactive - " + to.meta.title;
+    });
   });
 };

@@ -1,13 +1,14 @@
 const routes = [
   {
     path: "/",
-    name: "home",
+    // name: "home",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
         path: "",
         component: () => import("pages/Index.vue"),
         meta: {
+          title: "Home",
           userStatus: true,
           requiresAuth: true,
           permissions: ["user"]
@@ -16,14 +17,49 @@ const routes = [
     ]
   },
   {
+    path: "/lpr/",
+    // name: "lpr",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/lpr.vue"),
+        meta: {
+          title: "lpr",
+          userStatus: true,
+          requiresAuth: true,
+          permissions: ["publisher"]
+        }
+      }
+    ]
+  },
+  {
+    path: "/users/",
+    // name: "users",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/users.vue"),
+        meta: {
+          title: "users",
+          userStatus: true,
+          requiresAuth: true,
+          permissions: ["admin"]
+        }
+      }
+    ]
+  },
+  {
     path: "/settings/",
-    name: "settings",
+    // name: "settings",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
         path: "",
         component: () => import("pages/Settings.vue"),
         meta: {
+          title: "Settings",
           userStatus: true,
           requiresAuth: true,
           permissions: ["admin"]
@@ -33,14 +69,14 @@ const routes = [
   },
   {
     path: "/auth",
-    name: " auth",
+    // name: " auth",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
         path: "",
         component: () => import("pages/PageAuth.vue"),
         meta: {
-          permissions: []
+          title: "Auth"
         }
       }
     ]
