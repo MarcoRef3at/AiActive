@@ -7,7 +7,7 @@ const routes = [
         path: "",
         component: () => import("pages/Index.vue"),
         meta: {
-          title: "Home",
+          title: "home",
           userStatus: true,
           requiresAuth: true,
           permissions: ["user"]
@@ -55,7 +55,7 @@ const routes = [
         path: "",
         component: () => import("pages/Settings.vue"),
         meta: {
-          title: "Settings",
+          title: "settings",
           userStatus: true,
           requiresAuth: true,
           permissions: ["admin"]
@@ -71,12 +71,16 @@ const routes = [
         path: "",
         component: () => import("pages/PageAuth.vue"),
         meta: {
-          title: "Auth"
+          title: "auth"
         }
       }
     ]
   },
 
+  {
+    path: "/not-authorized",
+    component: () => import("pages/NotAuthorized.vue")
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

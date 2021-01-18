@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import routes from "../router/routes";
+import routes from "./../router/routes";
 import store from "../store";
 
 import JWT from "jwt-client";
@@ -9,14 +9,6 @@ import JWT from "jwt-client";
 Vue.use(VueRouter);
 
 const Router = new VueRouter({
-  /*
-   * NOTE! Change Vue Router mode from quasar.conf.js -> build -> vueRouterMode
-   *
-   * If you decide to go with "history" mode, please also set "build.publicPath"
-   * to something other than an empty string.
-   * Example: '/' instead of ''
-   */
-
   // Leave as is and change from quasar.conf.js instead!
   mode: process.env.VUE_ROUTER_MODE,
   base: process.env.VUE_ROUTER_BASE,
@@ -30,8 +22,7 @@ Router.beforeEach((to, from, next) => {
     // check if there is meta data
     let isLoggedIn = store.getters["auth/isLoggedIn"];
     console.log("isLoggedIn:", isLoggedIn);
-    console.log("record:", record);
-    if (!isLoggedIn && record.name === "PageIndex") {
+    if (!isLoggedIn && record.meta.title === "home") {
       next({
         path: "/auth",
         replace: true
@@ -69,34 +60,22 @@ Router.beforeEach((to, from, next) => {
         // decipher the token
         let session = JWT.read(token);
         // check if they are not an admin (administrator)
-        if (session.claim.permissions.administrator) {
+        if (session.claim.role == "admin") {
           canProceed = true;
         } else {
           for (let index = 0; index < permissions.length; ++index) {
             let permission = permissions[index];
             // console.log('Permission needed:', permission)
-            if (permission === "administrator") {
-              if (session.claim.permissions.administrator) {
+            if (permission === "admin") {
+              if (session.claim.role == "admin") {
                 canProceed = true;
               }
-            } else if (permission === "liveview") {
-              if (session.claim.permissions.liveview) {
+            } else if (permission === "user") {
+              if (session.claim.role == "user") {
                 canProceed = true;
               }
-            } else if (permission === "archive") {
-              if (session.claim.permissions.archive) {
-                canProceed = true;
-              }
-            } else if (permission === "alarmsArchiveEvents") {
-              if (session.claim.permissions.alarmsArchiveEvents) {
-                canProceed = true;
-              }
-            } else if (permission === "remoteAccess") {
-              if (session.claim.permissions.remoteAccess) {
-                canProceed = true;
-              }
-            } else if (permission === "settings") {
-              if (session.claim.permissions.settings) {
+            } else if (permission === "publisher") {
+              if (session.claim.role == "publisher") {
                 canProceed = true;
               }
             } else {

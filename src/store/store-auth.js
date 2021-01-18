@@ -135,22 +135,23 @@ const actions = {
             to remember the desiered path before login and redirects to it
             */
       //
-      if (this.$router.history.current.fullPath != "/") {
-        this.$router.replace("/");
-        // console.log("this.$router:", this.$router);
-        // this.$router.go(-1);
-      }
+      // if (this.$router.history.current.fullPath != "/") {
+      //   this.$router.replace("/");
+      //   // console.log("this.$router:", this.$router);
+      //   // this.$router.go(-1);
+      // }
     } else {
       commit("setLoggedIn", false);
       commit("setUserData", false);
-      if (this.$router.history.current.fullPath != "/auth") {
-        this.$router.replace("/auth");
-      }
+      // if (this.$router.history.current.fullPath != "/auth") {
+      //   this.$router.replace("/auth");
+      // }
     }
   },
 
   handleBootUserAuth({ dispatch }) {
     // todo : check senario again
+    console.log("Store Started");
     //If There's a token in cookies validate it from the server
     if (Cookies.has("token")) {
       dispatch("isLoggedIn");
