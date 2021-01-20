@@ -1,22 +1,25 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import auth from "./store-auth";
-import users from "./store-users";
+
+// import example from './module-example'
+
 Vue.use(Vuex);
-let store = null;
+
+/*
+ * If not building with SSR mode, you can
+ * directly export the Store instantiation
+ */
+
 export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      auth,
-      users
+      // example
     },
+
     // enable strict mode (adds overhead!)
     // for dev mode only
-    strict: process.env.DEBUGGING
+    strict: process.env.DEV
   });
-  // add this so that we export store
-  store = Store;
+
   return Store;
 }
-// add this line to access store wherever you need
-export { store };

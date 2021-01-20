@@ -7,16 +7,14 @@ import { showNotif } from "../functions/fn_ShowNotification";
 Vue.use(VueRouter);
 
 export default async ({ router, store }) => {
-  store.dispatch["auth/isLoggedIn"];
-  const isLoggedIn = await store.getters["auth/isLoggedIn"];
   router.beforeEach((to, from, next) => {
     let allowedToEnter = true;
 
     //Check the data in the required path to go
     to.matched.some(record => {
       //Get LoggedIn value from the store & cookies
-      // const hasCookies = Cookies.has("token"); //boolean
-      //  && hasCookies;
+      const isLoggedIn = store.getters["auth/isLoggedIn"];
+      const hasCookies = Cookies.has("token") && hasCookies;
       console.log("isLoggedIn:", isLoggedIn);
 
       //if trying to access home page without login
