@@ -39,6 +39,7 @@ export function login_register({ dispatch }, payload) {
   }, 500);
 }
 export function isLoggedIn({ dispatch }) {
+  console.log("isLoggedIn");
   let host = "/auth/me";
 
   Axios.post(host, {}, { headers: headers })

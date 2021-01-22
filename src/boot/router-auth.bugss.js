@@ -3,10 +3,11 @@ import VueRouter from "vue-router";
 import JWT from "jwt-client";
 import { Cookies } from "quasar";
 import { showNotif } from "../functions/fn_ShowNotification";
-
+import auth from "../store/auth";
 Vue.use(VueRouter);
 
 export default async ({ router, store }) => {
+  store.registerModule("auth", auth);
   router.beforeEach((to, from, next) => {
     let allowedToEnter = true;
 
@@ -14,7 +15,7 @@ export default async ({ router, store }) => {
     to.matched.some(record => {
       //Get LoggedIn value from the store & cookies
       const isLoggedIn = store.getters["auth/isLoggedIn"];
-      const hasCookies = Cookies.has("token") && hasCookies;
+      const hasCookies = Cookies.has("token");
       console.log("isLoggedIn:", isLoggedIn);
 
       //if trying to access home page without login

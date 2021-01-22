@@ -3,14 +3,6 @@
     class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
   >
     <div>
-      <div style="font-size: 30vh">
-        Oops Not Authorized
-      </div>
-
-      <div class="text-h2" style="opacity:.4">
-        Nothing here...
-      </div>
-
       <q-btn
         class="q-mt-xl"
         color="white"
@@ -20,6 +12,13 @@
         label="Go Home"
         no-caps
       />
+      <div style="font-size: 30vh">
+        Oops Not Authorized
+      </div>
+
+      <div class="text-h2" style="opacity:.4">
+        Nothing here...
+      </div>
     </div>
   </div>
 </template>

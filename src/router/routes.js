@@ -16,7 +16,7 @@ const routes = [
     ]
   },
   {
-    path: "/lpr/",
+    path: "/lpr",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -32,7 +32,7 @@ const routes = [
     ]
   },
   {
-    path: "/users/",
+    path: "/users",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -48,7 +48,7 @@ const routes = [
     ]
   },
   {
-    path: "/settings/",
+    path: "/settings",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
