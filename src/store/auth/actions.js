@@ -114,6 +114,7 @@ export async function fetch (state) {
 export function logout (state) {
   Cookies.remove('authorization_token')
   state.commit('setUser', null)
+  this.$router.push('/auth')
 }
 
 export function verify (state, token) {

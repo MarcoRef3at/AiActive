@@ -12,10 +12,26 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          AiActive
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <!-- Login  Button -->
+        <q-btn
+          v-if="!loggedIn && $route.path != '/auth'"
+          to="/auth"
+          flat
+          icon-right="account_circle"
+          label="Login"
+          class="absolute-right"
+        />
+         <!-- logout  Button -->
+        <q-btn
+          v-else-if="$route.path != '/auth'"
+          @click="showLogoutModal"
+          flat
+          icon-right="logout"
+          label="Logout"
+          class="absolute-right"
+        />
       </q-toolbar>
     </q-header>
 
@@ -36,7 +52,7 @@
 
 <script>
 import AuthMenu from './auth/AuthMenu'
-
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: 'MyLayout',
   components: {
@@ -46,6 +62,23 @@ export default {
     return {
       leftDrawerOpen: false
     }
+  },
+  methods: {
+    ...mapActions("auth", ["logout"]),
+    showLogoutModal(){
+      this.$q.dialog({
+      title: this.$i18n.t('auth.logout.confirm'),
+      message: this.$i18n.t('auth.logout.logout_confirmation'),
+      ok: this.$i18n.t('auth.logout.logout'),
+      cancel: this.$i18n.t('auth.logout.cancel')
+    }).onOk(() => {
+      this.$auth.logout()
+    })
+    }
+  },
+
+  computed: {
+    ...mapGetters("auth", ["loggedIn"])
   }
 }
 </script>

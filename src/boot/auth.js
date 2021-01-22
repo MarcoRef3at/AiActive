@@ -49,12 +49,12 @@ export default ({ app, router, store, Vue }) => {
       store.dispatch('auth/fetch').then(() => {
         console.log('router fetch')
         if (!store.getters['auth/loggedIn']) {
-          router.push('/login')
+          router.push('/auth')
         } else if (
           isArrayOrString(record.meta.auth) &&
           !store.getters['auth/check'](record.meta.auth)
         ) {
-          router.push('/account')
+          router.push('/')
         }
       })
     }

@@ -110,6 +110,7 @@ export default {
     ...mapActions("auth", ["login_register", "isLoggedIn"]),
 
     submitForm() {
+      this.loading = true
       this.$refs.email.validate();
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
