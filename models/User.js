@@ -1,25 +1,25 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please add a name'],
+    required: [true, "Please add a name"],
   },
   email: {
     type: String,
-    required: [true, 'Please add an email'],
+    required: [true, "Please add an email"],
     unique: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email',
+      "Please add a valid email",
     ],
   },
   role: {
     type: String,
-    enum: ['user', 'publisher'],
-    default: 'user',
+    enum: ["user", "publisher"],
+    default: "user",
   },
   isAdmin: {
     type: Boolean,
@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please add a Password'],
+    required: [true, "Please add a Password"],
     minLength: 6,
     select: false,
   },
@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 //Encrypt password before save using bcrypt
-UserSchema.pre('save', async function (next) {
+UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -57,6 +57,7 @@ UserSchema.methods.getSignedJwtToken = function () {
       userName: this.name,
       isAdmin: this.isAdmin,
       isActive: this.isActive,
+      role: this.role,
     },
     process.env.JWT_SECRET,
     {
@@ -71,4 +72,4 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 //other than module exports .. it creates the collection in the database adding 's' to it's name
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);
