@@ -1,0 +1,172 @@
+import { Loading } from "quasar";
+import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
+import JWT from "jwt-client";
+import { Axios } from "boot/axios";
+import { Cookies } from "quasar";
+import config from "app/config/config";
+import router from "../boot/router-auth";
+
+const token = Cookies.get("token");
+const headers = {
+  Authorization: `Bearer ${token}`
+};
+
+const state = {
+  loggedIn: false,
+
+  token: "",
+
+  userData: {}
+};
+
+const mutations = {
+  setLoggedIn(state, payload) {
+    state.loggedIn = payload.success; //Boolean true or false
+    var cookiesToken;
+    if (process.env.NODE_ENV == "development") {
+      cookiesToken = payload.token; //Token from body
+    } else {
+      cookiesToken = Cookies.get("token"); //Token from cookies
+    }
+    //payload is either data or false
+    //if not false set cookies
+    if (payload != false) {
+      state.token = cookiesToken;
+      //if development-mode set cookies from body
+      if (process.env.NODE_ENV == "development")
+        Cookies.set("token", cookiesToken);
+    }
+    // if false remove cookies
+    else {
+      Cookies.remove("token");
+    }
+  },
+
+  //payload is either data OR false
+  //if not false set userData
+  setUserData(state, payload) {
+    //Set UserData
+    state.userData = payload;
+
+    // Clear Token and UserData
+    if (!payload) {
+      state.userData = "";
+      state.token = null;
+    }
+  }
+};
+
+const actions = {
+  //Login or Register Action
+  login_register({ dispatch }, payload) {
+    Loading.show();
+
+    setTimeout(() => {
+      //payload.status = login or register
+      let host = `/auth/${payload.status}`;
+
+      Axios.post(host, {
+        email: payload.email,
+        password: payload.password,
+        name: payload.name,
+        role: payload.isAdmin
+      })
+
+        .then(response => {
+          //Set UserData and LoggedIn then Route to homepage
+          dispatch("handleAuthStateChange", response.data);
+        })
+
+        .catch(error => {
+          if (error.message == "Network Error") {
+            showErrorMessage("Server Offline");
+            return;
+          } else {
+            showErrorMessage(error.response.data.error);
+          }
+        });
+    }, 500);
+  },
+
+  isLoggedIn({ dispatch }) {
+    let host = "/auth/me";
+
+    Axios.post(host, {}, { headers: headers })
+
+      .then(response => {
+        //In /auth/me response comes with no token so we add it from cookies
+        response.data.token = Cookies.get("token");
+        dispatch("handleAuthStateChange", response.data);
+      })
+
+      .catch(error => {
+        showErrorMessage(error.response.data.error);
+
+        //Client-Side Logout
+        dispatch("handleAuthStateChange", { success: false });
+      });
+  },
+
+  logoutUser({ dispatch }) {
+    Loading.show();
+
+    //Client-Side Logout
+    dispatch("handleAuthStateChange", { success: false });
+
+    let host = "/auth/logout";
+
+    //Server-Side Logout
+    Axios.get(host, {}, { headers: headers }).catch(error => {
+      showErrorMessage("Failed To Logout from the server");
+      console.log("error:", error);
+    });
+  },
+
+  handleAuthStateChange({ commit }, payload) {
+    Loading.hide();
+
+    // LOGIN If success is True & User Status is not Disabled
+    if (payload.success && JWT.read(payload.token).claim) {
+      commit("setLoggedIn", payload);
+      commit("setUserData", JWT.read(payload.token).claim);
+
+      /*--------------------------------------------------
+      todo: leave routings to the router-auth
+            to remember the desiered path before login and redirects to it
+            */
+      //
+      // if (this.$router.history.current.fullPath != "/") {
+      //   this.$router.replace("/");
+      //   // console.log("this.$router:", this.$router);
+      //   // this.$router.go(-1);
+      // }
+    } else {
+      commit("setLoggedIn", false);
+      commit("setUserData", false);
+      // if (this.$router.history.current.fullPath != "/auth") {
+      //   this.$router.replace("/auth");
+      // }
+    }
+  },
+
+  handleBootUserAuth({ dispatch }) {
+    // todo : check senario again
+    console.log("Store Started");
+    //If There's a token in cookies validate it from the server
+    if (Cookies.has("token")) {
+      dispatch("isLoggedIn");
+    }
+  }
+};
+const getters = {
+  isLoggedIn: state => state.loggedIn,
+  token: state => state.token
+};
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions,
+  getters
+};
