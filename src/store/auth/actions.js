@@ -8,6 +8,38 @@ const FETCH_USER_ROUTE = '/api/v1/auth/me'
 const PASSWORD_FORGOT_ROUTE = '/auth/password/forgot'
 const PASSWORD_RESET_ROUTE = '/auth/password/reset'
 
+export function login_register(state , payload) {
+  let self = this
+  setTimeout(() => {
+    //payload.status = login or register
+    let host = `/api/v1/auth/${payload.status}`;
+    axiosInstance.post(host, payload.body)
+
+      .then(response => {
+
+
+        //dispatch handleAuthStateChange
+        state.commit('setUser', response.data)
+        const token = response.data.token
+        axiosInstance.defaults.headers.common['Authorization'] =
+          'Bearer ' + token
+        state.dispatch('setToken', {
+          token: token,
+          rememberMe: payload.rememberMe
+        })
+        self.$router.replace('/account')
+      })
+
+      .catch(error => {
+          // showNotif(error.response.data.error);
+          console.log(error);
+      })
+      .finally(() => {
+        console.log('final action')
+      });
+  }, 500);
+}
+
 export function register (state, data) {
   return axiosInstance.post(REGISTER_ROUTE, data)
 }
@@ -74,13 +106,6 @@ export async function fetch (state) {
     return axiosInstance.post(FETCH_USER_ROUTE).then(response => {
       state.commit('setUser', response.data.data)
     })
-
-    // state.commit('setUser', {
-    //   id: 10,
-    //   email: 'baher@aiactive.com',
-    //   name: 'baher',
-    //   role: 'superuser'
-    // })
   } else {
     state.dispatch('logout')
   }

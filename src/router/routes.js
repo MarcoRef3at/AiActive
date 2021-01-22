@@ -8,6 +8,11 @@ const routes = [
         path: '', component: () => import('pages/Index.vue')
       },
       {
+        path: '/auth',
+        name: 'auth',
+        component: () => import('pages/PageAuth')
+      },
+      {
         path: '/login',
         name: 'login',
         component: () => import('pages/auth/Login')
@@ -22,28 +27,28 @@ const routes = [
         name: 'register',
         component: () => import('pages/auth/Register')
       },
-      {
-        path: '/verification',
-        name: 'verification',
-        component: () => import('pages/auth/Verification')
-      },
-      {
-        path: '/password',
-        name: 'password',
-        component: { render: h => h('router-view') },
-        children: [
-          {
-            path: 'forgot',
-            name: 'forgot',
-            component: () => import('pages/auth/password/Forgot')
-          },
-          {
-            path: 'reset',
-            name: 'reset',
-            component: () => import('pages/auth/password/Reset')
-          }
-        ]
-      },
+      // {
+      //   path: '/verification',
+      //   name: 'verification',
+      //   component: () => import('pages/auth/Verification')
+      // },
+      // {
+      //   path: '/password',
+      //   name: 'password',
+      //   component: { render: h => h('router-view') },
+      //   children: [
+      //     {
+      //       path: 'forgot',
+      //       name: 'forgot',
+      //       component: () => import('pages/auth/password/Forgot')
+      //     },
+      //     {
+      //       path: 'reset',
+      //       name: 'reset',
+      //       component: () => import('pages/auth/password/Reset')
+      //     }
+      //   ]
+      // },
       {
         path: '/account',
         meta: { auth: true },
@@ -63,19 +68,19 @@ const routes = [
           }
         ]
       },
-      {
-        path: '/superuser',
-        meta: { auth: ['superuser'] },
-        name: 'superuser',
-        component: { render: h => h('router-view') },
-        children: [
-          {
-            path: 'users',
-            name: 'superuserUsers',
-            component: () => import('pages/auth/Users')
-          }
-        ]
-      }
+      // {
+      //   path: '/superuser',
+      //   meta: { auth: ['superuser'] },
+      //   name: 'superuser',
+      //   component: { render: h => h('router-view') },
+      //   children: [
+      //     {
+      //       path: 'users',
+      //       name: 'superuserUsers',
+      //       component: () => import('pages/auth/Users')
+      //     }
+      //   ]
+      // }
     ]
   }
 ]

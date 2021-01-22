@@ -13,7 +13,7 @@ export default {
       cancel: this.$i18n.t('auth.logout.cancel')
     }).onOk(() => {
       this.$auth.logout().then(() => {
-        this.$router.push('/')
+        this.$router.push('/login')
       })
     }).onCancel(() => {
       this.$router.go(-1)

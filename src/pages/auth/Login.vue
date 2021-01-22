@@ -60,7 +60,7 @@ export default {
     return {
       data: {
         body: {
-          email: 'user@user.com',
+          email: 'admin@admin.com',
           password: '123456'
         },
         rememberMe: false

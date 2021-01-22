@@ -5,7 +5,9 @@ const axiosInstance = axios.create({
   paramsSerializer: params => {
     return qs.stringify(params, { arrayFormat: 'repeat' })
   },
-  baseURL: 'http://localhost:5000'
+  baseURL: 'http://localhost:5000',
+  headers: { "Content-type": "application/json" },
+  withCredentials: true
 })
 
 export default ({ Vue }) => {
