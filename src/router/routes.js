@@ -5,7 +5,7 @@ const routes = [
     children: [
       {
         path: "",
-        name: "home",
+        name: "Home",
         component: () => import("pages/Index.vue"),
         meta: { permission: true }
       },
@@ -16,19 +16,19 @@ const routes = [
       },
       {
         path: "/lpr",
-        name: "lpr",
+        name: "Lpr",
         component: () => import("pages/lpr.vue"),
         meta: { permission: ["admin"] }
       },
       {
         path: "/settings",
-        name: "settings",
+        name: "Settings",
         component: () => import("pages/settings.vue"),
         meta: { permission: ["admin"] }
       },
       {
         path: "/users",
-        name: "users",
+        name: "Users",
         component: () => import("pages/users.vue"),
         meta: { permission: ["admin"] }
       },
@@ -42,6 +42,7 @@ const routes = [
   },
   {
     path: "/NotAuthorized",
+    name: "Not Authorized",
     component: () => import("pages/NotAuthorized.vue"),
     meta: { permission: true }
   },

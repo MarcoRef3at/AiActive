@@ -1,5 +1,4 @@
-import { Loading } from "quasar";
-import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
+import { Notify } from "quasar";
 import JWT from "jwt-client";
 import { Axios } from "boot/axios";
 import { Cookies } from "quasar";
@@ -26,7 +25,9 @@ export function login_register(state, payload) {
       })
 
       .catch(error => {
-        showErrorMessage(error.response.data.error);
+        //todo: check error
+        console.log("error:", error.response.data.error);
+        Notify(error.response.data.error);
       });
   }, 500);
 }
@@ -57,7 +58,9 @@ export async function isLoggedIn(state) {
       })
 
       .catch(error => {
-        showErrorMessage(error.response.data.error);
+        //todo: check error
+        console.log("error:", error.response.data.error);
+        // Notify(error.response.data.error);
 
         //Client-Side Logout
         state.dispatch("logoutUser");
@@ -74,7 +77,7 @@ export function logoutUser(state) {
   };
   let host = "/auth/logout";
   Axios.get(host, {}, { headers: headers }).catch(error => {
-    showErrorMessage("Failed To Logout from the server");
+    Notify("Failed To Logout from the server");
   });
 
   //Client-Side Logout
