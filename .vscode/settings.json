@@ -1,4 +1,5 @@
 {
   
-  "vetur.experimental.templateInterpolationService": true
+  "vetur.experimental.templateInterpolationService": true,
+  "workbench.colorTheme": "Winter is Coming (Dark Blue - No Italics)"
 }

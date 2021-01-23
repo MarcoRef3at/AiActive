@@ -5,81 +5,45 @@ const routes = [
     children: [
       {
         path: "",
+        name: "home",
         component: () => import("pages/Index.vue"),
-        meta: {
-          title: "home",
-          userStatus: true,
-          requiresAuth: true,
-          permissions: ["user"]
-        }
-      }
-    ]
-  },
-  {
-    path: "/lpr",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
+        meta: { permission: true }
+      },
       {
-        path: "",
+        path: "/auth",
+        name: "auth",
+        component: () => import("pages/PageAuth.vue")
+      },
+      {
+        path: "/lpr",
+        name: "lpr",
         component: () => import("pages/lpr.vue"),
-        meta: {
-          title: "lpr",
-          userStatus: true,
-          requiresAuth: true,
-          permissions: ["publisher"]
-        }
-      }
-    ]
-  },
-  {
-    path: "/users",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
+        meta: { permission: ["admin"] }
+      },
       {
-        path: "",
+        path: "/settings",
+        name: "settings",
+        component: () => import("pages/settings.vue"),
+        meta: { permission: ["admin"] }
+      },
+      {
+        path: "/users",
+        name: "users",
         component: () => import("pages/users.vue"),
-        meta: {
-          title: "users",
-          userStatus: true,
-          requiresAuth: true,
-          permissions: ["admin"]
-        }
-      }
-    ]
-  },
-  {
-    path: "/settings",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
+        meta: { permission: ["admin"] }
+      },
       {
-        path: "",
-        component: () => import("pages/Settings.vue"),
-        meta: {
-          title: "settings",
-          userStatus: true,
-          requiresAuth: true,
-          permissions: ["admin"]
-        }
+        path: "/not-authorized",
+        name: "not-authorized",
+        component: () => import("pages/NotAuthorized.vue"),
+        meta: { permission: ["admin"] }
       }
     ]
   },
   {
-    path: "/auth",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () => import("pages/PageAuth.vue"),
-        meta: {
-          title: "auth"
-        }
-      }
-    ]
-  },
-
-  {
-    path: "/not-authorized",
-    component: () => import("pages/NotAuthorized.vue")
+    path: "/NotAuthorized",
+    component: () => import("pages/NotAuthorized.vue"),
+    meta: { permission: true }
   },
   // Always leave this as last one,
   // but you can also remove it

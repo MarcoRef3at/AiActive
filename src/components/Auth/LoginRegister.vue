@@ -18,7 +18,7 @@
         color="teal"
         class="col"
         outlined
-        v-model="formData.name"
+        v-model="formData.body.name"
         label="Name"
         stack-label
         lazy-rules
@@ -32,7 +32,7 @@
         color="teal"
         class="col"
         outlined
-        v-model="formData.email"
+        v-model="formData.body.email"
         label="Email"
         stack-label
         :rules="[
@@ -50,7 +50,7 @@
         color="teal"
         class="col"
         outlined
-        v-model="formData.password"
+        v-model="formData.body.password"
         label="Password"
         :type="isPasswordVisible ? 'password' : 'text'"
         stack-label
@@ -70,11 +70,21 @@
         </template>
       </q-input>
     </div>
+    <q-checkbox
+      id="rememberMe"
+      v-model="formData.rememberMe"
+      label="Remember Me"
+    />
 
     <!-- //Submit Button (Login or Register) -->
     <div class="row q-mb-md">
       <q-space />
-      <q-btn type="submit" :label="login_register_status" color="primary" />
+      <q-btn
+        type="submit"
+        :label="login_register_status"
+        color="primary"
+        :loading="loading"
+      />
     </div>
   </form>
 </template>
@@ -88,24 +98,39 @@ export default {
   data() {
     return {
       formData: {
-        name: "",
-        email: "",
-        password: "",
-        role: "user",
-        status: this.login_register_status
+        body: {
+          name: "",
+          email: "",
+          password: "",
+          role: "user"
+        },
+        status: this.login_register_status,
+        rememberMe: false
       },
-      isPasswordVisible: true
+      isPasswordVisible: true,
+      loading: false
     };
   },
   methods: {
     ...mapActions("auth", ["login_register", "isLoggedIn"]),
 
     submitForm() {
+      this.loading = true;
       this.$refs.email.validate();
       this.$refs.password.validate();
       if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
-        ////////////////////////Password is not encrypted in console////////////////////////
-        this.login_register(this.formData);
+        //todo: Password is not sent encrypted
+        this.login_register(this.formData)
+          .then(response => {
+            // this.$router.push('/account')
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            //todo: on wrong email it's not working well
+            // this.loading = false;
+          });
       }
     },
 

@@ -1,38 +1,79 @@
-//okkkk
-import Vue from "vue";
-import VueRouter from "vue-router";
-import JWT from "jwt-client";
-import { Cookies } from "quasar";
-import { showNotif } from "../functions/fn_ShowNotification";
+import { Notify } from "quasar";
+import { Axios } from "./axios";
 import auth from "../store/auth";
+// import enUS from "../i18n/en-us/auth";
+/* eslint-disable no-use-before-define */
 
-Vue.use(VueRouter);
+// import { jsonapiModule } from "jsonapi-vuex";
 
-export default ({ router, store }) => {
+/* eslint-enable no-use-before-define */
+function isArrayOrString(variable) {
+  if (typeof variable === typeof [] || typeof variable === typeof "") {
+    return true;
+  }
+  return false;
+}
+
+export default ({ app, router, store, Vue }) => {
+  // Axios.interceptors.response.use(
+  //   response => {
+  //     return response;
+  //   },
+  //   error => {
+  //     if (!error.response) {
+  //       Notify.create({
+  //         message: app.i18n.t("auth.network_error"),
+  //         color: "red"
+  //       });
+  //     }
+  //     return Promise.reject(error);
+  //   }
+  // );
+
+  // /**
+  //  * Register i18n
+  //  */
+  // app.i18n.mergeLocaleMessage("en-us", enUS);
+
+  /**
+   * Register auth store
+   */
   store.registerModule("auth", auth);
 
-  router.beforeEach((to, from, next) => {
-    let allowedToEnter = true;
-    store.dispatch("auth/isLoggedIn").then(() => {
-      //Check the data in the required path to go
-      to.matched.some(record => {
-        //Get LoggedIn value from the store & cookies
-        const hasCookies = Cookies.has("token");
-        const isLoggedIn = hasCookies;
+  // store.registerModule(
+  //   "jv",
+  //   jsonapiModule(Axios, { preserveJson: true })
+  // );
 
-        //if trying to access home page without login
-        //redirect to auth page
-        if (!isLoggedIn && record.meta.title === "home") {
+  /**
+   * Set route guard
+   */
+  router.beforeEach((to, from, next) => {
+    let loggedIn = store.getters["auth/isLoggedIn"];
+    const record = to.matched.find(record => record.meta.permission);
+    //if requires to be loggedIn
+    if (record) {
+      //check if logged in or not
+      store.dispatch("auth/isLoggedIn").then(() => {
+        //if Not logged in redirect to auth
+        if (!loggedIn) {
+          //add redirect
           next({
             path: "/auth",
-            replace: true
+            replace: true,
+            // redirect back to original path when done signing in
+            query: { redirect: to.fullPath }
           });
-        }
-        // ------------------------------------------------------------
-        //If there's a redirect meta go to this path
-        else if (
-          isLoggedIn &&
-          record.meta.title === "home" &&
+        } else if (
+          //if requested route requires a non-owned permission
+          isArrayOrString(record.meta.permission) &&
+          !store.getters["auth/check"](record.meta.permission)
+        ) {
+          router.push("/NotAuthorized").catch(err => {});
+        } else if (
+          //redirect to requested page after login
+          loggedIn &&
+          record.name === "home" &&
           typeof from.query.redirect != "undefined" &&
           from.query.redirect != "/"
         ) {
@@ -40,76 +81,15 @@ export default ({ router, store }) => {
             path: from.query.redirect,
             replace: true
           });
-        } else {
-          next();
-        }
-        // ------------------------------------------------------------
-
-        if ("meta" in record) {
-          // check if user needs to be logged in to access this page
-          if ("requiresAuth" in record.meta) {
-            if (record.meta.requiresAuth) {
-              // console.log("Page requires auth:", to, from);
-              // this route requires auth, check if user is logged in
-              // if not, redirect to login page.
-              if (!isLoggedIn) {
-                // User is not logged in, redirect to signin page
-                allowedToEnter = false;
-                next({
-                  path: "/auth",
-                  replace: true,
-                  // redirect back to original path when done signing in
-                  query: { redirect: to.fullPath }
-                });
-                return;
-              }
-            }
-          }
-
-          // ------------------------------------------------------------
-          // check if user has correct permissions to access this page
-          if (allowedToEnter && "permissions" in record.meta) {
-            let canProceed = false;
-            let permissions = record.meta.permissions;
-            // get currently logged in user permissions
-            let token = Cookies.get("token");
-            // decipher the token
-            let session = JWT.read(token);
-            // check if they are not an admin
-            if (session.claim.role == "admin") {
-              canProceed = true;
-            } else {
-              for (let index = 0; index < permissions.length; ++index) {
-                let requiredPermission = permissions[index];
-                if (requiredPermission == session.claim.role) {
-                  canProceed = true;
-                } else {
-                  next("/not-authorized");
-                }
-              }
-            }
-
-            if (!canProceed) {
-              allowedToEnter = false;
-              // redirect to previous page
-              // next(from.fullPath);
-              next("/not-authorized");
-            }
-          }
-        }
-
-        if (allowedToEnter) {
-          // go to the requested page
-          next();
         }
       });
-    });
+    }
+    next();
   });
 
-  //Change Tab Title to be with page name
-  router.afterEach((to, from) => {
-    Vue.nextTick(() => {
-      document.title = "Aiactive - " + to.meta.title;
-    });
+  //on Refresh Check if user is logged in
+  store.dispatch("auth/isLoggedIn").catch(response => {
+    console.log("response:", response);
+    store.dispatch("auth/logoutUser");
   });
 };

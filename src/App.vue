@@ -12,8 +12,6 @@ export default {
     ...mapActions("auth", ["handleBootUserAuth"])
   },
 
-  mounted() {
-    this.handleBootUserAuth();
-  }
+  mounted() {}
 };
 </script>

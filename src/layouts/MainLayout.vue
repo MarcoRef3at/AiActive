@@ -4,7 +4,7 @@
       <q-toolbar>
         <!-- Menu Button -->
         <q-btn
-          v-if="loggedIn && $route.path != '/auth'"
+          v-if="isLoggedIn && $route.path != '/auth'"
           flat
           dense
           round
@@ -19,7 +19,7 @@
 
         <!-- Login  Button -->
         <q-btn
-          v-if="!loggedIn && $route.path != '/auth'"
+          v-if="!isLoggedIn && $route.path != '/auth'"
           to="/auth"
           flat
           icon-right="account_circle"
@@ -30,7 +30,7 @@
         <!-- logout  Button -->
         <q-btn
           v-else-if="$route.path != '/auth'"
-          @click="logoutUser"
+          @click="showLogoutModal"
           flat
           icon-right="logout"
           label="Logout"
@@ -40,7 +40,7 @@
     </q-header>
 
     <q-drawer
-      v-if="loggedIn && $route.path != '/auth'"
+      v-if="isLoggedIn && $route.path != '/auth'"
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import EssentialLink from "components/EssentialLink.vue";
 
 const linksData = [
@@ -101,11 +101,23 @@ export default {
     };
   },
   methods: {
-    ...mapActions("auth", ["logoutUser"])
+    ...mapActions("auth", ["logoutUser"]),
+    showLogoutModal() {
+      this.$q
+        .dialog({
+          title: "Logout",
+          message: "Are you sure you want to logout?",
+          ok: "Logout",
+          cancel: "Cancel"
+        })
+        .onOk(() => {
+          this.logoutUser();
+        });
+    }
   },
 
   computed: {
-    ...mapState("auth", ["loggedIn"])
+    ...mapGetters("auth", ["isLoggedIn"])
   }
 };
 </script>
