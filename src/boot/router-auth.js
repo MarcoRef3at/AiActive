@@ -39,56 +39,60 @@ export default ({ app, router, store, Vue }) => {
   /**
    * Set route guard
    */
-  router.beforeEach((to, from, next) => {
-    console.log("to:", to);
+  router.beforeResolve((to, from, next) => {
     let loggedIn = store.getters["auth/isLoggedIn"];
     const record = to.matched.find(record => record.meta.permission);
     //to prevent rendering restricted pages before redirecting to "Not-Authorized" page
-    if (to.fullPath != "/auth") {
-      //if requires to be loggedIn
-      if (record) {
-        //check if logged in or not
-        store.dispatch("auth/isLoggedIn").then(() => {
-          //if Not logged in redirect to auth
-          if (!loggedIn) {
-            //add redirect
-            next({
-              path: "/auth",
-              replace: true,
-              // redirect back to original path when done signing in
-              query: { redirect: to.fullPath }
-            });
-          } else if (
-            //if requested route requires a non-owned permission
-            isArrayOrString(record.meta.permission) &&
-            !store.getters["auth/check"](record.meta.permission)
-          ) {
-            router.push("/NotAuthorized").catch(err => {});
-          } else if (
-            //redirect to requested page after login
-            loggedIn &&
-            record.name === "Home" &&
-            typeof from.query.redirect != "undefined" &&
-            from.query.redirect != "/"
-          ) {
-            next({
-              path: from.query.redirect,
-              replace: true
-            });
-          } else {
-            next();
-          }
-        });
-      }
-    } else {
-      next();
+    // if (to.fullPath != "/auth") {
+    //if requires to be loggedIn
+    if (record) {
+      //check if logged in or not
+      store.dispatch("auth/isLoggedIn").then(() => {
+        //if Not logged in redirect to auth
+        if (!loggedIn) {
+          //add redirect
+          next({
+            path: "/auth",
+            replace: true,
+            // redirect back to original path when done signing in
+            query: { redirect: to.fullPath }
+          });
+        } else if (
+          //if requested route requires a non-owned permission
+          isArrayOrString(record.meta.permission) &&
+          !store.getters["auth/check"](record.meta.permission)
+        ) {
+          // router.push("/NotAuthorized").catch(err => {});
+          next({
+            path: from.fullPath,
+            replace: true
+          });
+        } else if (
+          //redirect to requested page after login
+          loggedIn &&
+          record.name === "Home" &&
+          typeof from.query.redirect != "undefined" &&
+          from.query.redirect != "/"
+        ) {
+          next({
+            path: from.query.redirect,
+            replace: true
+          });
+        }
+        // else {
+        // }
+      });
     }
+    console.log("next");
+    next();
+    // } else {
+    // next();
+    // }
   });
 
   //on Refresh Check if user is logged in
-  store.dispatch("auth/isLoggedIn").catch(response => {
-    console.log("response:", response);
-    store.dispatch("auth/logoutUser");
+  store.dispatch("auth/isLoggedIn").catch(() => {
+    // store.dispatch("auth/logoutUser");
   });
 
   //Change Tab Title to be with page name

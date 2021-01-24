@@ -123,13 +123,13 @@ export default {
         this.login_register(this.formData)
           .then(response => {
             // this.$router.push('/account')
+            console.log("then:");
           })
           .catch(error => {
             console.log(error);
           })
           .finally(() => {
-            //todo: on wrong email it's not working well
-            // this.loading = false;
+            this.loading = false;
           });
       }
     },

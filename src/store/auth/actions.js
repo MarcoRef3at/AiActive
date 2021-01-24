@@ -5,31 +5,35 @@ import { Cookies } from "quasar";
 
 export function login_register(state, payload) {
   let self = this;
+  const p = new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      //payload.status = login or register
+      let host = `/auth/${payload.status}`;
 
-  setTimeout(() => {
-    //payload.status = login or register
-    let host = `/auth/${payload.status}`;
+      Axios.post(host, payload.body)
 
-    Axios.post(host, payload.body)
+        .then(response => {
+          let responseData = JWT.read(response.data.token).claim;
+          state.commit("setUserData", responseData);
+          const token = response.data.token;
+          Axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+          state.dispatch("setToken", {
+            token: token,
+            rememberMe: payload.rememberMe
+          });
+          self.$router.replace("/");
 
-      .then(response => {
-        let responseData = JWT.read(response.data.token).claim;
-        state.commit("setUserData", responseData);
-        const token = response.data.token;
-        Axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-        state.dispatch("setToken", {
-          token: token,
-          rememberMe: payload.rememberMe
+          resolve();
+        })
+
+        .catch(error => {
+          let err = error.response.data.error;
+          Notify.create(err);
+          reject(error);
         });
-        self.$router.replace("/");
-      })
-
-      .catch(error => {
-        //todo: check error
-        console.log("error:", error.response.data.error);
-        Notify(error.response.data.error);
-      });
-  }, 500);
+    }, 500);
+  });
+  return p;
 }
 
 export function setToken(state, data) {
@@ -46,7 +50,7 @@ export function setToken(state, data) {
   }
 }
 
-export async function isLoggedIn(state) {
+export function isLoggedIn(state) {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
   let host = "/auth/me";
@@ -58,15 +62,10 @@ export async function isLoggedIn(state) {
       })
 
       .catch(error => {
-        //todo: check error
-        console.log("error:", error.response.data.error);
-        // Notify(error.response.data.error);
-
+        Notify.create(error.response.data.error);
         //Client-Side Logout
         state.dispatch("logoutUser");
       });
-  } else {
-    state.dispatch("logoutUser");
   }
 }
 export function logoutUser(state) {
@@ -83,5 +82,5 @@ export function logoutUser(state) {
   //Client-Side Logout
   Cookies.remove("token");
   state.commit("setUserData", null);
-  this.$router.push("/auth");
+  this.$router.push("/auth").catch(err => {});
 }

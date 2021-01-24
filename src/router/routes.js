@@ -30,7 +30,7 @@ const routes = [
         path: "/users",
         name: "Users",
         component: () => import("pages/users.vue"),
-        meta: { permission: ["admin"] }
+        meta: { permission: ["user"] }
       },
       {
         path: "/not-authorized",
