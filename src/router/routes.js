@@ -23,7 +23,7 @@ const routes = [
       {
         path: "/settings",
         name: "Settings",
-        component: () => import("pages/settings.vue"),
+        component: () => import("pages/PageSettings.vue"),
         meta: { permission: ["admin"] }
       },
       {
