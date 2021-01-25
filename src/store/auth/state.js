@@ -1,3 +1,3 @@
 export default {
-  userData: {}
+  userData: null
 };

@@ -1,4 +1,5 @@
 export function isLoggedIn(state) {
+  console.log("state.userData:", state.userData);
   return state.userData !== null;
 }
 

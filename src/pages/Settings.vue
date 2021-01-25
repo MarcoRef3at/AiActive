@@ -1,4 +1,5 @@
 <template>
+  <!-- todo: conditional render according to permission (v-if) -->
   <q-page class="flex flex-center">
     <Users />
   </q-page>
