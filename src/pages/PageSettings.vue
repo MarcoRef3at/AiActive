@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Users from "src/components/Settings/Users.vue";
+import Users from "src/components/Settings/UsersSettings/UsersSettings";
 export default {
   components: { Users },
   name: "SettingsPage"

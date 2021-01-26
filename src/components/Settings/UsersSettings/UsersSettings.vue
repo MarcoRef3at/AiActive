@@ -10,11 +10,11 @@
       bordered
       flat
       hide-bottom
+      :filter="filter"
     >
-      <!-- :filter="filter"
-      :pagination="pagination" -->
+      <!--  :pagination="pagination" -->
       <template v-slot:top>
-        <!-- <q-btn
+        <q-btn
           outline
           rounded
           :label="$t('AddUser')"
@@ -36,7 +36,7 @@
           <template v-slot:append>
             <q-icon name="search" />
           </template>
-        </q-input> -->
+        </q-input>
       </template>
 
       <template v-slot:body="props">
@@ -66,7 +66,7 @@
           </q-td>
 
           <q-td auto-width>
-            <!-- <q-btn
+            <q-btn
               class="q-ma-sm"
               flat
               size="sm"
@@ -84,21 +84,21 @@
               dense
               @click="removeUser(props.row.id)"
               icon="remove"
-            /> -->
+            />
           </q-td>
         </q-tr>
       </template>
     </q-table>
 
     <!-- Add User Modal -->
-    <!-- <q-dialog v-model="addUserModal">
+    <q-dialog v-model="addUserModal">
       <add-user @close="addUserModal = false" />
-    </q-dialog> -->
+    </q-dialog>
 
     <!-- Edit User Modal -->
-    <!-- <q-dialog v-model="editUserModal" @hide="closeEditUser">
+    <q-dialog v-model="editUserModal" @hide="closeEditUser">
       <edit-user @close="closeEditUser" :user="modals.editUserData" />
-    </q-dialog> -->
+    </q-dialog>
   </div>
 </template>
 
@@ -111,6 +111,8 @@ export default {
       modals: {
         editUserData: {}
       },
+      editUserModal: false,
+      addUserModal: false,
       loading: false,
       filter: "",
       pagination: {
@@ -183,10 +185,10 @@ export default {
     };
   },
   components: {
-    // "add-user": require("components/Settings/UsersSettings/Modals/AddUser")
-    //   .default,
-    // "edit-user": require("components/Settings/UsersSettings/Modals/EditUser")
-    //   .default
+    "add-user": require("components/Settings/UsersSettings/Modals/AddUser")
+      .default,
+    "edit-user": require("components/Settings/UsersSettings/Modals/EditUser")
+      .default
   },
   methods: {
     // ...mapActions("users", [
@@ -195,27 +197,27 @@ export default {
     //   "setAddUserModal",
     //   "setEditUserModal"
     // ]),
-    // editUser(userId) {
-    //   let selectedUser = this.users.find(x => x.id === userId);
-    //   this.modals.editUserData = Object.assign({}, selectedUser);
-    //   this.editUserModal = true;
-    // },
-    // removeUser(userId) {
-    //   this.$q
-    //     .dialog({
-    //       title: "Confirm",
-    //       message: "Would you like to Delete this User?",
-    //       cancel: true
-    //       //persistent: true
-    //     })
-    //     .onOk(() => {
-    //       this.deleteUser(userId);
-    //     });
-    // },
-    // closeEditUser() {
-    //   this.editUserModal = false;
-    //   this.modals.editUserData = {};
-    // }
+    editUser(userId) {
+      // let selectedUser = this.users.find(x => x.id === userId);
+      // this.modals.editUserData = Object.assign({}, selectedUser);
+      this.editUserModal = true;
+    },
+    removeUser(userId) {
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Would you like to Delete this User?",
+          cancel: true
+          //persistent: true
+        })
+        .onOk(() => {
+          this.deleteUser(userId);
+        });
+    },
+    closeEditUser() {
+      this.editUserModal = false;
+      this.modals.editUserData = {};
+    }
   },
   mounted() {
     // this.getUsers();
@@ -230,7 +232,7 @@ export default {
     //   set(value) {
     //     this.setAddUserModal(value);
     //   }
-    // },
+    // }
     // editUserModal: {
     //   get() {
     //     return this.showEditUserModal;
@@ -241,14 +243,14 @@ export default {
     // }
   },
   filters: {
-    // isAdmin(value) {
-    //   if (value) return "admin";
-    //   else return "user";
-    // },
-    // isActive(value) {
-    //   if (value) return "enabled";
-    //   else return "disabled";
-    // }
+    isAdmin(value) {
+      if (value) return "admin";
+      else return "user";
+    },
+    isActive(value) {
+      if (value) return "enabled";
+      else return "disabled";
+    }
   }
 };
 </script>
