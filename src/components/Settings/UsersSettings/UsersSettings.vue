@@ -4,15 +4,15 @@
       title="Users"
       row-key="id"
       class="users-table"
-      :data="data"
+      :data="users"
       :columns="columns"
       :loading="loading"
       bordered
       flat
       hide-bottom
+      :filter="filter"
+      :pagination="pagination"
     >
-      <!-- :filter="filter" -->
-      <!--  :pagination="pagination" -->
       <template v-slot:top>
         <q-btn
           outline
@@ -25,18 +25,18 @@
 
         <q-space />
 
-        <!-- <q-input
+        <q-input
           bordered
           dense
           debounce="300"
           color="primary"
           :placeholder="$t('Search')"
-        > -->
-        <!-- v-model="filter" -->
-        <!-- <template v-slot:append>
+          v-model="filter"
+        >
+          <template v-slot:append>
             <q-icon name="search" />
           </template>
-        </q-input> -->
+        </q-input>
       </template>
 
       <template v-slot:body="props">
@@ -111,15 +111,15 @@ export default {
       modals: {
         editUserData: {}
       },
-      editUserModal: false,
-      addUserModal: false,
+      // editUserModal: false,
+      // addUserModal: false,
       loading: false,
-      // filter: "",
+      filter: "",
       pagination: {
         sortBy: "desc",
         descending: false,
         //page: 2,
-        rowsPerPage: 0
+        rowsPerPage: 5
         // rowsNumber: xx if getting data from a server
       },
       columns: [
@@ -159,29 +159,7 @@ export default {
         },
         { name: "actions", align: "center", label: this.$t("Actions") }
       ],
-      data: [
-        {
-          id: 1,
-          name: "Baher Elnaggar",
-          email: "baher@aiactive.com",
-          role: "admin",
-          status: true
-        },
-        {
-          id: 2,
-          name: "Ahmed Helmy",
-          email: "ahme@aiactive.com",
-          role: "admin",
-          status: true
-        },
-        {
-          id: 3,
-          name: "Sara H.",
-          email: "sara@aiactive.com",
-          role: "user",
-          status: false
-        }
-      ]
+      data: []
     };
   },
   components: {
@@ -191,12 +169,12 @@ export default {
       .default
   },
   methods: {
-    // ...mapActions("users", [
-    //   "getUsers",
-    //   "deleteUser",
-    //   "setAddUserModal",
-    //   "setEditUserModal"
-    // ]),
+    ...mapActions("users", [
+      // "getUsers",
+      // "deleteUser",
+      "setAddUserModal",
+      "setEditUserModal"
+    ]),
     editUser(userId) {
       // let selectedUser = this.users.find(x => x.id === userId);
       // this.modals.editUserData = Object.assign({}, selectedUser);
@@ -223,24 +201,26 @@ export default {
     // this.getUsers();
   },
   computed: {
-    // ...mapState("users", ["users"]),
-    // ...mapGetters("users", ["showAddUserModal", "showEditUserModal"]),
-    // addUserModal: {
-    //   get() {
-    //     return this.showAddUserModal;
-    //   },
-    //   set(value) {
-    //     this.setAddUserModal(value);
-    //   }
-    // }
-    // editUserModal: {
-    //   get() {
-    //     return this.showEditUserModal;
-    //   },
-    //   set(value) {
-    //     this.setEditUserModal(value);
-    //   }
-    // }
+    ...mapState("users", ["users"]),
+    ...mapGetters("users", ["showAddUserModal", "showEditUserModal"]),
+
+    addUserModal: {
+      get() {
+        return this.showAddUserModal;
+      },
+      set(value) {
+        this.setAddUserModal(value);
+      }
+    },
+
+    editUserModal: {
+      get() {
+        return this.showEditUserModal;
+      },
+      set(value) {
+        this.setEditUserModal(value);
+      }
+    }
   },
   filters: {
     // isAdmin(value) {

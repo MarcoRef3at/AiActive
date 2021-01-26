@@ -55,11 +55,11 @@ export default {
         isActive: true,
         userPassword: "",
         userConfirmPassword: ""
-      },
-      form: {
-        error: false,
-        message: "Password Fields must be identical!"
       }
+      //   form: {
+      //     error: false,
+      //     message: "Password Fields must be identical!"
+      //   }
     };
   },
   watch: {
