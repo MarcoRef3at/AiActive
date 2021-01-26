@@ -10,8 +10,8 @@
       bordered
       flat
       hide-bottom
-      :filter="filter"
     >
+      <!-- :filter="filter" -->
       <!--  :pagination="pagination" -->
       <template v-slot:top>
         <q-btn
@@ -25,18 +25,18 @@
 
         <q-space />
 
-        <q-input
+        <!-- <q-input
           bordered
           dense
           debounce="300"
           color="primary"
-          v-model="filter"
           :placeholder="$t('Search')"
-        >
-          <template v-slot:append>
+        > -->
+        <!-- v-model="filter" -->
+        <!-- <template v-slot:append>
             <q-icon name="search" />
           </template>
-        </q-input>
+        </q-input> -->
       </template>
 
       <template v-slot:body="props">
@@ -55,13 +55,13 @@
 
           <q-td key="permissions" :props="props">
             <q-badge :color="props.row.role == 'admin' ? 'primary' : 'green-5'">
-              {{ props.row.role | role }}
+              {{ props.row.role }}
             </q-badge>
           </q-td>
 
           <q-td key="status" :props="props">
             <q-badge :color="props.row.status ? 'primary' : 'accent'">
-              {{ props.row.status | status }}
+              {{ props.row.status }}
             </q-badge>
           </q-td>
 
@@ -114,7 +114,7 @@ export default {
       editUserModal: false,
       addUserModal: false,
       loading: false,
-      filter: "",
+      // filter: "",
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -243,14 +243,14 @@ export default {
     // }
   },
   filters: {
-    isAdmin(value) {
-      if (value) return "admin";
-      else return "user";
-    },
-    isActive(value) {
-      if (value) return "enabled";
-      else return "disabled";
-    }
+    // isAdmin(value) {
+    //   if (value) return "admin";
+    //   else return "user";
+    // },
+    // isActive(value) {
+    //   if (value) return "enabled";
+    //   else return "disabled";
+    // }
   }
 };
 </script>
