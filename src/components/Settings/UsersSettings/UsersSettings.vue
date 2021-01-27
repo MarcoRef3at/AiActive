@@ -111,8 +111,6 @@ export default {
       modals: {
         editUserData: {}
       },
-      // editUserModal: false,
-      // addUserModal: false,
       loading: false,
       filter: "",
       pagination: {
@@ -170,7 +168,7 @@ export default {
   },
   methods: {
     ...mapActions("users", [
-      // "getUsers",
+      "getUsers",
       // "deleteUser",
       "setAddUserModal",
       "setEditUserModal"
@@ -198,7 +196,7 @@ export default {
     }
   },
   mounted() {
-    // this.getUsers();
+    this.getUsers();
   },
   computed: {
     ...mapState("users", ["users"]),

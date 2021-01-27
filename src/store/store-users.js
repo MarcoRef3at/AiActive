@@ -1,41 +1,41 @@
-// import config from "@/../config/config";
-// import Vue from "vue";
-// import Axios from "axios";
-// import { LocalStorage, Loading, Notify } from "quasar";
-// import { showErrorMessage } from "src/functions/function-show-error-message";
+import config from "app/config/config";
+import Vue from "vue";
+import Axios from "axios";
+import { Cookies, Loading, Notify } from "quasar";
+import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 
 const state = {
   users: [
-    {
-      id: 1,
-      name: "Baher Elnaggar",
-      email: "baher@aiactive.com",
-      role: "admin",
-      status: true
-    },
-    {
-      id: 2,
-      name: "Ahmed Helmy",
-      email: "ahme@aiactive.com",
-      role: "admin",
-      status: true
-    },
-    {
-      id: 3,
-      name: "Sara H.",
-      email: "sara@aiactive.com",
-      role: "user",
-      status: false
-    }
+    // {
+    //   id: 1,
+    //   name: "Baher Elnaggar",
+    //   email: "baher@aiactive.com",
+    //   role: "admin",
+    //   status: true
+    // },
+    // {
+    //   id: 2,
+    //   name: "Ahmed Helmy",
+    //   email: "ahme@aiactive.com",
+    //   role: "admin",
+    //   status: true
+    // },
+    // {
+    //   id: 3,
+    //   name: "Sara H.",
+    //   email: "sara@aiactive.com",
+    //   role: "user",
+    //   status: false
+    // }
   ],
   showAddUserModal: false,
   showEditUserModal: false
 };
 
 const mutations = {
-  // addUser(state, user) {
-  //   state.users.push(user);
-  // },
+  addUser(state, user) {
+    state.users.push(user);
+  },
   // updateUser(state, payload) {
   //   // get user index
   //   let userIndex = state.users.findIndex(x => x.id == payload.id);
@@ -54,51 +54,53 @@ const mutations = {
 };
 
 const actions = {
-  // getUsers({ dispatch }) {
-  //   Loading.show();
-  //   setTimeout(() => {
-  //     const host = config.API_URL + "/users";
-  //     const userToken = LocalStorage.getItem("loggedInUserToken");
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${userToken}`
-  //     };
-  //     Axios.get(host, {
-  //       headers: headers
-  //     })
-  //       .then(response => {
-  //         let users = response.data;
-  //         dispatch("handleStateUsers", users);
-  //       })
-  //       .catch(error => {
-  //         showErrorMessage(error.message);
-  //       });
-  //   }, 500);
-  // },
-  // addUser({ commit, dispatch }, payload) {
-  //   Loading.show();
-  //   setTimeout(() => {
-  //     const host = config.API_URL + "/users";
-  //     const userToken = LocalStorage.getItem("loggedInUserToken");
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${userToken}`
-  //     };
-  //     Axios.post(host, payload, {
-  //       headers: headers
-  //     })
-  //       .then(response => {
-  //         commit("addUser", response.data.user);
-  //         dispatch("setAddUserModal", false);
-  //         Loading.hide();
-  //         Notify.create("User Successfully Added!");
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //         showErrorMessage(error.message);
-  //       });
-  //   }, 500);
-  // },
+  getUsers({ dispatch }) {
+    Loading.show();
+    setTimeout(() => {
+      const host = config.API_URL + "/users";
+      const token = Cookies.get("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      };
+      Axios.get(host, {
+        headers: headers
+      })
+        .then(response => {
+          console.log("response:", response);
+          let users = response.data.data;
+          dispatch("handleStateUsers", users);
+        })
+        .catch(error => {
+          console.log("error:", error);
+          showErrorMessage(error.message);
+        });
+    }, 500);
+  },
+  addUser({ commit, dispatch }, payload) {
+    Loading.show();
+    setTimeout(() => {
+      const host = config.API_URL + "/users";
+      const token = Cookies.get("token");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      };
+      Axios.post(host, payload, {
+        headers: headers
+      })
+        .then(response => {
+          commit("addUser", response.data.user);
+          dispatch("setAddUserModal", false);
+          Loading.hide();
+          Notify.create("User Successfully Added!");
+        })
+        .catch(error => {
+          console.log(error);
+          showErrorMessage(error.message);
+        });
+    }, 500);
+  },
   // updateUser({ commit, dispatch }, payload) {
   //   Loading.show();
   //   setTimeout(() => {
@@ -146,13 +148,13 @@ const actions = {
   //       });
   //   }, 500);
   // },
-  // handleStateUsers({ commit, getters }, payload) {
-  //   Loading.hide();
-  //   payload.forEach(user => {
-  //     // Commit only non-existing user with id
-  //     if (!getters.user_id.includes(user.id)) commit("addUser", user);
-  //   });
-  // },
+  handleStateUsers({ commit, getters }, payload) {
+    Loading.hide();
+    payload.forEach(user => {
+      // Commit only non-existing user with id
+      if (!getters.user_id.includes(user.id)) commit("addUser", user);
+    });
+  },
   setAddUserModal({ commit }, value) {
     commit("setAddUserModal", value);
   },

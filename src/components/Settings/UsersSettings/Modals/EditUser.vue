@@ -1,36 +1,36 @@
 <template>
   <q-card class="edit-user-modal">
-    <modal-header>Edit User</modal-header>
+    <!-- <modal-header>Edit User</modal-header> -->
 
-    <!-- <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm">
       <q-card-section>
-        <modal-user-name :name.sync="user.name" ref="modalUserName" />
+        <!-- <modal-user-name :name.sync="user.name" ref="modalUserName" />
 
-        <modal-user-email :email.sync="user.email" ref="modalUserEmail" />
+        <modal-user-email :email.sync="user.email" ref="modalUserEmail" /> -->
 
         <div class="row q-mb-sm justify-start">
-          <modal-user-permission
+          <!-- <modal-user-permission
             :isAdmin.sync="user.is_admin"
             ref="modalUserPermission"
-          />
+          /> -->
 
           <q-space />
 
-          <modal-user-status
+          <!-- <modal-user-status
             :isActive.sync="user.is_active"
             ref="modalUserStatus"
-          />
+          /> -->
         </div>
 
-        <modal-user-reset-password @resetPassword="resetPassword = $event" />
+        <!-- <modal-user-reset-password @resetPassword="resetPassword = $event" /> -->
 
-        <modal-user-form-error :error="resetPassword">
+        <!-- <modal-user-form-error :error="resetPassword">
           default user Password is (Password)
-        </modal-user-form-error>
+        </modal-user-form-error> -->
       </q-card-section>
 
-      <modal-buttons></modal-buttons>
-    </form> -->
+      <!-- <modal-buttons></modal-buttons> -->
+    </form>
   </q-card>
 </template>
 
