@@ -1,35 +1,35 @@
 <template>
   <q-card class="edit-user-modal">
-    <!-- <modal-header>Edit User</modal-header> -->
+    <modal-header>Edit User</modal-header>
 
     <form @submit.prevent="submitForm">
       <q-card-section>
-        <!-- <modal-user-name :name.sync="user.name" ref="modalUserName" />
+        <modal-user-name :name.sync="user.name" ref="modalUserName" />
 
-        <modal-user-email :email.sync="user.email" ref="modalUserEmail" /> -->
+        <modal-user-email :email.sync="user.email" ref="modalUserEmail" />
 
         <div class="row q-mb-sm justify-start">
-          <!-- <modal-user-permission
-            :isAdmin.sync="user.is_admin"
+          <modal-user-permission
+            :isAdmin.sync="user.role"
             ref="modalUserPermission"
-          /> -->
+          />
 
           <q-space />
 
-          <!-- <modal-user-status
-            :isActive.sync="user.is_active"
+          <modal-user-status
+            :isActive.sync="user.status"
             ref="modalUserStatus"
-          /> -->
+          />
         </div>
 
-        <!-- <modal-user-reset-password @resetPassword="resetPassword = $event" /> -->
+        <modal-user-reset-password @resetPassword="resetPassword = $event" />
 
-        <!-- <modal-user-form-error :error="resetPassword">
+        <modal-user-form-error :error="resetPassword">
           default user Password is (Password)
-        </modal-user-form-error> -->
+        </modal-user-form-error>
       </q-card-section>
 
-      <!-- <modal-buttons></modal-buttons> -->
+      <modal-buttons></modal-buttons>
     </form>
   </q-card>
 </template>
@@ -44,14 +44,22 @@ export default {
     };
   },
   components: {
-    // 'modal-header': require('components/Settings/UsersSettings/Modals/Shared/ModalHeader').default,
-    // 'modal-user-name': require('components/Settings/UsersSettings/Modals/Shared/ModalUserName').default,
-    // 'modal-user-email': require('components/Settings/UsersSettings/Modals/Shared/ModalUserEmail').default,
-    // 'modal-user-permission': require('components/Settings/UsersSettings/Modals/Shared/ModalUserPermission').default,
-    // 'modal-user-status': require('components/Settings/UsersSettings/Modals/Shared/ModalUserStatus').default,
-    // 'modal-user-reset-password': require('components/Settings/UsersSettings/Modals/Shared/ModalUserResetPassword').default,
-    // 'modal-user-form-error': require('components/Settings/UsersSettings/Modals/Shared/ModalUserFormError').default,
-    // 'modal-buttons': require('components/Settings/UsersSettings/Modals/Shared/ModalButtons').default
+    "modal-header": require("components/Settings/UsersSettings/Modals/Shared/ModalHeader")
+      .default,
+    "modal-user-name": require("components/Settings/UsersSettings/Modals/Shared/ModalUserName")
+      .default,
+    "modal-user-email": require("components/Settings/UsersSettings/Modals/Shared/ModalUserEmail")
+      .default,
+    "modal-user-permission": require("components/Settings/UsersSettings/Modals/Shared/ModalUserPermission")
+      .default,
+    "modal-user-status": require("components/Settings/UsersSettings/Modals/Shared/ModalUserStatus")
+      .default,
+    "modal-user-reset-password": require("components/Settings/UsersSettings/Modals/Shared/ModalUserResetPassword")
+      .default,
+    "modal-user-form-error": require("components/Settings/UsersSettings/Modals/Shared/ModalUserFormError")
+      .default,
+    "modal-buttons": require("components/Settings/UsersSettings/Modals/Shared/ModalButtons")
+      .default
   },
   methods: {
     // ...mapActions('users', ['updateUser']),
@@ -69,7 +77,9 @@ export default {
       // 	}
     }
   },
-  mounted() {}
+  mounted() {
+    // console.log("role", this.user.role);
+  }
 };
 </script>
 <style scoped>

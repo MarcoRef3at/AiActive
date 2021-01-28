@@ -53,7 +53,7 @@
             {{ props.row.email }}
           </q-td>
 
-          <q-td key="permissions" :props="props">
+          <q-td key="roles" :props="props">
             <q-badge :color="props.row.role == 'admin' ? 'primary' : 'green-5'">
               {{ props.row.role }}
             </q-badge>
@@ -144,10 +144,10 @@ export default {
           sortable: true
         },
         {
-          name: "permissions",
+          name: "roles",
           align: "center",
           label: this.$t("Permission"),
-          field: "isAdmin"
+          field: "role"
         },
         {
           name: "status",
@@ -174,8 +174,8 @@ export default {
       "setEditUserModal"
     ]),
     editUser(userId) {
-      // let selectedUser = this.users.find(x => x.id === userId);
-      // this.modals.editUserData = Object.assign({}, selectedUser);
+      let selectedUser = this.users.find(x => x.id === userId);
+      this.modals.editUserData = Object.assign({}, selectedUser);
       this.editUserModal = true;
     },
     removeUser(userId) {
@@ -196,7 +196,7 @@ export default {
     }
   },
   mounted() {
-    this.getUsers();
+    // this.getUsers();
   },
   computed: {
     ...mapState("users", ["users"]),

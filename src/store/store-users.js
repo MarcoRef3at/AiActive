@@ -6,27 +6,27 @@ import { showErrorMessage } from "src/functions/fn_ShowErrorMsg";
 
 const state = {
   users: [
-    // {
-    //   id: 1,
-    //   name: "Baher Elnaggar",
-    //   email: "baher@aiactive.com",
-    //   role: "admin",
-    //   status: true
-    // },
-    // {
-    //   id: 2,
-    //   name: "Ahmed Helmy",
-    //   email: "ahme@aiactive.com",
-    //   role: "admin",
-    //   status: true
-    // },
-    // {
-    //   id: 3,
-    //   name: "Sara H.",
-    //   email: "sara@aiactive.com",
-    //   role: "user",
-    //   status: false
-    // }
+    {
+      id: 1,
+      name: "Baher Elnaggar",
+      email: "baher@aiactive.com",
+      role: "Admin",
+      status: true
+    },
+    {
+      id: 2,
+      name: "Ahmed Helmy",
+      email: "ahme@aiactive.com",
+      role: "Admin",
+      status: true
+    },
+    {
+      id: 3,
+      name: "Sara H.",
+      email: "sara@aiactive.com",
+      role: "User",
+      status: false
+    }
   ],
   showAddUserModal: false,
   showEditUserModal: false
