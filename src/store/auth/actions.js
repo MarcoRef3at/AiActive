@@ -27,8 +27,9 @@ export function login_register(state, payload) {
         })
 
         .catch(error => {
-          let err = error.response.data.error;
-          Notify.create(err);
+          if (!typeof error.response === "undefined") {
+            Notify.create(error.response.data.error);
+          }
           reject(error);
         });
     }, 500);
@@ -62,7 +63,9 @@ export function isLoggedIn(state) {
       })
 
       .catch(error => {
-        Notify.create(error.response.data.error);
+        if (!typeof error.response === "undefined") {
+          Notify.create(error.response.data.error);
+        }
         //Client-Side Logout
         state.dispatch("logoutUser");
       });
