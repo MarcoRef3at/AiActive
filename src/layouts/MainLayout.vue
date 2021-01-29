@@ -8,34 +8,80 @@
           flat
           dense
           round
+          @click="leftDrawerOpen = !leftDrawerOpen"
           icon="menu"
           aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title>
-          Quasar App
+        <q-toolbar-title v-if="$q.screen.gt.sm" shrink class="q-ml-sm">
+          AIACTIVE Technologies
         </q-toolbar-title>
 
-        <!-- Login  Button -->
-        <q-btn
-          v-if="!isLoggedIn && $route.path != '/auth'"
-          to="/auth"
-          flat
-          icon-right="account_circle"
-          label="Login"
-          class="absolute-right"
-        />
+        <q-input
+          class=" absolute-center GPL__toolbar-input "
+          dense
+          color="orange"
+          standout
+          clearable
+          v-model="search"
+          placeholder="Search"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+        <q-space />
+        <div>
+          <!-- Login  Button -->
+          <q-btn
+            v-if="!isLoggedIn && $route.path != '/auth'"
+            to="/auth"
+            flat
+            icon-right="account_circle"
+            label="Login"
+            class="absolute-right"
+          />
 
-        <!-- logout  Button -->
-        <q-btn
-          v-else-if="$route.path != '/auth'"
-          @click="showLogoutModal"
-          flat
-          icon-right="logout"
-          label="Logout"
-          class="absolute-right"
-        />
+          <!-- LoggedIn Avatar -->
+          <q-btn v-else-if="$route.path != '/auth'" round flat>
+            <q-avatar size="26px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+            <q-tooltip>Account</q-tooltip>
+
+            <!-- DropDown List -->
+            <q-menu>
+              <q-list class="text-grey-8" style="min-width: 100px">
+                <q-item aria-hidden="true">
+                  <!-- List Header -->
+                  <q-item-section
+                    class="text-uppercase text-grey-7"
+                    style="font-size: 0.7rem"
+                    >Account</q-item-section
+                  >
+                </q-item>
+
+                <!-- List Items -->
+                <q-item
+                  v-for="menu in accountMenu"
+                  :key="menu.text"
+                  clickable
+                  @click="menuActionClick(menu.clickAction)"
+                  v-close-popup
+                  aria-hidden="true"
+                >
+                  <!-- List Items Icon -->
+                  <q-item-section avatar>
+                    <q-icon :name="menu.icon" />
+                  </q-item-section>
+
+                  <!-- List Items Label -->
+                  <q-item-section>{{ menu.text }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -45,17 +91,32 @@
       show-if-above
       bordered
       content-class="bg-grey-1"
+      @click="leftDrawerOpen = false"
+      behavior="mobile"
     >
-      <q-list>
-        <q-item-label header class="text-grey-8">
-          Essential Links
-        </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+      <q-scroll-area class="fit">
+        <q-toolbar class="GPL__toolbar">
+          <q-toolbar-title class="row items-center text-grey-8">
+            <img
+              class="q-pl-md"
+              src="~/assets/aiactive-logo.png"
+              style="width:80%"
+            />
+          </q-toolbar-title>
+        </q-toolbar>
+
+        <q-list padding>
+          <q-item-label header class="text-grey-8">
+            Essential Links
+          </q-item-label>
+          <EssentialLink
+            v-for="link in essentialLinks"
+            :key="link.title"
+            v-bind="link"
+            clickable
+          />
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -96,8 +157,13 @@ export default {
   components: { EssentialLink },
   data() {
     return {
+      search: "",
       leftDrawerOpen: false,
-      essentialLinks: linksData
+      essentialLinks: linksData,
+      accountMenu: [
+        { icon: "settings", text: "Settings", clickAction: "/settings" },
+        { icon: "logout", text: "Logout", clickAction: "logout" }
+      ]
     };
   },
   methods: {
@@ -113,6 +179,13 @@ export default {
         .onOk(() => {
           this.logoutUser();
         });
+    },
+    menuActionClick(action) {
+      if (action === "logout") {
+        this.showLogoutModal();
+      } else {
+        this.$router.push(action);
+      }
     }
   },
 
@@ -121,3 +194,46 @@ export default {
   }
 };
 </script>
+<style lang="sass">
+.GPL
+
+  &__toolbar
+    height: 64px
+
+  &__toolbar-input
+    width: 35%
+
+  &__drawer-item
+    line-height: 24px
+    border-radius: 0 24px 24px 0
+    margin-right: 12px
+
+    .q-item__section--avatar
+      padding-left: 12px
+      .q-icon
+        color: #5f6368
+
+    .q-item__label:not(.q-item__label--caption)
+      color: #3c4043
+      letter-spacing: .01785714em
+      font-size: .875rem
+      font-weight: 500
+      line-height: 1.25rem
+
+    &--storage
+      border-radius: 0
+      margin-right: 0
+      padding-top: 24px
+      padding-bottom: 24px
+
+  &__side-btn
+    &__label
+      font-size: 12px
+      line-height: 24px
+      letter-spacing: .01785714em
+      font-weight: 500
+
+  @media (min-width: 1024px)
+    &__page-container
+      padding-left: 94px
+</style>
