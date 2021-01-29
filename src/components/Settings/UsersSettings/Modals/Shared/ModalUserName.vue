@@ -11,8 +11,8 @@
       label="User name"
       stack-label
       class="col"
+      v-select-all
     >
-      <!-- v-select-all -->
       <template v-slot:append>
         <q-icon
           v-if="name"

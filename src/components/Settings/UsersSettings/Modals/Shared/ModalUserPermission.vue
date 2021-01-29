@@ -2,7 +2,7 @@
   <div class="column q-mr-sm permission">
     <q-select
       outlined
-      @input="$emit('update:isAdmin', $event.value)"
+      @input="$emit('update:role', $event.value)"
       v-model="model"
       :options="options"
       label="Permission"
@@ -14,30 +14,30 @@
 
 <script>
 export default {
-  props: ["isAdmin"],
+  props: ["role"],
   data() {
     return {
       options: [
         {
           label: "Admin",
-          value: 1
+          value: "admin"
         },
         {
           label: "User",
-          value: 0
+          value: "user"
         }
       ]
     };
   },
   methods: {},
   mounted() {
-    // this.model = this.isAdmin;
+    // this.model = this.role;
     // console.log("permission", this.model);
   },
   computed: {
     model: {
       get() {
-        if (this.isAdmin)
+        if (this.role == "admin")
           return {
             label: "Admin",
             value: 1

@@ -14,6 +14,7 @@
       :pagination="pagination"
     >
       <template v-slot:top>
+        <!-- Button ADD -->
         <q-btn
           outline
           rounded
@@ -25,6 +26,7 @@
 
         <q-space />
 
+        <!-- Search bar -->
         <q-input
           bordered
           dense
@@ -39,32 +41,38 @@
         </q-input>
       </template>
 
+      <!-- Column ID -->
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="id" :props="props">
             {{ props.row.id }}
           </q-td>
 
+          <!-- Column NAME -->
           <q-td key="name" :props="props" class="text-subtitle2">
             {{ props.row.name }}
           </q-td>
 
+          <!-- Column EMAIL -->
           <q-td key="email" :props="props">
             {{ props.row.email }}
           </q-td>
 
+          <!-- Column ROLE -->
           <q-td key="roles" :props="props">
             <q-badge :color="props.row.role == 'admin' ? 'primary' : 'green-5'">
-              {{ props.row.role }}
+              {{ props.row.role | capitalizeLetter }}
             </q-badge>
           </q-td>
 
+          <!-- Column STATUS  -->
           <q-td key="status" :props="props">
             <q-badge :color="props.row.status ? 'primary' : 'accent'">
-              {{ props.row.status }}
+              {{ props.row.status | isActive }}
             </q-badge>
           </q-td>
 
+          <!-- Button EDIT -->
           <q-td auto-width>
             <q-btn
               class="q-ma-sm"
@@ -76,6 +84,8 @@
               @click="editUser(props.row.id)"
               icon="edit"
             />
+
+            <!-- Button REMOVE -->
             <q-btn
               class="q-ma-sm"
               size="sm"
@@ -90,12 +100,12 @@
       </template>
     </q-table>
 
-    <!-- Add User Modal -->
+    <!-- Modal Add User -->
     <q-dialog v-model="addUserModal">
       <add-user @close="addUserModal = false" />
     </q-dialog>
 
-    <!-- Edit User Modal -->
+    <!-- Modal Edit User -->
     <q-dialog v-model="editUserModal" @hide="closeEditUser">
       <edit-user @close="closeEditUser" :user="modals.editUserData" />
     </q-dialog>
@@ -221,14 +231,17 @@ export default {
     }
   },
   filters: {
+    capitalizeLetter(value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    },
     // isAdmin(value) {
     //   if (value) return "admin";
     //   else return "user";
     // },
-    // isActive(value) {
-    //   if (value) return "enabled";
-    //   else return "disabled";
-    // }
+    isActive(value) {
+      if (value) return "Enabled";
+      else return "Disabled";
+    }
   }
 };
 </script>

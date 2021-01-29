@@ -10,7 +10,7 @@
 
         <div class="row q-mb-sm justify-start">
           <modal-user-permission
-            :isAdmin.sync="user.role"
+            :role.sync="user.role"
             ref="modalUserPermission"
           />
 
@@ -29,7 +29,7 @@
         </modal-user-form-error>
       </q-card-section>
 
-      <modal-buttons></modal-buttons>
+      <modal-buttons :loading="loading" />
     </form>
   </q-card>
 </template>
@@ -40,7 +40,8 @@ export default {
   props: ["user"],
   data() {
     return {
-      resetPassword: false
+      resetPassword: false,
+      loading: false
     };
   },
   components: {
@@ -62,19 +63,22 @@ export default {
       .default
   },
   methods: {
-    // ...mapActions('users', ['updateUser']),
+    ...mapActions("users", ["updateUser"]),
 
     submitForm() {
-      // 	let nameValidation = this.$refs.modalUserName.$refs.name
-      // 		nameValidation.validate()
-      // 	let emailValidation = this.$refs.modalUserEmail.$refs.email
-      // 		emailValidation.validate()
-      // 	if (!nameValidation.hasError && !emailValidation.hasError) {
-      // 		if(this.resetPassword) {
-      // 			this.user.resetPassword = true
-      // 		}
-      // 		this.updateUser(this.user)
-      // 	}
+      let nameValidation = this.$refs.modalUserName.$refs.name;
+      nameValidation.validate();
+      let emailValidation = this.$refs.modalUserEmail.$refs.email;
+      emailValidation.validate();
+      if (!nameValidation.hasError && !emailValidation.hasError) {
+        this.loading = true;
+        if (this.resetPassword) {
+          this.user.resetPassword = true;
+        }
+        this.updateUser(this.user).finally(() => {
+          this.loading = false;
+        });
+      }
     }
   },
   mounted() {

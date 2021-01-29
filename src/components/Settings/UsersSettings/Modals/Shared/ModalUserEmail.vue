@@ -12,8 +12,8 @@
       label="User email"
       stack-label
       class="col"
+      v-select-all
     >
-      <!-- v-select-all -->
       <template v-slot:append>
         <q-icon
           v-if="email"
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-// import { selectAll } from 'src/directives/directive-select-all'
+import { selectAll } from "src/directives/directive-select-all";
 
 export default {
   props: ["email"],
-  // directives: {
-  // 	selectAll
-  // },
+  directives: {
+    selectAll
+  },
   methods: {
     isValidEmailAddress(email) {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

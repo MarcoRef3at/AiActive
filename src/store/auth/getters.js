@@ -11,7 +11,9 @@ export const check = state => roles => {
   if (user) {
     if (Array.isArray(roles) && roles.length) {
       for (let role of roles) {
-        if (!user.role.includes(role)) {
+        if (user.role == "admin") {
+          return true;
+        } else if (!user.role.includes(role)) {
           return false;
         }
       }
