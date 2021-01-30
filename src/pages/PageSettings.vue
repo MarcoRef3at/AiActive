@@ -60,11 +60,11 @@
 
         <q-tab-panel name="average-speed-settings">
           <average-speed-settings />
-        </q-tab-panel>
+        </q-tab-panel>-->
 
         <q-tab-panel name="general-settings">
           <general-settings />
-        </q-tab-panel> -->
+        </q-tab-panel>
       </q-tab-panels>
     </q-card>
   </q-page>
@@ -76,6 +76,8 @@ import { mapState, mapActions } from "vuex";
 export default {
   components: {
     "users-settings": require("components/Settings/UsersSettings/UsersSettings")
+      .default,
+    "general-settings": require("components/Settings/GeneralSettings/GeneralSettings")
       .default
   },
   name: "SettingsPage",
