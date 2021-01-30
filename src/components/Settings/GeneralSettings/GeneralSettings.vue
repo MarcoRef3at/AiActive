@@ -1,42 +1,42 @@
 <template>
-  <form @submit="onSubmit" class="q-pa-md">
-    <q-select
-      :label="$t('SelectLanguage')"
-      v-model="lang"
-      :options="langOptions"
-      dense
-      borderless
-      map-options
-      options-dense
-      style="max-width: 150px"
-    />
-    <q-color
-      name="accent_color"
-      v-model="color"
-      style="width: 200px; max-width: 100%;"
-    />
-    <div
-      v-for="(item, index) in submitResult"
-      :key="index"
-      class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap"
-    >
-      {{ item.name }} = {{ item.value }}
-    </div>
-    <div class="row justify-end">
-      <q-btn type="submit" :label="$t('Apply')" class="q-mt-md" color="blue">
-      </q-btn>
-    </div>
-  </form>
-</template>
+  <div class="q-pa-md">
+    <q-form @submit="onSubmit" class="q-gutter-md">
+      <q-select
+        :label="$t('SelectLanguage')"
+        v-model="lang"
+        :options="langOptions"
+        dense
+        borderless
+        map-options
+        options-dense
+        style="max-width: 150px"
+      />
+      <q-color
+        name="accent_color"
+        v-model="color"
+        style="width: 200px; max-width: 100%;"
+      />
 
+      <div class="row justify-end">
+        <q-btn
+          type="submit"
+          :label="$t('Apply')"
+          class="q-mt-md"
+          color="primary"
+        >
+        </q-btn>
+      </div>
+    </q-form>
+  </div>
+</template>
 <script>
 import languages from "quasar/lang/index.json";
-import { Loading } from "quasar";
-import { colors } from "quasar";
-
 const appLanguages = languages.filter(lang =>
   ["ar", "en-us"].includes(lang.isoName)
 );
+import { Loading } from "quasar";
+import { colors } from "quasar";
+
 export default {
   data() {
     return {
@@ -45,43 +45,33 @@ export default {
       submitResult: []
     };
   },
+
   methods: {
-    onSubmit() {
-      this.setLanguage();
-      this.setColor(color);
+    setTheme() {
+      const { setBrand } = colors;
+      setBrand("primary", this.color);
+      // todo : cookies not working well
+      this.$cookies.set("ThemeColor", this.color);
     },
     setLanguage() {
+      //Change Language
+      this.$i18n.locale = this.lang.value;
+      // todo : cookies not working well
+      this.$cookies.set("Language", this.$i18n.locale);
+      //Change RTL direction
+      import(`quasar/lang/${this.lang.value}`).then(language => {
+        this.$q.lang.set(language.default);
+      });
+    },
+    onSubmit() {
       Loading.show();
       setTimeout(() => {
-        //Change Language
-        this.$i18n.locale = this.lang.value;
-        //Change RTL direction
-        import(`quasar/lang/${this.lang.value}`).then(language => {
-          this.$q.lang.set(language.default);
-        });
+        this.setLanguage();
+        this.setTheme();
         Loading.hide();
       }, 300);
-    },
-    setColor(color) {
-      Loading.show();
-      setTimeout(() => {
-        //Change Language
-        const { setBrand } = colors;
-        setBrand("primary", color);
-        Loading.hide();
-      }, 300);
-    },
-    // todo : bayzaaaa
-    setTheme(color) {
-      // get status
-      this.$q.dark.set(false);
-      // console.log(this.$q.dark.isActive); // true, false
-      // destructuring to keep only what is needed
-      const { setBrand } = colors;
-      setBrand("primary", color);
     }
   },
-
   created() {
     this.langOptions = appLanguages.map(lang => ({
       label: lang.nativeName,

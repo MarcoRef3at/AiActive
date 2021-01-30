@@ -1,10 +1,10 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar style="height: 58px">
         <!-- Menu Button -->
         <q-btn
-          v-if="isLoggedIn && $route.path != '/auth'"
+          v-if="isLoggedIn && $route.path != '/auth' && $q.screen.gt.sm"
           flat
           dense
           round
@@ -84,42 +84,79 @@
         </div>
       </q-toolbar>
     </q-header>
+    <!-- Mobile Footer -->
+    <q-footer v-if="!$q.screen.gt.sm">
+      <q-tabs>
+        <q-item
+          v-for="nav in navs"
+          :key="nav.label"
+          :to="nav.to"
+          exact
+          clickable
+          class="text-white"
+          active-class="bg-primary-light-dimmed text-yellow-8"
+        >
+          <q-item-section avatar center>
+            <q-icon :name="nav.icon" />
+          </q-item-section>
+          <q-tooltip>{{ $t(nav.label) }}</q-tooltip>
+        </q-item>
+      </q-tabs>
+    </q-footer>
 
     <q-drawer
-      v-if="isLoggedIn && $route.path != '/auth'"
+      v-if="isLoggedIn && $route.path != '/auth' && $q.screen.gt.sm"
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
-      content-class="bg-grey-1"
       @click="leftDrawerOpen = false"
-      behavior="mobile"
+      :mini="miniState"
+      @mouseover="miniState = false"
+      @mouseout="miniState = true"
+      mini-to-overlay
+      overlay
+      content-class="bg-primary"
     >
       <q-scroll-area class="fit">
-        <q-toolbar class="GPL__toolbar">
-          <q-toolbar-title class="row items-center text-grey-8">
+        <!-- Drawer Toolbar -->
+        <q-toolbar style="height: 20px">
+          <q-toolbar-title class="row items-center ">
+            <!-- Logo Opened -->
             <img
-              class="q-pl-md"
+              v-if="!miniState"
+              class="q-pt-lg q-mx-md "
               src="~/assets/aiactive-logo.png"
               style="width:80%"
             />
+            <!-- Logo Closed -->
+            <q-avatar v-else size="30px" class="q-pt-md q-mb-md ">
+              <img src="~/assets/Logo_2020.png" />
+            </q-avatar>
           </q-toolbar-title>
         </q-toolbar>
-
-        <q-list padding>
-          <q-item-label header class="text-grey-8">
-            Essential Links
-          </q-item-label>
-          <EssentialLink
-            v-for="link in essentialLinks"
-            :key="link.title"
-            v-bind="link"
+        <q-list class="q-pt-lg">
+          <q-item
+            v-for="nav in navs"
+            :key="nav.label"
+            :to="nav.to"
+            exact
             clickable
-          />
+            class="text-white"
+            active-class="bg-primary-light-dimmed text-yellow-7"
+          >
+            <q-item-section avatar>
+              <q-icon :name="nav.icon" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>
+                {{ $t(nav.label) }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container :class="$q.screen.gt.sm ? 'q-pl-xl' : 'q-pb-xl'">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -127,42 +164,39 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import EssentialLink from "components/EssentialLink.vue";
-
-const linksData = [
-  {
-    title: "Home",
-    icon: "home",
-    link: "/"
-  },
-  {
-    title: "Settings",
-    icon: "settings",
-    link: "/Settings"
-  },
-  {
-    title: "users",
-    icon: "users",
-    link: "/users"
-  },
-  {
-    title: "lpr",
-    icon: "lpr",
-    link: "/lpr"
-  }
-];
 
 export default {
   name: "MainLayout",
-  components: { EssentialLink },
   data() {
     return {
+      miniState: true,
       search: "",
       leftDrawerOpen: false,
-      essentialLinks: linksData,
       accountMenu: [
         { icon: "settings", text: "Settings", clickAction: "/settings" },
         { icon: "logout", text: "Logout", clickAction: "logout" }
+      ],
+      navs: [
+        {
+          label: "Home",
+          icon: "home",
+          to: "/"
+        },
+        {
+          label: "Settings",
+          icon: "settings",
+          to: "/Settings"
+        },
+        {
+          label: "users",
+          icon: "fas fa-users",
+          to: "/users"
+        },
+        {
+          label: "lpr",
+          icon: "device_hub",
+          to: "/lpr"
+        }
       ]
     };
   },
@@ -198,7 +232,7 @@ export default {
 .GPL
 
   &__toolbar
-    height: 64px
+    height: 40px
 
   &__toolbar-input
     width: 35%
