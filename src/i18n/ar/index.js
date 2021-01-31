@@ -9,6 +9,9 @@ export default {
   Login: "تسجيل دخول",
   online: "متصل",
   offline: "غير متصل",
+  Home: "الصفحة الرئيسية",
+  Lpr: "LPR",
+  Users: "مستخدمين",
   //FreeFlow
   AutoUpdate: "تحديث تلقائى",
   SearchPlate: "بحث بالوحة",

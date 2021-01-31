@@ -6,6 +6,9 @@ export default {
   TollGates: "Toll Gates",
   Reporting: "Reporting",
   Settings: "Settings",
+  Home: "Home",
+  Lpr: "LPR",
+  Users: "Users",
   //TitleBar
   Logout: "Logout",
   Login: "Login",

@@ -11,11 +11,7 @@
         options-dense
         style="max-width: 150px"
       />
-      <q-color
-        name="accent_color"
-        v-model="color"
-        style="width: 200px; max-width: 100%;"
-      />
+      <q-color v-model="color" no-header no-footer class="my-picker" />
 
       <div class="row justify-end">
         <q-btn
@@ -41,7 +37,7 @@ export default {
   data() {
     return {
       lang: this.$i18n.locale,
-      color: "#f66363",
+      color: localStorage.getItem("ThemeColor") || "#027be3",
       submitResult: []
     };
   },
@@ -50,18 +46,19 @@ export default {
     setTheme() {
       const { setBrand } = colors;
       setBrand("primary", this.color);
-      // todo : cookies not working well
-      this.$cookies.set("ThemeColor", this.color);
+      localStorage.setItem("ThemeColor", this.color);
     },
     setLanguage() {
       //Change Language
       this.$i18n.locale = this.lang.value;
+
+      console.log("lang:", this.lang.value);
       // todo : cookies not working well
-      this.$cookies.set("Language", this.$i18n.locale);
       //Change RTL direction
       import(`quasar/lang/${this.lang.value}`).then(language => {
         this.$q.lang.set(language.default);
       });
+      localStorage.setItem("Language", this.lang.value);
     },
     onSubmit() {
       Loading.show();
@@ -73,6 +70,7 @@ export default {
     }
   },
   created() {
+    console.log("this.$i18n.locale:", this.$i18n.locale);
     this.langOptions = appLanguages.map(lang => ({
       label: lang.nativeName,
       value: lang.isoName
