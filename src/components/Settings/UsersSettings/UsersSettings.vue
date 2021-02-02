@@ -179,7 +179,7 @@ export default {
   methods: {
     ...mapActions("users", [
       "getUsers",
-      // "deleteUser",
+      "deleteUser",
       "setAddUserModal",
       "setEditUserModal"
     ]),

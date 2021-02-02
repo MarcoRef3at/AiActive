@@ -40,7 +40,6 @@ export default {
   Database: "Database",
   Notifications: "Notification",
   General: "General",
-  Search: "Search",
   AddUser: "Add User",
   Name: "Name",
   Email: "Email",

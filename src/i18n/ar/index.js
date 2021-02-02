@@ -38,7 +38,6 @@ export default {
   Database: "قاعدة بيانات",
   Notifications: "اشعارات",
   General: "عام",
-  Search: "بحث",
   AddUser: "اضافة مستخدم",
   Name: "اسم المستخدم",
   Email: "بريد الكترونى",

@@ -58,7 +58,16 @@ module.exports = function(/* ctx */) {
       // extractCSS: false,
 
       // https://quasar.dev/quasar-cli/handling-webpack
-      extendWebpack(cfg) {}
+      extendWebpack(cfg) {
+        cfg.module.rules.push({
+          resourceQuery: /blockType=i18n/,
+          type: "javascript/auto",
+          use: [
+            { loader: "@kazupon/vue-i18n-loader" },
+            { loader: "yaml-loader" }
+          ]
+        });
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer

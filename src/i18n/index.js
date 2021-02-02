@@ -6,4 +6,4 @@ const messages = {
   ar: arAR
 };
 
-export { messages };
+export default messages;
