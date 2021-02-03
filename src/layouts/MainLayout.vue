@@ -37,7 +37,7 @@ export default {
 
     //Change RTL direction
     let Language = localStorage.getItem("Language");
-    console.log("language:", Language == "undefined");
+    // console.log("language:", Language == "undefined");
     if (Language != null && Language != "undefined") {
       this.$i18n.locale = Language;
       import(`quasar/lang/${Language}`).then(language => {

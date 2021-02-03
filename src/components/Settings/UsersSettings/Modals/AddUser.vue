@@ -4,7 +4,7 @@
 
     <form @submit.prevent="submitForm">
       <q-card-section>
-        <modal-user-name :name.sync="userData.userName" ref="modalUserName" />
+        <modal-user-name :name.sync="userData.name" ref="modalUserName" />
 
         <modal-user-email :email.sync="userData.email" ref="modalUserEmail" />
 
@@ -17,18 +17,18 @@
           <q-space />
 
           <modal-user-status
-            :isActive.sync="userData.isActive"
+            :status.sync="userData.status"
             ref="modalUserStatus"
           />
         </div>
 
         <modal-user-password
-          :password.sync="userData.userPassword"
+          :password.sync="userData.password"
           ref="modalUserPassword"
         />
 
         <modal-user-confirm-password
-          :confirmPassword.sync="userData.userConfirmPassword"
+          :confirmPassword.sync="userConfirmPassword"
           ref="modalUserConfirmPassword"
         />
 
@@ -49,13 +49,13 @@ export default {
   data() {
     return {
       userData: {
-        userName: "",
+        name: "",
         email: "",
-        isAdmin: false,
-        isActive: true,
-        userPassword: "",
-        userConfirmPassword: ""
+        role: "user",
+        status: true,
+        password: ""
       },
+      userConfirmPassword: "",
       form: {
         error: false,
         message: "Password Fields must be identical!"
@@ -64,10 +64,10 @@ export default {
     };
   },
   watch: {
-    "userData.userPassword": function(newVal, oldVal) {
+    "userData.password": function(newVal, oldVal) {
       if (newVal) this.form.error = false;
     },
-    "userData.userConfirmPassword": function(newVal, oldVal) {
+    userConfirmPassword: function(newVal, oldVal) {
       if (newVal) this.isMatched();
     }
   },
@@ -114,15 +114,14 @@ export default {
           // check if password field is identical
           this.loading = true;
           console.log("adding user");
-          this.addUser(this.userData)
-          .finally(() => {
+          this.addUser(this.userData).finally(() => {
             this.loading = false;
           });
         }
       }
     },
     isMatched() {
-      if (this.userData.userPassword == this.userData.userConfirmPassword) {
+      if (this.userData.password == this.userConfirmPassword) {
         this.form.error = false;
         return true;
       } else {

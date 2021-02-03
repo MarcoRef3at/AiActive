@@ -9,9 +9,9 @@
       :loading="loading"
       bordered
       flat
-      hide-bottom
       :filter="filter"
-      :pagination="pagination"
+      :pagination.sync="pagination"
+      @request="onRequest"
     >
       <template v-slot:top>
         <!-- Button ADD -->
@@ -126,7 +126,7 @@ export default {
       pagination: {
         sortBy: "desc",
         descending: false,
-        //page: 2,
+        page: 1,
         rowsPerPage: 5
         // rowsNumber: xx if getting data from a server
       },
@@ -181,8 +181,18 @@ export default {
       "getUsers",
       "deleteUser",
       "setAddUserModal",
-      "setEditUserModal"
+      "setEditUserModal",
+      "setPagination"
     ]),
+    onRequest(props) {
+      const { page, rowsPerPage, sortBy, descending } = props.pagination;
+      console.log("props:", props);
+
+      this.setPagination({
+        page: page,
+        limit: rowsPerPage
+      });
+    },
     editUser(userId) {
       let selectedUser = this.users.find(x => x.id === userId);
       this.modals.editUserData = Object.assign({}, selectedUser);
@@ -206,8 +216,12 @@ export default {
     }
   },
   mounted() {
-    // this.getUsers();
+    this.onRequest({
+      pagination: this.pagination
+    });
+    this.getUsers();
   },
+
   computed: {
     ...mapState("users", ["users"]),
     ...mapGetters("users", ["showAddUserModal", "showEditUserModal"]),
@@ -228,6 +242,14 @@ export default {
       set(value) {
         this.setEditUserModal(value);
       }
+    }
+  },
+  watch: {
+    pagination: function() {
+      this.onRequest({
+        pagination: this.pagination
+      });
+      this.getUsers();
     }
   },
   filters: {
