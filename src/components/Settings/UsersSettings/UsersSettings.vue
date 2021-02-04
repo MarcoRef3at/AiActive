@@ -2,16 +2,16 @@
   <div class="q-pa-md">
     <q-table
       title="Users"
-      row-key="id"
-      class="users-table"
       :data="users"
       :columns="columns"
+      row-key="id"
+      :pagination.sync="pagination"
       :loading="loading"
+      :filter="filter"
+      @request="onRequest"
+      class="users-table"
       bordered
       flat
-      :filter="filter"
-      :pagination.sync="pagination"
-      @request="onRequest"
     >
       <template v-slot:top>
         <!-- Button ADD -->
@@ -128,7 +128,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 5
-        // rowsNumber: xx if getting data from a server
+        // rowsNumber: 20
       },
       columns: [
         {
@@ -185,13 +185,25 @@ export default {
       "setPagination"
     ]),
     onRequest(props) {
+      this.loading = true;
       const { page, rowsPerPage, sortBy, descending } = props.pagination;
-      console.log("props:", props);
 
-      this.setPagination({
-        page: page,
-        limit: rowsPerPage
-      });
+      setTimeout(() => {
+        // fetch data from "server"
+        this.setPagination({
+          page: page,
+          limit: rowsPerPage
+        });
+
+        // update local pagination object
+        this.pagination.page = page;
+        this.pagination.rowsPerPage = rowsPerPage;
+        this.pagination.sortBy = sortBy;
+        this.pagination.descending = descending;
+
+        // ...and turn of loading indicator
+        this.loading = false;
+      }, 1500);
     },
     editUser(userId) {
       let selectedUser = this.users.find(x => x.id === userId);
@@ -244,14 +256,7 @@ export default {
       }
     }
   },
-  watch: {
-    pagination: function() {
-      this.onRequest({
-        pagination: this.pagination
-      });
-      this.getUsers();
-    }
-  },
+  watch: {},
   filters: {
     capitalizeLetter(value) {
       return value.charAt(0).toUpperCase() + value.slice(1);

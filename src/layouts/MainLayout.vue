@@ -1,8 +1,9 @@
 <template>
   <q-layout view="hHh Lpr lff">
-    <q-header elevated> </q-header>
+    <q-header elevated>
+      <TOOLBAR />
+    </q-header>
 
-    <TOOLBAR />
     <DRAWER v-if="$q.screen.gt.sm" />
     <FOOTER v-else />
     <q-page-container :class="$q.screen.gt.sm ? 'q-pl-xl' : 'q-pb-xl'">

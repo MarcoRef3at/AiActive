@@ -7,6 +7,7 @@
     @mouseout="miniState = true"
     mini-to-overlay
     content-class="bg-primary"
+    :width="200"
   >
     <q-scroll-area class="fit">
       <!-- Drawer Toolbar -->

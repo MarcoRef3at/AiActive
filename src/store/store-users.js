@@ -40,7 +40,7 @@ const mutations = {
 
 const actions = {
   getUsers({ dispatch }) {
-    Loading.show();
+    // Loading.show();
     setTimeout(() => {
       const limit = `npp=${state.pagination.limit}`;
       const page = `&page=${state.pagination.page}`;

@@ -11,22 +11,26 @@
       aria-label="Menu"
     /> -->
 
-    <q-toolbar-title v-if="$q.screen.gt.sm" shrink class="q-ml-xl">
+    <q-toolbar-title v-if="$q.screen.gt.sm" shrink class="q-ml-sm">
       AIACTIVE Technologies
     </q-toolbar-title>
 
+    <q-btn flat class="">
+      <q-icon name="search" @click="show = !show" />
+    </q-btn>
+
     <q-input
-      class=" absolute-center GPL__toolbar-input "
+      show-if-above
+      :width="200"
+      class="  GPL__toolbar-input "
+      v-if="show"
       dense
       color="orange"
       standout
       clearable
-      v-model="search"
       placeholder="Search"
+      v-model="search"
     >
-      <template v-slot:prepend>
-        <q-icon name="search" />
-      </template>
     </q-input>
     <q-space />
     <div>
@@ -95,6 +99,7 @@ export default {
   name: "Toolbar",
   data() {
     return {
+      show: true,
       search: "",
       darkMode: false,
       accountMenu: [
@@ -137,6 +142,7 @@ export default {
 };
 </script>
 <style lang="sass">
+
 .GPL
 
   &__toolbar
@@ -178,4 +184,17 @@ export default {
   @media (min-width: 1024px)
     &__page-container
       padding-left: 94px
+</style>
+<style lang="scss">
+.slide-fade-enter-active {
+  transition: all 0.6s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
+}
 </style>
