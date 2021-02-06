@@ -31,7 +31,7 @@ export default {
   },
   methods: {},
   mounted() {
-    this.model = this.status;
+    // this.model = this.status;
   },
   computed: {
     model: {

@@ -13,15 +13,8 @@
       stack-label
       class="col"
       v-select-all
+      clearable
     >
-      <template v-slot:append>
-        <q-icon
-          v-if="email"
-          @click="$emit('update:email', '')"
-          name="close"
-          class="cursor-pointer"
-        />
-      </template>
     </q-input>
   </div>
 </template>

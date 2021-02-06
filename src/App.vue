@@ -8,9 +8,7 @@ import { mapActions } from "vuex";
 export default {
   name: "App",
 
-  methods: {
-    ...mapActions("auth", ["handleBootUserAuth"])
-  },
+  methods: {},
 
   mounted() {}
 };

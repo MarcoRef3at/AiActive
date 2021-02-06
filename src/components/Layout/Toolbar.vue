@@ -1,35 +1,33 @@
 <template>
   <q-toolbar style="height: 58px" class="bg-primary text-white">
-    <!-- Menu Button -->
-    <!-- <q-btn
-      v-if="isLoggedIn && $route.path != '/auth' && $q.screen.gt.sm"
+    <!-- Search Button -->
+    <q-btn
       flat
-      dense
+      push
+      color="primary"
+      text-color="white"
       round
-      @click="leftDrawerOpen = !leftDrawerOpen"
-      icon="menu"
-      aria-label="Menu"
-    /> -->
+      @click="searchFocus"
+      class="q-mr-sm "
+      clearable
+      icon="search"
+      :loading="loadingSearch"
+    />
 
-    <q-toolbar-title v-if="$q.screen.gt.sm" shrink class="q-ml-sm">
-      AIACTIVE Technologies
-    </q-toolbar-title>
-
-    <q-btn flat class="">
-      <q-icon name="search" @click="show = !show" />
-    </q-btn>
-
+    <!-- Search Input -->
     <q-input
       show-if-above
       :width="200"
       class="  GPL__toolbar-input "
-      v-if="show"
+      v-if="showSearch"
       dense
-      color="orange"
       standout
       clearable
       placeholder="Search"
+      ref="search"
+      @blur="blurSearch"
       v-model="search"
+      @keypress.enter="submitSearch"
     >
     </q-input>
     <q-space />
@@ -51,7 +49,7 @@
         </q-avatar>
         <q-tooltip>Account</q-tooltip>
 
-        <!-- DropDown List -->
+        <!-- Avatar DropDown List -->
         <q-menu>
           <q-list style="min-width: 100px">
             <q-item aria-hidden="true">
@@ -70,7 +68,6 @@
             />
 
             <!-- List Items -->
-
             <q-item
               v-for="menu in accountMenu"
               :key="menu.text"
@@ -99,7 +96,8 @@ export default {
   name: "Toolbar",
   data() {
     return {
-      show: true,
+      showSearch: false,
+      loadingSearch: false,
       search: "",
       darkMode: false,
       accountMenu: [
@@ -110,6 +108,21 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["logoutUser"]),
+    async searchFocus() {
+      await (this.showSearch = true);
+      this.$refs.search.focus();
+    },
+    submitSearch() {
+      console.log("submitsearch");
+      this.loadingSearch = true;
+      this.$refs.search.blur();
+      //todo: settimeout ... loadingSearch = false
+    },
+    blurSearch() {
+      if (this.search == "") {
+        this.showSearch = false;
+      }
+    },
     showLogoutModal() {
       this.$q
         .dialog({

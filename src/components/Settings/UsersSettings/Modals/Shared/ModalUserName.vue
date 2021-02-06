@@ -12,15 +12,8 @@
       stack-label
       class="col"
       v-select-all
+      clearable
     >
-      <template v-slot:append>
-        <q-icon
-          v-if="name"
-          @click="$emit('update:name', '')"
-          name="close"
-          class="cursor-pointer"
-        />
-      </template>
     </q-input>
   </div>
 </template>

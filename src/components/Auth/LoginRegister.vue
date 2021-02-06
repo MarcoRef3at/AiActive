@@ -46,6 +46,7 @@
 
     <!-- //Password -->
     <div class="row q-mb-md">
+      <!-- todo: change length to 6 -->
       <q-input
         color="teal"
         class="col"
@@ -55,7 +56,7 @@
         :type="isPasswordVisible ? 'password' : 'text'"
         stack-label
         :rules="[
-          val => val.length >= 6 || 'Please enter at least 6 characters'
+          val => val.length >= 4 || 'Please enter at least 6 characters'
         ]"
         lazy-rules
         ref="password"

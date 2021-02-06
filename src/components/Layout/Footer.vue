@@ -1,5 +1,5 @@
 <template>
-  <q-footer>
+  <q-footer v-if="isLoggedIn && $route.path != '/auth'">
     <q-tabs>
       <q-item
         v-for="nav in navs"
@@ -10,7 +10,7 @@
         class="text-white"
         active-class="bg-primary-light-dimmed text-yellow-8"
       >
-        <q-item-section avatar center>
+        <q-item-section avatar>
           <q-icon :name="nav.icon" />
         </q-item-section>
         <q-tooltip>{{ $t(nav.label) }}</q-tooltip>
@@ -20,12 +20,16 @@
 </template>
 <script>
 import navs from "../../router/navs";
+import { mapGetters } from "vuex";
 export default {
   name: "Footer",
   data() {
     return {
       navs: navs
     };
+  },
+  computed: {
+    ...mapGetters("auth", ["isLoggedIn"])
   }
 };
 </script>

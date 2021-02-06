@@ -1,13 +1,15 @@
 <template>
   <q-drawer
     v-if="isLoggedIn && $route.path != '/auth'"
+    v-model="leftDrawerOpen"
     show-if-above
     :mini="miniState"
     @mouseover="miniState = false"
     @mouseout="miniState = true"
-    mini-to-overlay
-    content-class="bg-primary"
     :width="200"
+    :breakpoint="500"
+    bordered
+    content-class="bg-primary"
   >
     <q-scroll-area class="fit">
       <!-- Drawer Toolbar -->
@@ -20,6 +22,7 @@
             src="~/assets/aiactive-logo.png"
             style="width:80%"
           />
+
           <!-- Logo Closed -->
           <q-avatar v-else size="30px" class="q-pt-md q-mb-md ">
             <img src="~/assets/Logo_2020.png" />
@@ -27,18 +30,24 @@
         </q-toolbar-title>
       </q-toolbar>
       <q-list class="q-pt-lg">
+        <!-- Drawer Items -->
         <q-item
           v-for="nav in navs"
           :key="nav.label"
           :to="nav.to"
+          @mouseover="miniState = false"
+          @mouseout="miniState = true"
           exact
           clickable
           class="text-white"
           active-class="bg-primary-light-dimmed text-yellow-7"
         >
+          <!-- Drawer Item's Icon -->
           <q-item-section avatar>
             <q-icon :name="nav.icon" />
           </q-item-section>
+
+          <!-- Drawer Item's label -->
           <q-item-section>
             <q-item-label>
               {{ $t(nav.label) }}
@@ -61,6 +70,7 @@ export default {
       leftDrawerOpen: false
     };
   },
+  methods: {},
   computed: {
     ...mapGetters("auth", ["isLoggedIn"])
   }

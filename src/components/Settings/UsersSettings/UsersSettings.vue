@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-md">
+    <!-- todo: sort -->
     <q-table
       title="Users"
       :data="users"
@@ -14,6 +15,14 @@
       flat
     >
       <template v-slot:top>
+        <q-btn
+          outline
+          rounded
+          flat
+          :disable="loading"
+          icon="refresh"
+          @click="getUsers"
+        />
         <!-- Button ADD -->
         <q-btn
           outline
@@ -67,7 +76,7 @@
 
           <!-- Column STATUS  -->
           <q-td key="status" :props="props">
-            <q-badge :color="props.row.status ? 'primary' : 'accent'">
+            <q-badge :color="props.row.status ? 'positive' : 'negative'">
               {{ props.row.status | isActive }}
             </q-badge>
           </q-td>
@@ -89,11 +98,12 @@
             <q-btn
               class="q-ma-sm"
               size="sm"
-              color="accent"
+              color="primary"
+              flat
               round
               dense
               @click="removeUser(props.row.id)"
-              icon="remove"
+              icon="delete"
             />
           </q-td>
         </q-tr>

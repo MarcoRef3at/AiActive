@@ -1,14 +1,18 @@
 <template>
   <q-card class="edit-user-modal">
+    <!-- Modal Header -->
     <modal-header>Edit User</modal-header>
 
     <form @submit.prevent="submitForm">
       <q-card-section>
+        <!-- UserName -->
         <modal-user-name :name.sync="user.name" ref="modalUserName" />
 
+        <!-- Email -->
         <modal-user-email :email.sync="user.email" ref="modalUserEmail" />
 
         <div class="row q-mb-sm justify-start">
+          <!-- Permission/Role -->
           <modal-user-permission
             :role.sync="user.role"
             ref="modalUserPermission"
@@ -16,19 +20,20 @@
 
           <q-space />
 
-          <modal-user-status
-            :isActive.sync="user.status"
-            ref="modalUserStatus"
-          />
+          <!-- Status -->
+          <modal-user-status :status.sync="user.status" ref="modalUserStatus" />
         </div>
 
+        <!-- Reset Password -->
         <modal-user-reset-password @resetPassword="resetPassword = $event" />
 
+        <!-- Reset Password Warning -->
         <modal-user-form-error :error="resetPassword">
           default user Password is (Password)
         </modal-user-form-error>
       </q-card-section>
 
+      <!-- Button Save -->
       <modal-buttons :loading="loading" />
     </form>
   </q-card>
@@ -49,6 +54,7 @@ export default {
       .default,
     "modal-user-name": require("components/Settings/UsersSettings/Modals/Shared/ModalUserName")
       .default,
+
     "modal-user-email": require("components/Settings/UsersSettings/Modals/Shared/ModalUserEmail")
       .default,
     "modal-user-permission": require("components/Settings/UsersSettings/Modals/Shared/ModalUserPermission")
@@ -66,24 +72,25 @@ export default {
     ...mapActions("users", ["updateUser"]),
 
     submitForm() {
+      // FrontEnd Validation
       let nameValidation = this.$refs.modalUserName.$refs.name;
       nameValidation.validate();
       let emailValidation = this.$refs.modalUserEmail.$refs.email;
       emailValidation.validate();
+
       if (!nameValidation.hasError && !emailValidation.hasError) {
         this.loading = true;
         if (this.resetPassword) {
           this.user.resetPassword = true;
         }
+
         this.updateUser(this.user).finally(() => {
           this.loading = false;
         });
       }
     }
   },
-  mounted() {
-    // console.log("role", this.user.role);
-  }
+  mounted() {}
 };
 </script>
 <style scoped>

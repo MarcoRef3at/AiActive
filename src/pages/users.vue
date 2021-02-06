@@ -24,6 +24,12 @@
 
 <script>
 export default {
-  name: "Error404"
+  name: "Error404",
+  data() {
+    return {
+      listOpen: true,
+      hover: false
+    };
+  }
 };
 </script>
