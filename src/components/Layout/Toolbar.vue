@@ -47,7 +47,7 @@
         <q-avatar size="26px">
           <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
         </q-avatar>
-        <q-tooltip>Account</q-tooltip>
+        <q-tooltip>{{ user.name }}</q-tooltip>
 
         <!-- Avatar DropDown List -->
         <q-menu>
@@ -57,7 +57,7 @@
               <q-item-section
                 class="text-uppercase text-grey-7"
                 style="font-size: 0.7rem"
-                >Account</q-item-section
+                >{{ user.role }} : {{ user.name }}</q-item-section
               >
             </q-item>
             <q-toggle
@@ -144,7 +144,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", ["isLoggedIn"])
+    ...mapGetters("auth", ["isLoggedIn", "user"])
   },
   watch: {
     darkMode: function() {
