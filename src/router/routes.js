@@ -18,7 +18,7 @@ const routes = [
         path: "/lpr",
         name: "Lpr",
         component: () => import("pages/lpr.vue"),
-        meta: { permission: ["admin"] }
+        meta: { permission: ["user"] }
       },
       {
         path: "/settings",
