@@ -1,8 +1,7 @@
 export default {
-  userData: null
-  // {
-  //   name: "asdf",
-  //   email: "asdf",
-  //   role: "admin"
-  // }
+  userData: {
+    name: "asdf",
+    email: "asdf",
+    role: "admin"
+  }
 };
