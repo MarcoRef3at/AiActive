@@ -83,7 +83,7 @@ export default {
         if (this.resetPassword) {
           this.user.resetPassword = true;
         }
-
+        //todo: filter payload before send
         this.updateUser(this.user).finally(() => {
           this.loading = false;
         });
