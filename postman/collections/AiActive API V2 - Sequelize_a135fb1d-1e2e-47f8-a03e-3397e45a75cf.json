@@ -1,0 +1,1809 @@
+{
+    "info": {
+        "_postman_id": "5b53f84a-864b-4eae-aed7-08df18023af4",
+        "name": "AiActive API V2 - Sequelize",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "Get All Users",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "2ae91f65-3d0e-476c-964b-177b0044d540",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users?page=1&limit=2&select=username,permissions&sort=-id",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "2"
+                                },
+                                {
+                                    "key": "select",
+                                    "value": "username,permissions"
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single User",
+                    "id": "f513608b-a130-4a96-b4d6-2acbe66b9ff6",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add User",
+                    "id": "1e27e583-7fcc-475d-baaf-a10eb062dde1",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\":\"test.user\",\r\n    \"email\":\"test@user.com\",\r\n    \"password\":\"123456\",\r\n    \"sendEmail\":false,\r\n    \"expiresAt\":\"2021-08-09 00:55:00\",\r\n    \"isActive\":true\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users"
+                            ]
+                        },
+                        "description": "Username Must be in the format of \"firstName.lastName\" with minimum number of 6 characters\n\nPassword is optional .. if not provided, the default password will be taken from username like the following example: \n\nusername : John.Smith \n\npassword: js.1234\n\nrole is optional - default value = user\n\npermissions is not required - default value = []"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User",
+                    "id": "e29e48f8-d7b1-42fb-9bc9-c02725b62468",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\":\"test.test\",\r\n    \"email\":\"test@email.com\",\r\n    \"password\":\"123456\",\r\n    \"expiresAt\":\"2021-10-09 01:13:55\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users/4",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users",
+                                "4"
+                            ]
+                        },
+                        "description": "Update all user data \nusername\nemail\npassword\nisActive\nrole\n\nif password changed user will be logged out\nif isActive is set to false user will be logged out and disabled"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "id": "ee8030fd-e960-47cd-afe2-2ae0b56e0c54",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User's Permissions",
+                    "id": "e38d5ae6-8737-4462-82de-7ebd51fa4014",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"permissions\": [\r\n       \"getUsers\",\"getUser\",\"updateUserPermissions\"\r\n    ]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users/2/permissions",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users",
+                                "2",
+                                "permissions"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Me",
+                    "id": "89f4d0b2-80e1-4aa2-996f-f8207d42dd77",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\":\"super.admin\",\r\n    \"email\":\"test@email.coms\",\r\n    \"password\":\"1234567\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/users/me",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "users",
+                                "me"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "20079ed7-c2cd-4110-93b5-17672fb9325b",
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "163a6256-cfde-4827-a629-7c3ae1e2da57",
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "04b0412e-edf0-4d4d-9020-b54c15228a39",
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Permissions",
+            "item": [
+                {
+                    "name": "Get All Permissions",
+                    "id": "57b0f9be-63e7-4fbf-9a9b-f861f9c49777",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Role's Permissions",
+                    "id": "2ddf3ba5-e59a-469f-906c-eb9a9d24956e",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions/role/admin",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions",
+                                "role",
+                                "admin"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Permission",
+                    "id": "f7f200b9-4d5f-4fe2-baee-c230e2029bee",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Permission",
+                    "id": "3d900ae1-af08-4d5f-8e01-f2032bfb481f",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"getUsers\",\r\n    \"module\":\"users\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Permission",
+                    "id": "96ccf77d-0b9e-4eb3-8934-554c110e00f5",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"getUsers\",\r\n    \"module\":\"users\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/permissions/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "permissions",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Permission",
+                    "id": "9f4ab680-1d2c-43c0-80e9-d70f20ba2609",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/permissions/2",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "permissions",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Bulk Create Permissions",
+                    "id": "a7b4595f-d644-42c0-a236-24d00a9b66cf",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "COPY",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete All Permissions",
+                    "id": "54f86b7d-fbae-40e7-b9c6-1b995dc5430e",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions/all",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions",
+                                "all"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User's Available Permissions",
+                    "id": "03e65ad6-b9e2-4e06-9a53-daf0e2b2fa82",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Permissions/user/2",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Permissions",
+                                "user",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "407d7d6c-528e-487f-ae0a-7d52d1db7e87"
+        },
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "ed8c4836-c219-444a-8478-9538176506e0",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "cecac4ee-fb11-4f24-9470-17554ba00110",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\":\"user.name\",\r\n    \"email\":\"user@email.com\",\r\n    \"password\":\"123456\" \r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/auth/register",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "register"
+                            ]
+                        },
+                        "description": "Username Must be in the format of \"firstName.lastName\" with minimum number of 6 characters\n\nPassword is optional .. if not provided, the default password will be taken from username like the following example:\nusername : John.Smith\npassword: js.1234\n\n\n\nUser is disabled by default after registration"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "ed59a1b3-bdbe-4f8e-9c09-49a26094d5b4",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)\r",
+                                    "\r",
+                                    " function jwt_decode(a) {\r",
+                                    "    return (atob(a));\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test(\"validate data\", function () {\r",
+                                    "    //Get the token\r",
+                                    "    var a=pm.environment.get(\"TOKEN\");\r",
+                                    "    \r",
+                                    "    //call your function to decode it\r",
+                                    "    let decodedData=(jwt_decode(a));\r",
+                                    "\r",
+                                    "    //print the decodedData to console to see the structure\r",
+                                    "    console.log((decodedData));\r",
+                                    "    \r",
+                                    "   \r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "a8ff0de5-9804-4126-b973-a0638d27c319",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\": \"super.admin\",\r\n    \"password\":\"P@ssw0rd\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/auth/login",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Login with (Email or Username) and Password\n\nPermissions will be set after each login request"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Me",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "413d6488-27c9-4555-961c-46ee5d026a56",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "8a9c3ac7-6abe-4ff1-8a7a-43c546ae56b9",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ4c3hzeCIsImVtYWlsIjoiYXNhZGZAc2RmLnNmIiwicm9sZSI6InVzZXIiLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNjI1NjgyNDM3LCJleHAiOjE2MjgyNzQ0Mzd9.isif-6WiJVC0IlkZVnHqPMbQ0nAZDVddlStBd0XgFsk",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/auth/me",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "me"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "ed59a1b3-bdbe-4f8e-9c09-49a26094d5b4",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "a0c6961b-df83-4c32-ac51-042f935ec442",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            },
+                            {
+                                "key": "",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/auth/logout",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "logout"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Forgot Password",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "ed59a1b3-bdbe-4f8e-9c09-49a26094d5b4",
+                                "exec": [
+                                    "pm.environment.set(\"RESET_TOKEN\", pm.response.json().resetToken)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "92a632ee-3db8-4921-9244-f966d5ac35ac",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"email\":\"admin@email.com\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/auth/forgotpassword",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "forgotpassword"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reset Password",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "375e304a-268b-4b02-a86e-6830c4cc8fa7",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "efc26a66-5dcd-48bf-a18b-99ca47649b7b",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"password\":\"1234567\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/v2/auth/resetpassword/{{RESET_TOKEN}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "v2",
+                                "auth",
+                                "resetpassword",
+                                "{{RESET_TOKEN}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "3e930dbf-41e8-4593-8b91-d12d38291120",
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "777551ac-19c2-42ad-9c2e-6e5651ecbd77",
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "f04603c3-44d7-4235-a6bd-4a88d92b76cb",
+                        "type": "text/javascript",
+                        "exec": [
+                            "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Zones",
+            "item": [
+                {
+                    "name": "Add Zone",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "90064218-f334-4192-ae52-ff1e57b400d9",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "cb4b2d51-3287-42b0-bff5-d0cbb02f8000",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"Zone 6\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Zones",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Zones"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Zone",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "5597e5af-7686-4bc7-aa42-ab2bbc1744fa",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "fc33ed05-d29b-406b-a28c-22797cb0a7b0",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Zones/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Zones",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Zones",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "0a981637-86fc-4b56-b745-b8b8e3edf4f1",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "8ad15ed7-61ce-468f-8e59-b9c12241bbfe",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Zones",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Zones"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a Zone",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "017498ed-9c19-4b6b-bd54-5d578f028a27",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "ed8fb2e6-50f8-4e9f-b2a5-9e131014433e",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/zones/2",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "zones",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Zone's Devices",
+                    "id": "03c39025-226e-4b92-a4e1-36190b738d15",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"devices\":[\"Device 1\"]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/zones/1/devices",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "zones",
+                                "1",
+                                "devices"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "b83f7ed5-7bb1-440c-a73f-366ae5438b95"
+        },
+        {
+            "name": "Table Records",
+            "item": [
+                {
+                    "name": "Add Record",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "ca925765-8639-4bfa-b8c8-f6a91ba47703",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"Device 2\",\r\n    \"ip\":\"192.168.1.2\",\r\n    \"username\":\"username\",\r\n    \"password\":\"123456\",\r\n    \"port\":80,\r\n    \"streamLink\":\"asdfasdf.asdf\",\r\n    \"resolutionHeight\":720,\r\n    \"resolutionWidth\":860,\r\n    \"storagePath\":\"asdfasdfasdf\",\r\n    \"days\":34,\r\n    \"vendor\":\"asx\",\r\n    \"zoneId\":2\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/records/Devices",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "records",
+                                "Devices"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Record",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "47ea5030-f3c7-4d45-9320-bc796d85a5a3",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/records/Devices/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "records",
+                                "Devices",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Devices",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "762f1b14-cd2a-47d0-9e5b-9025a5dbc908",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/records/Devices",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "records",
+                                "Devices"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a Device",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "f69ebb4d-02b0-480a-80ef-55051998232a",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/records/Devices/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "records",
+                                "Devices",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "f4cccbef-eef3-44ad-b6e6-3cbac4dc0145"
+        },
+        {
+            "name": "Devices",
+            "item": [
+                {
+                    "name": "Add Device",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "89c53caf-7f54-4fd8-b9b8-e115be91c525",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"Device 1\",\r\n    \"vendor\":\"axis\",\r\n    \"ip\":\"192.168.1.1\",\r\n    \"username\":\"username\",\r\n    \"password\":\"123456\",\r\n    \"port\":80,\r\n    \"streamLink\":\"asdfasdf.asdf\",\r\n    \"resolutionHeight\":720,\r\n    \"resolutionWidth\":860,\r\n    \"storagePath\":\"asdfasdfasdf\",\r\n    \"days\":34,\r\n    \"zoneId\":1\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Devices",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Devices"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Device",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "a02fff1d-ddef-41d9-86fb-e74b18f4a46b",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "ab89458b-7af7-47da-b6c3-1fe81717aae7",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Devices/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Devices",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Devices",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "b3b3d9ea-e139-4280-a50f-4f525c7ce7fb",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "cdda945c-c039-409d-a67a-c444b68c454a",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{TOKEN}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{TOKEN}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/v2/Devices?page=1&limit=2&select=name,features&sort=-id",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "v2",
+                                "Devices"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "2"
+                                },
+                                {
+                                    "key": "select",
+                                    "value": "name,features"
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a Device",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "0ef3cf9a-2254-450d-8863-13aaf8df37cb",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "22919b20-5236-46a1-bab6-d1f2bf407a62",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Devices/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Devices",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Device's Features",
+                    "id": "a32707c6-d8d0-4ed2-b8d9-4f2501adeacd",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"features\":[\"LPR\",\"Average Speed\",\"Vehicle MMC\"]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/devices/1/features",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "devices",
+                                "1",
+                                "features"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Device",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+                                "exec": [
+                                    "pm.environment.set(\"TOKEN\", pm.response.json().token)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "6a9d8611-8fcc-4c0e-8cf9-612bbbd463fc",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"Device 2\",\r\n    \"vendor\":\"axis\",\r\n    \"ip\":\"192.168.1.2\",\r\n    \"username\":\"username\",\r\n    \"password\":\"123456\",\r\n    \"port\":80,\r\n    \"streamLink\":\"asdfasdf.asdf\",\r\n    \"resolutionHeight\":720,\r\n    \"resolutionWidth\":860,\r\n    \"storagePath\":\"asdfasdfasdf\",\r\n    \"days\":34,\r\n    \"zoneId\":1\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/Devices/1",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "Devices",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Auto Search Devices",
+                    "id": "3ec9515d-6582-49c1-9d80-98de67c7b0d3",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"ip\":\"192.168.3.1-192.168.3.254\",\r\n    \"port\":\"80,554\",\r\n    \"user\":\"admin\",\r\n    \"pass\": \"admin\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/onvif/scan",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "onvif",
+                                "scan"
+                            ]
+                        },
+                        "description": "{\n    \"ip\":\"192.168.1.1-192.168.1.254,192.168.3.1-192.168.3.254\",\n    \"port\":\"80,81,82\",\n    \"user\":\"admin\",\n    \"pass\": \"admin\"\n}"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Snapshot",
+                    "id": "22b85013-4674-4a83-a81c-15cb3ee47eb9",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "digest",
+                            "digest": [
+                                {
+                                    "key": "password",
+                                    "value": "admin",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "admin",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "algorithm",
+                                    "value": "MD5",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://192.168.3.40/onvifsnapshot/media_service/snapshot?channel=1&subtype=1",
+                            "protocol": "http",
+                            "host": [
+                                "192",
+                                "168",
+                                "3",
+                                "40"
+                            ],
+                            "path": [
+                                "onvifsnapshot",
+                                "media_service",
+                                "snapshot"
+                            ],
+                            "query": [
+                                {
+                                    "key": "channel",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "subtype",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Config Device",
+                    "id": "450797c9-1952-4124-a3e5-42b16fbcc4fc",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"profileId\":0,\r\n    \"retentionTime\":333\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL}}/api/v2/devices/1/config",
+                            "host": [
+                                "{{URL}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v2",
+                                "devices",
+                                "1",
+                                "config"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "id": "182579b0-10d2-452c-8b31-7a1d7334ba8d"
+        }
+    ]
+}
