@@ -1,0 +1,4854 @@
+{
+	"info": {
+		"_postman_id": "5b53f84a-864b-4eae-aed7-08df18023af4",
+		"name": "AiActive API V2 - Sequelize",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed8c4836-c219-444a-8478-9538176506e0",
+								"exec": [
+									"/******** DON'T TOUCH ********/\r",
+									"const TEST_MODE = pm.collectionVariables.get(\"TEST_MODE\");\r",
+									"if (TEST_MODE === \"ON\") {\r",
+									"  const req = { name: request.name.toUpperCase() };\r",
+									"  const test_title = pm.collectionVariables.get(\"Test_Title\");\r",
+									"  const res = pm.response.json();\r",
+									"  req.bodies = pm.collectionVariables.get(`${req.name}_bodies`);\r",
+									"  if (req.bodies && req.bodies.length > 0) {\r",
+									"    postman.setNextRequest(request.name);\r",
+									"  }\r",
+									"  /****************** TEST Cases **************************/\r",
+									"  if (test_title == \"REGISTER_Valid\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(200);\r",
+									"      pm.expect(res).to.be.an(\"object\");\r",
+									"      pm.expect(res.data).to.be.an(\"object\");\r",
+									"      pm.expect(res.data.isActive).to.be.false;\r",
+									"    });\r",
+									"  } else if (test_title == \"REGISTER_MissingParameter\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(400);\r",
+									"      pm.expect(res.error).to.be.a(\"string\");\r",
+									"      pm.expect(res.error).to.contain(\"cannot be null\");\r",
+									"    });\r",
+									"  } else if (test_title == \"REGISTER_InvalidEmailFormat\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(400);\r",
+									"      pm.expect(res.error).to.be.a(\"string\");\r",
+									"      pm.expect(res.error).to.be.eq(\"Please Add A Valid Email\");\r",
+									"    });\r",
+									"  } else if (test_title == \"REGISTER_InvalidPassword\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(400);\r",
+									"      pm.expect(res.error).to.be.a(\"string\");\r",
+									"      pm.expect(res.error).to.contain(\"Password must be at least 6 characters\");\r",
+									"    });\r",
+									"  }\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a74388c9-1156-4839-9ecd-d5804ab63d79",
+								"exec": [
+									"const originalBody = {\r",
+									"    \"username\":\"user.name\",\r",
+									"    \"email\":\"user@email.com\",\r",
+									"    \"password\":\"123456\" \r",
+									"};\r",
+									"\r",
+									"const test_bodies = [\r",
+									"  {\r",
+									"    test_title: \"REGISTER_Valid\",\r",
+									"    body: originalBody\r",
+									"  },\r",
+									"  {\r",
+									"    test_title: \"REGISTER_MissingParameter\",\r",
+									"    body: {\r",
+									"       \"username\":\"user.name\",\r",
+									"    }\r",
+									"  },\r",
+									"  {\r",
+									"    test_title: \"REGISTER_InvalidEmailFormat\",\r",
+									"    body: {\r",
+									"        \"username\":\"user.name\",\r",
+									"        \"email\":\"user.email\",\r",
+									"        \"password\":\"123456\" \r",
+									"    }\r",
+									"  },\r",
+									"  {\r",
+									"    test_title: \"REGISTER_InvalidPassword\",\r",
+									"    body: {\r",
+									"        \"username\":\"user.name\",\r",
+									"        \"email\":\"user.email\",\r",
+									"        \"password\":\"12\" \r",
+									"    }\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"/******* DON'T TOUCH ********/\r",
+									"const TEST_MODE = pm.collectionVariables.get(\"TEST_MODE\");\r",
+									"const req = { name: request.name.toUpperCase() };\r",
+									"if (TEST_MODE === \"ON\") {\r",
+									"  req.bodies = pm.collectionVariables.get(`${req.name}_bodies`);\r",
+									"\r",
+									"  if (!req.bodies || req.bodies.length == 0) {\r",
+									"    req.bodies = test_bodies;\r",
+									"  }\r",
+									"\r",
+									"  req.data = req.bodies.shift();\r",
+									"  pm.collectionVariables.set(\"Test_Title\", req.data.test_title);\r",
+									"  pm.collectionVariables.set(\r",
+									"    `${req.name}_body`,\r",
+									"    JSON.stringify(req.data.body)\r",
+									"  );\r",
+									"  pm.collectionVariables.set(`${req.name}_bodies`, req.bodies);\r",
+									"} else {\r",
+									"  pm.collectionVariables.set(\r",
+									"    `${req.name}_body`,\r",
+									"    JSON.stringify(originalBody)\r",
+									"  );\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "cecac4ee-fb11-4f24-9470-17554ba00110",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{REGISTER_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"register"
+							]
+						},
+						"description": "## Parameters\n\n| Parameter   | Required | Value | Notes\n| ------      | -------- | ----- |------ |\n| username | true     | STRING   | Must be in the format of \"firstName.lastName\" with minimum number of 6 characters |\n| email | true     | STRING   | Must be in the format of email |\n| password | false    | STRING  | if not provided, the default password will be taken from username like the following example:- <br /> username : John.Smith <br /> password: js.1234\n\n\n\n\n###### - User is disabled by default after registration"
+					},
+					"response": [
+						{
+							"id": "cd0df82b-e376-4d6f-b29e-bf0023874bc1",
+							"name": "REGISTER_Valid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"user.name\",\r\n    \"email\":\"user@email.com\",\r\n    \"password\":\"123456\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "488"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 22:54:42 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654901817"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "329"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"149-Vkh63A31kT811foF/ZT57oZELEs\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"role\": \"user\",\n        \"isActive\": false,\n        \"expiresAt\": \"4707-11-29T00:00:00.000Z\",\n        \"id\": 64,\n        \"username\": \"user.name\",\n        \"email\": \"user@email.com\",\n        \"updatedAt\": \"2022-06-10T22:54:42.837Z\",\n        \"createdAt\": \"2022-06-10T22:54:42.837Z\"\n    },\n    \"message\": \"User has been registerd successfully, Please contact the admin to activate your account\"\n}"
+						},
+						{
+							"id": "a254fa9a-4600-4c63-8638-9ca64ea160cf",
+							"name": "REGISTER_Duplicate",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"user.name\",\r\n    \"email\":\"user@email.com\",\r\n    \"password\":\"123456\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "486"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 22:55:37 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654901817"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "80"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"50-75sqrZG1iISVnt+kYfrXSvVi2XQ\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Duplicate entry 'user.name' for key 'users.username'\"\n}"
+						},
+						{
+							"id": "83e5f6b7-2140-496d-91b9-0d21bd27fc73",
+							"name": "REGISTER_MissingParameter",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"user.name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "483"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 22:56:21 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654901817"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "84"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"54-vWtSI6qwAXx8UyhHw2BEFANeXIk\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Users.email cannot be null,Users.password cannot be null\"\n}"
+						},
+						{
+							"id": "3dfa9862-3b22-4f62-baf0-4558c2eee055",
+							"name": "REGISTER_InvalidEmailFormat",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"user.name\",\r\n    \"email\":\"user.email\",\r\n    \"password\":\"123456\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "498"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 23:00:50 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654902417"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "52"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"34-yWiCINz/VuBlLYXPEbZaGs7Hwxs\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Please Add A Valid Email\"\n}"
+						},
+						{
+							"id": "966e0f18-e11b-4258-92ab-6d79d9d2944d",
+							"name": "REGISTER_InvalidPassword",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"user.name\",\r\n    \"email\":\"user@email.com\",\r\n    \"password\":\"12\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "496"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 23:01:44 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654902417"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "66"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"42-7k8XeGg7lVRRjtwVDIj2BqB1Epo\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Password must be at least 6 characters\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7872fa17-243d-499f-a57b-a01b90a2e86a",
+								"exec": [
+									"/******** DON'T TOUCH ********/\r",
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);\r",
+									"const TEST_MODE = pm.collectionVariables.get(\"TEST_MODE\");\r",
+									"if (TEST_MODE===\"ON\") {\r",
+									"  const req = { name: request.name.toUpperCase() };\r",
+									"  const test_title = pm.collectionVariables.get(\"Test_Title\");\r",
+									"  const jsonData = pm.response.json();\r",
+									"  req.bodies = pm.collectionVariables.get(`${req.name}_bodies`);\r",
+									"  if (req.bodies && req.bodies.length > 0) {\r",
+									"    postman.setNextRequest(request.name);\r",
+									"  }\r",
+									"/****************** TEST Cases **************************/\r",
+									"  if (test_title == \"LOGIN_Valid\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(200);\r",
+									"      pm.expect(jsonData).to.be.an(\"object\");\r",
+									"      pm.expect(jsonData.token).to.be.a(\"string\");\r",
+									"      pm.expect(jsonData.user).to.be.an(\"object\");\r",
+									"      pm.expect(jsonData.user.id).to.be.a(\"number\");\r",
+									"      pm.expect(jsonData.user.username).to.be.a(\"string\");\r",
+									"      pm.expect(jsonData.user.All_Permissions).to.be.an(\"array\");\r",
+									"    });\r",
+									"  } else if (test_title == \"LOGIN_InvalidCredentials\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(400);\r",
+									"      pm.expect(jsonData.error).to.be.a(\"string\");\r",
+									"      pm.expect(jsonData.error).to.be.eq(\"Invalid Credentials\");\r",
+									"    });\r",
+									"  } else if (test_title == \"LOGIN_MissingParameter\") {\r",
+									"    pm.test(test_title, function () {\r",
+									"      pm.response.to.have.status(400);\r",
+									"      pm.expect(jsonData.error).to.be.a(\"string\");\r",
+									"      pm.expect(jsonData.error).to.be.eq(\r",
+									"        \"Please provide an Email/Username and Password\"\r",
+									"      );\r",
+									"    });\r",
+									"  }\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d8ad942d-9152-4e59-9517-c8a89e310198",
+								"exec": [
+									"const originalBody = {\r",
+									"  \"username\": \"super.admin\",\r",
+									"  \"password\": \"P@ssw0rd\"\r",
+									"};\r",
+									"\r",
+									"const test_bodies = [\r",
+									"  {\r",
+									"    test_title: \"LOGIN_Valid\",\r",
+									"    body: originalBody\r",
+									"  },\r",
+									"  {\r",
+									"    test_title: \"LOGIN_InvalidCredentials\",\r",
+									"    body: {\r",
+									"      \"username\": \"invalid\",\r",
+									"      \"password\": \"123456\"\r",
+									"    }\r",
+									"  },\r",
+									"  {\r",
+									"    test_title: \"LOGIN_MissingParameter\",\r",
+									"    body: {\r",
+									"      \"username\": \"invalid\"\r",
+									"    }\r",
+									"  }\r",
+									"];\r",
+									"\r",
+									"/******* DON'T TOUCH ********/\r",
+									"const TEST_MODE = pm.collectionVariables.get(\"TEST_MODE\");\r",
+									"const req = { name: request.name.toUpperCase() };\r",
+									"if (TEST_MODE === \"ON\") {\r",
+									"  req.bodies = pm.collectionVariables.get(`${req.name}_bodies`);\r",
+									"\r",
+									"  if (!req.bodies || req.bodies.length == 0) {\r",
+									"    req.bodies = test_bodies;\r",
+									"  }\r",
+									"\r",
+									"  req.data = req.bodies.shift();\r",
+									"  pm.collectionVariables.set(\"Test_Title\", req.data.test_title);\r",
+									"  pm.collectionVariables.set(\r",
+									"    `${req.name}_body`,\r",
+									"    JSON.stringify(req.data.body)\r",
+									"  );\r",
+									"  pm.collectionVariables.set(`${req.name}_bodies`, req.bodies);\r",
+									"} else {\r",
+									"  pm.collectionVariables.set(\r",
+									"    `${req.name}_body`,\r",
+									"    JSON.stringify(originalBody)\r",
+									"  );\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "a8ff0de5-9804-4126-b973-a0638d27c319",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{LOGIN_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"login"
+							]
+						},
+						"description": "## Parameters\n\n\n| Parameter   | Required | Value | Notes\n| ------      | -------- | ----- |------ |\n| username | true     | STRING   | Either username or email |\n| email| true     | STRING   | Either username or email |\n| password | true | STRING  | \n\nPermissions will be set after each login request"
+					},
+					"response": [
+						{
+							"id": "7431fbea-d947-404a-90e7-8c6c6bd91cee",
+							"name": "LOGIN_Valid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"super.admin\",\r\n    \"password\": \"P@ssw0rd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/login",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "498"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 01 Jun 2022 21:10:56 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654118431"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdXBlci5hZG1pbiIsImVtYWlsIjoic3VwZXJfYWRtaW5AZW1haWwuY29tIiwicm9sZSI6InN1cGVyQWRtaW4iLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNjU0MTE3ODU2LCJleHAiOjE2NTY3MDk4NTZ9.uY0LIyHz1jIufXVyNxRWtC7lmqsZTLcfieS0dl_nWFg; Path=/; Expires=Fri, 01 Jul 2022 21:10:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1527"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"5f7-3oTSEUiYm/Nxt5V1NMFMjhvOBm8\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": true,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdXBlci5hZG1pbiIsImVtYWlsIjoic3VwZXJfYWRtaW5AZW1haWwuY29tIiwicm9sZSI6InN1cGVyQWRtaW4iLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNjU0MTE3ODU2LCJleHAiOjE2NTY3MDk4NTZ9.uY0LIyHz1jIufXVyNxRWtC7lmqsZTLcfieS0dl_nWFg\",\n    \"user\": {\n        \"id\": 1,\n        \"username\": \"super.admin\",\n        \"email\": \"super_admin@email.com\",\n        \"role\": \"superAdmin\",\n        \"isActive\": true,\n        \"expiresAt\": \"4707-11-29 02:00:00\",\n        \"resetPasswordToken\": null,\n        \"resetPasswordExpire\": null,\n        \"createdAt\": \"2022-03-08 15:17:59\",\n        \"updatedAt\": \"2022-03-08 15:17:59\",\n        \"All_Permissions\": [\n            {\n                \"name\": \"getUsers\"\n            },\n            {\n                \"name\": \"getUser\"\n            },\n            {\n                \"name\": \"addUser\"\n            },\n            {\n                \"name\": \"updateUser\"\n            },\n            {\n                \"name\": \"updateUserPermissions\"\n            },\n            {\n                \"name\": \"deleteUser\"\n            },\n            {\n                \"name\": \"getDevices\"\n            },\n            {\n                \"name\": \"addDevice\"\n            },\n            {\n                \"name\": \"getDevice\"\n            },\n            {\n                \"name\": \"updateDevice\"\n            },\n            {\n                \"name\": \"deleteDevice\"\n            },\n            {\n                \"name\": \"updateDevicesFeatures\"\n            },\n            {\n                \"name\": \"getLpr\"\n            },\n            {\n                \"name\": \"updateLpr\"\n            },\n            {\n                \"name\": \"getTemplates\"\n            },\n            {\n                \"name\": \"addTemplate\"\n            },\n            {\n                \"name\": \"updateTemplate\"\n            },\n            {\n                \"name\": \"deleteTemplate\"\n            },\n            {\n                \"name\": \"getAllLists\"\n            },\n            {\n                \"name\": \"getOneList\"\n            },\n            {\n                \"name\": \"editList\"\n            },\n            {\n                \"name\": \"assignDevicesToList\"\n            },\n            {\n                \"name\": \"createList\"\n            },\n            {\n                \"name\": \"deleteList\"\n            },\n            {\n                \"name\": \"getGisData\"\n            }\n        ]\n    },\n    \"All_Permissions\": [\n        \"getUsers\",\n        \"getUser\",\n        \"addUser\",\n        \"updateUser\",\n        \"updateUserPermissions\",\n        \"deleteUser\",\n        \"getDevices\",\n        \"addDevice\",\n        \"getDevice\",\n        \"updateDevice\",\n        \"deleteDevice\",\n        \"updateDevicesFeatures\",\n        \"getLpr\",\n        \"updateLpr\",\n        \"getTemplates\",\n        \"addTemplate\",\n        \"updateTemplate\",\n        \"deleteTemplate\",\n        \"getAllLists\",\n        \"getOneList\",\n        \"editList\",\n        \"assignDevicesToList\",\n        \"createList\",\n        \"deleteList\",\n        \"getGisData\"\n    ]\n}"
+						},
+						{
+							"id": "79fa7f4d-114e-47e5-86f2-ed9663053080",
+							"name": "LOGIN_InvalidCredentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"invalid\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/login",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "495"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 22:39:53 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654901217"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "47"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"2f-XSf5vxVMGbzV3XFF+nj3Vg/S+zA\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Invalid Credentials\"\n}"
+						},
+						{
+							"id": "7ac88658-dd43-4728-9f02-764bd91e88a3",
+							"name": "LOGIN_MissingParameter",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"invalid\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/login",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "493"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 22:41:05 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654901217"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "73"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"49-rtp/Bz3bJUPPv+To12CLjQudBFs\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Please provide an Email/Username and Password\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "413d6488-27c9-4555-961c-46ee5d026a56",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "8a9c3ac7-6abe-4ff1-8a7a-43c546ae56b9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/auth/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "482e8c54-eef3-46fc-9367-0f0a7704c289",
+							"name": "Get Me_Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ4c3hzeCIsImVtYWlsIjoiYXNhZGZAc2RmLnNmIiwicm9sZSI6InVzZXIiLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNjI1NjgyNDM3LCJleHAiOjE2MjgyNzQ0Mzd9.isif-6WiJVC0IlkZVnHqPMbQ0nAZDVddlStBd0XgFsk",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/me",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "483"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 10 Jun 2022 23:58:35 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654906017"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "587"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"24b-cQsC/kj0EfWokVICDctzo0SyQ9Q\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"username\": \"super.admin\",\n        \"email\": \"super_admin@email.com\",\n        \"role\": \"superAdmin\",\n        \"isActive\": true,\n        \"expiresAt\": \"4707-11-29 02:00:00\",\n        \"resetPasswordToken\": null,\n        \"resetPasswordExpire\": null,\n        \"All_Permissions\": [\n            \"getUsers\",\n            \"getUser\",\n            \"addUser\",\n            \"updateUser\",\n            \"updateUserPermissions\",\n            \"deleteUser\",\n            \"getDevices\",\n            \"addDevice\",\n            \"getDevice\",\n            \"updateDevice\",\n            \"deleteDevice\",\n            \"updateDevicesFeatures\",\n            \"getLpr\",\n            \"updateLpr\",\n            \"getTemplates\",\n            \"addTemplate\",\n            \"updateTemplate\",\n            \"deleteTemplate\",\n            \"getAllLists\",\n            \"getOneList\",\n            \"editList\",\n            \"assignDevicesToList\",\n            \"createList\",\n            \"deleteList\",\n            \"getGisData\"\n        ]\n    }\n}"
+						},
+						{
+							"id": "cd38302f-1b90-447c-ac5f-e22dff84d7aa",
+							"name": "Get Me_Invalid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/me",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "481"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 11 Jun 2022 00:00:28 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654906017"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-/CWTYbQugT2YPhFahwNJ6Gw0LJo\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"Not authorized to access this route\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed59a1b3-bdbe-4f8e-9c09-49a26094d5b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "a0c6961b-df83-4c32-ac51-042f935ec442",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "d125fef5-7ecf-4753-b395-2ecb98d52dd9",
+							"name": "Logout_Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/logout",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "463"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 11 Jun 2022 00:05:19 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654906017"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "token=none; Path=/; Expires=Sat, 11 Jun 2022 00:05:29 GMT; HttpOnly"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "70"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"46-qFrPvzUm2Ja813h/VXNrwCp+/4g\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": true,\n    \"data\": \"super.admin has been logged out successfully\"\n}"
+						},
+						{
+							"id": "c460dcfe-0323-4cc6-bf7c-9f8ac4bd5de3",
+							"name": "Logout_WithoutToken",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/auth/logout",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "Expect-CT",
+									"value": "max-age=0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "500"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "460"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 11 Jun 2022 00:06:31 GMT"
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "1654906017"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "54"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"36-LMUJLne2TQZIHMG5MzSjs3v6O0s\""
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"error\": \"You are already logged out\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Forgot Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed59a1b3-bdbe-4f8e-9c09-49a26094d5b4",
+								"exec": [
+									"pm.environment.set(\"RESET_TOKEN\", pm.response.json().resetToken)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "92a632ee-3db8-4921-9244-f966d5ac35ac",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"admin@email.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/auth/forgotpassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"forgotpassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "375e304a-268b-4b02-a86e-6830c4cc8fa7",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "efc26a66-5dcd-48bf-a18b-99ca47649b7b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\":\"1234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v2/auth/resetpassword/{{RESET_TOKEN}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"resetpassword",
+								"{{RESET_TOKEN}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "3e930dbf-41e8-4593-8b91-d12d38291120",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "32600f44-936b-4258-ab6e-0b7667a3e5ee",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0a1c029-9d12-4b8d-b914-45727081a982",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "2ae91f65-3d0e-476c-964b-177b0044d540",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/users?page=1&limit=0&select=username,permissions&sort=-id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "0"
+								},
+								{
+									"key": "select",
+									"value": "username,permissions"
+								},
+								{
+									"key": "sort",
+									"value": "-id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User",
+					"id": "f513608b-a130-4a96-b4d6-2acbe66b9ff6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/users/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User",
+					"id": "1e27e583-7fcc-475d-baaf-a10eb062dde1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"test.user\",\r\n    \"email\":\"test@user.com\",\r\n    \"password\":\"123456\",\r\n    \"sendEmail\":false,\r\n    \"expiresAt\":\"2021-08-09 00:55:00\",\r\n    \"isActive\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users"
+							]
+						},
+						"description": "Username Must be in the format of \"firstName.lastName\" with minimum number of 6 characters\n\nPassword is optional .. if not provided, the default password will be taken from username like the following example: \n\nusername : John.Smith \n\npassword: js.1234\n\nrole is optional - default value = user\n\npermissions is not required - default value = []"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"id": "e29e48f8-d7b1-42fb-9bc9-c02725b62468",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"test.test\",\r\n    \"email\":\"test@email.com\",\r\n    \"password\":\"123456\",\r\n    \"expiresAt\":\"2021-10-09 01:13:55\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/users/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users",
+								"4"
+							]
+						},
+						"description": "Update all user data \nusername\nemail\npassword\nisActive\nrole\n\nif password changed user will be logged out\nif isActive is set to false user will be logged out and disabled"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"id": "ee8030fd-e960-47cd-afe2-2ae0b56e0c54",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/users/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User's Permissions",
+					"id": "e38d5ae6-8737-4462-82de-7ebd51fa4014",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"permissions\": [\r\n       \"getUsers\",\"getUser\",\"updateUserPermissions\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/users/2/permissions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users",
+								"2",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Me",
+					"id": "89f4d0b2-80e1-4aa2-996f-f8207d42dd77",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"super.admin\",\r\n    \"email\":\"test@email.coms\",\r\n    \"password\":\"1234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/users/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "20079ed7-c2cd-4110-93b5-17672fb9325b",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "163a6256-cfde-4827-a629-7c3ae1e2da57",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "04b0412e-edf0-4d4d-9020-b54c15228a39",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Get All Permissions",
+					"id": "57b0f9be-63e7-4fbf-9a9b-f861f9c49777",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role's Permissions",
+					"id": "2ddf3ba5-e59a-469f-906c-eb9a9d24956e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions/role/admin",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions",
+								"role",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Permission",
+					"id": "f7f200b9-4d5f-4fe2-baee-c230e2029bee",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Permission",
+					"id": "3d900ae1-af08-4d5f-8e01-f2032bfb481f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"getUsers\",\r\n    \"module\":\"users\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Permission",
+					"id": "96ccf77d-0b9e-4eb3-8934-554c110e00f5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"getUsers\",\r\n    \"module\":\"users\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/permissions/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"permissions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Permission",
+					"id": "9f4ab680-1d2c-43c0-80e9-d70f20ba2609",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/permissions/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"permissions",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create Permissions",
+					"id": "a7b4595f-d644-42c0-a236-24d00a9b66cf",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "COPY",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Permissions",
+					"id": "54f86b7d-fbae-40e7-b9c6-1b995dc5430e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions/all",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User's Available Permissions",
+					"id": "03e65ad6-b9e2-4e06-9a53-daf0e2b2fa82",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/Permissions/user/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Permissions",
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "407d7d6c-528e-487f-ae0a-7d52d1db7e87"
+		},
+		{
+			"name": "Zones",
+			"item": [
+				{
+					"name": "Add Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90064218-f334-4192-ae52-ff1e57b400d9",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "cb4b2d51-3287-42b0-bff5-d0cbb02f8000",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Zone 6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Zones",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5597e5af-7686-4bc7-aa42-ab2bbc1744fa",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "fc33ed05-d29b-406b-a28c-22797cb0a7b0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Zones/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Zones",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Zones",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a981637-86fc-4b56-b745-b8b8e3edf4f1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "8ad15ed7-61ce-468f-8e59-b9c12241bbfe",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Zones",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "017498ed-9c19-4b6b-bd54-5d578f028a27",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ed8fb2e6-50f8-4e9f-b2a5-9e131014433e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/zones/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"zones",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Zone's Devices",
+					"id": "03c39025-226e-4b92-a4e1-36190b738d15",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"devices\":[\"Device 1\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/zones/1/devices",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"zones",
+								"1",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "b83f7ed5-7bb1-440c-a73f-366ae5438b95"
+		},
+		{
+			"name": "Devices",
+			"item": [
+				{
+					"name": "Features",
+					"item": [
+						{
+							"name": "LPR",
+							"item": [
+								{
+									"name": "Config LPR",
+									"id": "432f5f62-7035-4b7f-a5b6-73eafe904406",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"frame_every\": 10,\r\n    \"point_one_x\": 500\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{URL}}/api/v2/Devices/20/Config/LPR",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"Devices",
+												"20",
+												"Config",
+												"LPR"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"id": "006fe748-2592-4878-8417-59b5788da7f3"
+						},
+						{
+							"name": "Get Ai Stream",
+							"id": "09f98d9d-b3a5-45a4-8695-65d69159b6d2",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"frame_every\": 10,\r\n    \"point_one_x\": 500\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/api/v2/Devices/10/Features/Stream",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"Devices",
+										"10",
+										"Features",
+										"Stream"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "09a2db8b-3939-4f9d-b66d-df27590b546b"
+				},
+				{
+					"name": "Add Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "33648ade-0b19-4cfc-808b-bde6ac9dc5b1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "89c53caf-7f54-4fd8-b9b8-e115be91c525",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isVms\":false,\r\n    \"name\":\"Device dTsedvst\",\r\n    \"vendor\":1,\r\n    \"ip\":\"192.168.3.126\",\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin\",\r\n    \"port\":80,\r\n    \"streamLink\":\"\",\r\n    \"resolutionHeight\":720,\r\n    \"resolutionWidth\":860,\r\n    \"storagePath\":\"\",\r\n    \"days\":34,\r\n    \"zoneId\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a02fff1d-ddef-41d9-86fb-e74b18f4a46b",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ab89458b-7af7-47da-b6c3-1fe81717aae7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8fd254bc-d515-44d5-8784-25e1dac5dd4c",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "0ec8b919-475e-4551-a008-79ac40ed36d3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/1/RefreshDevice",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"1",
+								"RefreshDevice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Devices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3b3d9ea-e139-4280-a50f-4f525c7ce7fb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "cdda945c-c039-409d-a67a-c444b68c454a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v2/Devices?page=1&limit=2&select=name,features&sort=-id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v2",
+								"Devices"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "select",
+									"value": "name,features"
+								},
+								{
+									"key": "sort",
+									"value": "-id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0ef3cf9a-2254-450d-8863-13aaf8df37cb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "22919b20-5236-46a1-bab6-d1f2bf407a62",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/17",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Device's Features",
+					"id": "a32707c6-d8d0-4ed2-b8d9-4f2501adeacd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"features\":[\"LPR\",\"Speed Detection\",\"Vehicle MMC\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/devices/1/features",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"devices",
+								"1",
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "6a9d8611-8fcc-4c0e-8cf9-612bbbd463fc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isVms\":true,\r\n    \"name\":\"Device Test\",\r\n    \"vendor\":1,\r\n    \"ip\":\"192.168.3.34\",\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin\",\r\n    \"port\":80,\r\n    \"streamLink\":\"\",\r\n    \"resolutionHeight\":1080,\r\n    \"resolutionWidth\":1920,\r\n    \"storagePath\":\"\",\r\n    \"days\":34,\r\n    \"zoneId\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auto Search Devices",
+					"id": "3ec9515d-6582-49c1-9d80-98de67c7b0d3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ip\":\"192.168.3.1-192.168.3.254\",\r\n    \"port\":\"80,554\",\r\n    \"user\":\"admin\",\r\n    \"pass\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/onvif/scan",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"onvif",
+								"scan"
+							]
+						},
+						"description": "{\n    \"ip\":\"192.168.1.1-192.168.1.254,192.168.3.1-192.168.3.254\",\n    \"port\":\"80,81,82\",\n    \"user\":\"admin\",\n    \"pass\": \"admin\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Snapshot",
+					"id": "22b85013-4674-4a83-a81c-15cb3ee47eb9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "digest",
+							"digest": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "MD5",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.3.40/onvifsnapshot/media_service/snapshot?channel=1&subtype=1",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"3",
+								"40"
+							],
+							"path": [
+								"onvifsnapshot",
+								"media_service",
+								"snapshot"
+							],
+							"query": [
+								{
+									"key": "channel",
+									"value": "1"
+								},
+								{
+									"key": "subtype",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Config Device",
+					"id": "450797c9-1952-4124-a3e5-42b16fbcc4fc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"profileId\":0,\r\n    \"days\":333\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/devices/1/config",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"devices",
+								"1",
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vendors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0ef3cf9a-2254-450d-8863-13aaf8df37cb",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "291c55f9-77fd-4126-ade3-17deb49a3f63",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/Vendors",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"Vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get RTSP Link",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "33648ade-0b19-4cfc-808b-bde6ac9dc5b1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "c1f267bb-93dc-4ead-8143-9a99782e4c50",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ip\":\"192.168.1.11\",\r\n    \"port\":80,\r\n    \"username\":\"\",\r\n    \"password\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/RTSP",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"RTSP"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile And Snapshot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a02fff1d-ddef-41d9-86fb-e74b18f4a46b",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "3b518e5d-59c4-4eda-95f4-b924e2002325",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Devices/getProfileAndSnapshot/10415",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Devices",
+								"getProfileAndSnapshot",
+								"10415"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "182579b0-10d2-452c-8b31-7a1d7334ba8d"
+		},
+		{
+			"name": "Table Records",
+			"item": [
+				{
+					"name": "Add Record",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ca925765-8639-4bfa-b8c8-f6a91ba47703",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Device 2\",\r\n    \"ip\":\"192.168.1.2\",\r\n    \"username\":\"username\",\r\n    \"password\":\"123456\",\r\n    \"port\":80,\r\n    \"streamLink\":\"asdfasdf.asdf\",\r\n    \"resolutionHeight\":720,\r\n    \"resolutionWidth\":860,\r\n    \"storagePath\":\"asdfasdfasdf\",\r\n    \"days\":34,\r\n    \"vendor\":\"asx\",\r\n    \"zoneId\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/records/Devices",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"records",
+								"Devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Record",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "47ea5030-f3c7-4d45-9320-bc796d85a5a3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/records/Devices/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"records",
+								"Devices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Devices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "762f1b14-cd2a-47d0-9e5b-9025a5dbc908",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/records/Devices",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"records",
+								"Devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "caf30812-18b3-4fa0-9a73-ae6400a37776",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "f69ebb4d-02b0-480a-80ef-55051998232a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/records/Devices/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"records",
+								"Devices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "f4cccbef-eef3-44ad-b6e6-3cbac4dc0145"
+		},
+		{
+			"name": "LPR",
+			"item": [
+				{
+					"name": "Get All LPR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "33648ade-0b19-4cfc-808b-bde6ac9dc5b1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "7b5a8b39-d8b2-4bd0-a26b-15cb11662d9e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disableUrlEncoding": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/LPR?speed.gt=100",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"LPR"
+							],
+							"query": [
+								{
+									"key": "speed.gt",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update LPR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "33648ade-0b19-4cfc-808b-bde6ac9dc5b1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ff442e4c-2950-4b64-9865-d0f64a294e04",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ids\":[1],\r\n    \"isConfirmed\":true,\r\n    \"plateNumber\":111\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/LPR",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"LPR"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One LPR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86efe062-c6a0-4f78-b8c1-8dfdb5ed82fe",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "33648ade-0b19-4cfc-808b-bde6ac9dc5b1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "7333efd2-de7f-477f-9819-d785c7632df8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isConfirmed\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/LPR/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"LPR",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Violation Types",
+					"id": "1ba4b0f8-09b1-4c82-86f8-91b320d5ce3b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/lpr/violationTypes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"lpr",
+								"violationTypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "daily count",
+					"id": "dc73466e-1652-40d8-8a15-78549c325f8b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"day\":\"30\",\"month\":\"Nov\",\"year\":\"2021\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/lpr/day",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"lpr",
+								"day"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getHourlyViolations",
+					"id": "9a42b7d8-9545-4bcc-8c1c-e824b0d00c3d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/lpr/violations?year=2021&month=12&day=2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"lpr",
+								"violations"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2021",
+									"type": "text"
+								},
+								{
+									"key": "month",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "day",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dates of lpr",
+					"id": "b3fa3bfb-b96c-433c-b74b-1205e6239362",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"id": "568efc40-281d-43fd-a187-dff7a6558681"
+		},
+		{
+			"name": "Violation Templates",
+			"item": [
+				{
+					"name": "Get All Templates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a981637-86fc-4b56-b745-b8b8e3edf4f1",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "e9f70d25-5911-4d1a-9ccf-9028f9e107ac",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Templates?templateName=speed_red_sea",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Templates"
+							],
+							"query": [
+								{
+									"key": "templateName",
+									"value": "speed_red_sea"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Template Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90064218-f334-4192-ae52-ff1e57b400d9",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "592fc306-c168-4edc-8555-2559ad2bd400",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fieldName\": \"Report\",\r\n    \"value\": \"تقرير مخالفة مرور\",\r\n    \"templateName\": \"direction_giza\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Templates",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Templates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "017498ed-9c19-4b6b-bd54-5d578f028a27",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "2eca7749-5196-41a7-b1db-67823f7b5da1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Templates/direction_giza/Report2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Templates",
+								"direction_giza",
+								"Report2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5baa1941-05d6-4983-8bac-2c26a39037e9",
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "52de2cbd-1f12-4182-8de6-d9e0c3f1e3df",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Templates/direction_giza/Report2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Templates",
+								"direction_giza",
+								"Report2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Template FIeld",
+					"id": "84142bd6-129f-4bc2-8049-afbac829c043",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"value\": \"تقرير مخالفة\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/Templates/speed_giza/Report",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"Templates",
+								"speed_giza",
+								"Report"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "6d142dc1-aa6c-420a-970f-ffa49397ec8e"
+		},
+		{
+			"name": "matching",
+			"item": [
+				{
+					"name": "get all lists",
+					"id": "90d4a769-6a05-4213-9059-b2625a0b5d54",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/lists",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add list",
+					"id": "fe5f7fa4-d408-41bf-83f8-786451336b51",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"plateNumber\":\"مبينق1628\",\r\n    \"driverName\":\"try0\",\r\n    \"driver_lic_image_path\":\"b0f37e4c-fad2-4399-89fe-8a475b3b2adb.png\",\r\n    \"lic_image_path\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/lists",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"lists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one list",
+					"id": "e8e9c303-588f-4774-a6f6-1ccf017e62a1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/list/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"list",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete list",
+					"id": "eb89ba4d-bdd2-4dae-b5cf-6f74d7684592",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/list/18",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"list",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update list",
+					"id": "5fb35887-c382-4f57-aa83-f172a88e7d89",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"plateNumber\":\"مبينق1628\",\r\n    \"driverName\":\"try0\",\r\n    \"driver_lic_image_path\":\"b0f37e4c-fad2-4399-89fe-8a475b3b2adb.png\",\r\n    \"lic_image_path\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/list/18",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"list",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add devices and types to lists",
+					"id": "af3f7ff7-7155-424c-8e65-fc237f21d2aa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"devicesWithTypes\":\r\n    [\r\n    {\"lprListId\":5,\"DeviceId\":8,\"lprListsTypeId\":2},\r\n    {\"lprListId\":5,\"DeviceId\":9,\"lprListsTypeId\":1},\r\n    {\"lprListId\":5,\"DeviceId\":10,\"lprListsTypeId\":1}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/list/5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"list",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all types",
+					"id": "bbb237d7-44ff-44f6-b7db-50379727e343",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/types",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload",
+					"id": "0cc03536-1a5c-4212-9618-8e89a31dc253",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/BackEnd/Desktop/Backend-Sequelize - Copy/dist/icons/favicon-16x16.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v2/matching/upload",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"matching",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "38b1e324-b58f-4a4c-8933-cec002041295"
+		},
+		{
+			"name": "recording",
+			"item": [
+				{
+					"name": "get videos",
+					"id": "690266fa-5af7-490b-8f38-bc5c6a7c3091",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v2/recording/video?mid=325&fileName=2022-01-24T17-00-06.mp4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"recording",
+								"video"
+							],
+							"query": [
+								{
+									"key": "mid",
+									"value": "325"
+								},
+								{
+									"key": "fileName",
+									"value": "2022-01-24T17-00-06.mp4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get destinct days",
+					"id": "b9caf101-91f2-4ece-bb2d-30444765d293",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"id": "803b86cf-109b-4187-9c24-dac94f037210"
+		},
+		{
+			"name": "config",
+			"item": [
+				{
+					"name": "get gis config",
+					"id": "7a3fc947-e07a-4262-95d4-90d42ef45d4e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"id": "e3616f7a-aca4-411c-aff8-ff62a558307b"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e51248f3-3a2d-43f1-b6d4-a792f811103c",
+				"type": "text/javascript",
+				"exec": [
+					"// // Login Before Every Request",
+					"",
+					"// pm.sendRequest({",
+					"//     url: pm.environment.get(\"URL\")+\"/api/v2/auth/login\",",
+					"//     method: 'POST',",
+					"//       header: {",
+					"//     'Accept': '*/*',",
+					"//     'Content-Type': 'application/json',",
+					"//   },",
+					"   ",
+					"//     body: {",
+					"//         mode: 'raw',",
+					"//         raw: JSON.stringify({ username: pm.collectionVariables.get(\"username\"), password: pm.collectionVariables.get(\"password\") })",
+					"//     }",
+					"   ",
+					"    ",
+					"",
+					"// }, function (err, res) {",
+					"// //    pm.environment.set(\"TOKEN\", res.json().token)",
+					"// });",
+					"// const TEST_MODE = pm.collectionVariables.get(\"TEST_MODE\");",
+					"// if (TEST_MODE===\"ON\") {",
+					"// pm.collectionVariables.clear();",
+					"// pm.collectionVariables.set(\"TEST_MODE\",\"ON\");",
+					"// }"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "44fcd651-fb3f-4248-8641-d7b40c6e1140",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "35dfdcf2-0f8d-46c5-a113-c763d5d2eaaa",
+			"key": "TEST_MODE",
+			"value": "OFF",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "0acc4992-68a4-44d8-88ff-c3dec953ad11",
+			"key": "LOGIN_body",
+			"value": ""
+		},
+		{
+			"id": "3d6aba8e-dae9-4bdf-b3f9-f5f88360148b",
+			"key": "REGISTER_body",
+			"value": ""
+		},
+		{
+			"id": "a562482a-9445-4d22-b0dc-11c353ddcd8d",
+			"key": "Test_Title",
+			"value": ""
+		},
+		{
+			"id": "6c47fe4c-8f23-426e-bfef-6bff70e51a6e",
+			"key": "LOGIN_bodies",
+			"value": ""
+		},
+		{
+			"id": "6736fbce-727f-47a6-ae86-0f02e4455392",
+			"key": "REGISTER_bodies",
+			"value": ""
+		}
+	]
+}
